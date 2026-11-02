@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Windwalker\ORM;
 
 use Asika\ObjectMetadata\ObjectMetadata;
+use Closure;
 use DateTimeInterface;
 use InvalidArgumentException;
 use JsonException;
@@ -1021,10 +1022,12 @@ class EntityMapper implements EventAwareInterface
     }
 
     /**
-     * @param  array|object       $item
-     * @param  array|string|null  $condFields
-     * @param  array|null         $updateFields
-     * @param  ORMOptions         $options
+     * @param  array|object        $item
+     * @param  array|string|null   $condFields    Conflict keys. MySQL ignores them and relies on the table's
+     *                                            PRIMARY/UNIQUE indexes, so they must match a real unique index.
+     * @param  Closure|array|null  $updateFields  List of columns, `column => value` map, or a Closure
+     *                                            `(array $data, array $keys)` returning one of them.
+     * @param  ORMOptions          $options
      *
      * @return  object|T
      *
@@ -1033,7 +1036,7 @@ class EntityMapper implements EventAwareInterface
     public function upsert(
         array|object $item,
         array|string|null $condFields = null,
-        ?array $updateFields = null,
+        Closure|array|null $updateFields = null,
         ORMOptions $options = new ORMOptions()
     ): object {
         $metadata = $this->getMetadata();

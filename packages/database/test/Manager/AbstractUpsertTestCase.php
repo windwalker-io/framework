@@ -62,6 +62,56 @@ abstract class AbstractUpsertTestCase extends AbstractDatabaseTestCase
     }
 
     #[Test]
+    public function upsertWithAssocUpdateFieldsUsesCustomValues(): void
+    {
+        $this->writer->upsert('ww_upsert_items', ['title' => 'A', 'state' => 1], 'title');
+        $this->writer->upsert(
+            'ww_upsert_items',
+            ['title' => 'A', 'state' => 5],
+            'title',
+            ['state' => 99]
+        );
+
+        self::assertEquals(99, $this->fetchRows()[0]['state']);
+    }
+
+    #[Test]
+    public function upsertWithMixedUpdateFields(): void
+    {
+        $this->writer->upsert('ww_upsert_items', ['title' => 'A', 'state' => 1], 'title');
+        $this->writer->upsert(
+            'ww_upsert_items',
+            ['title' => 'A', 'state' => 5],
+            'title',
+            ['title', 'state' => 7]
+        );
+
+        self::assertEquals(7, $this->fetchRows()[0]['state']);
+    }
+
+    #[Test]
+    public function upsertWithCallbackUpdateFields(): void
+    {
+        $this->writer->upsert('ww_upsert_items', ['title' => 'A', 'state' => 1], 'title');
+
+        $received = null;
+
+        $this->writer->upsert(
+            'ww_upsert_items',
+            ['title' => 'A', 'state' => 5],
+            'title',
+            function (array $data, array $keys) use (&$received) {
+                $received = [$data, $keys];
+
+                return ['state' => $data['state'] + 100];
+            }
+        );
+
+        self::assertSame([['title' => 'A', 'state' => 5], ['title']], $received);
+        self::assertEquals(105, $this->fetchRows()[0]['state']);
+    }
+
+    #[Test]
     public function upsertSkipsNullsWhenUpdateNullsIsFalse(): void
     {
         $this->writer->upsert('ww_upsert_items', ['title' => 'A', 'state' => 1], 'title');

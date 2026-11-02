@@ -50,6 +50,18 @@ abstract class AbstractOrmUpsertTestCase extends AbstractORMTestCase
         self::assertSame('C2', $mapper->findOne($c->id)->title);
         self::assertSame(1, $mapper->findOne($c->id)->state);
 
+        $mapper->upsert(['id' => $c->id, 'title' => 'C3', 'state' => 2], null, ['state' => 42]);
+        self::assertSame('C2', $mapper->findOne($c->id)->title);
+        self::assertSame(42, $mapper->findOne($c->id)->state);
+
+        $mapper->upsert(
+            ['id' => $c->id, 'title' => 'C4', 'state' => 3],
+            null,
+            static fn(array $data) => ['title' => $data['title'] . '!']
+        );
+        self::assertSame('C4!', $mapper->findOne($c->id)->title);
+        self::assertSame(42, $mapper->findOne($c->id)->state);
+
         $tm->drop(true);
     }
 }

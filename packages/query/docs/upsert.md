@@ -103,3 +103,49 @@ $statement = $query->upsert('articles', incrementField: true)
 - Each `upsert()` call resets the upsert state, including keys, update columns, and `returning()`.
 - On SQL Server and Oracle the same value appears in several places of the `MERGE` statement, so it is bound once per
   place. This keeps the statement valid with drivers that do not support repeated named placeholders.
+
+## WriterManager and ORM
+
+`WriterManager::upsert()` and `ORM::upsert()` / `EntityMapper::upsert()` accept `$updateFields` as:
+
+- `null`: update all inserted columns except the conflict keys.
+- a list `['title', 'state']`: columns updated with the inserted values.
+- a map `['hits' => raw('hits + 1')]`: custom values. Integer keys and string keys can be mixed.
+- a `Closure` `fn(array $data, array $keys): array`: receives the data and returns a list or a map.
+
+### Conflict detection differs by platform
+
+MySQL cannot choose the conflict keys: `ON DUPLICATE KEY UPDATE` fires on **any** PRIMARY or UNIQUE index violation, so
+the keys given to `onConflict()` (or `$condFields` in the ORM) are not part of the SQL. This has two consequences:
+
+- If the keys have no matching PRIMARY/UNIQUE index, MySQL does not match anything and simply inserts a new row.
+- If the table has several unique indexes, a row matching any of them is updated, which may not be the row you meant.
+
+The keys still matter: PostgreSQL and SQLite need them to match a unique index, SQL Server and Oracle use them as
+the `MERGE ... ON` condition, and `$updateFields` defaults to every column except the keys.
+
+### Safest usage when the database is unknown
+
+To get the same result on every platform:
+
+1. Make the conflict keys a real PRIMARY KEY or UNIQUE index (a single index, with exactly those columns).
+2. Pass exactly those columns to `onConflict()` / `$condFields`. Do not rely on other unique indexes to trigger the
+   update.
+3. Always provide the keys in the data. For auto-increment IDs, either leave the ID out and use a unique business key
+   as the conflict key, or only use the ID as the key when it is set.
+4. Pass `$updateFields` explicitly instead of relying on the default, and do not include the keys in it.
+5. Do not depend on `returning()` alone to read the ID; use the value returned by `WriterManager::upsert()` or the
+   ORM, which resolves it per platform.
+
+```php
+// articles has UNIQUE (slug)
+$db->getWriter()->upsert(
+    'articles',
+    ['slug' => 'hello', 'title' => 'Hello', 'hits' => 0],
+    'slug',
+    ['title', 'hits' => raw('hits + 1')],
+    ['returningIdField' => 'id']
+);
+
+$orm->upsert(Article::class, $article, ['slug'], ['title']);
+```
