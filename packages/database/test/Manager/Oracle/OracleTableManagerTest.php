@@ -122,7 +122,5 @@ class OracleTableManagerTest extends AbstractDatabaseTestCase
         self::assertFalse(self::$db->getTableManager('ww_oracle_ent2', true)->exists());
     }
 
-    protected static function setupDatabase(): void
-    {
-    }
+    protected static function setupDatabase(): void {}
 }

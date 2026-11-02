@@ -8,7 +8,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\OracleGrammar;
-
 use Windwalker\Query\Bounded\BoundedHelper;
 
 use function Windwalker\Query\qn;
