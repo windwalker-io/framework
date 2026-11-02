@@ -407,12 +407,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $clause->value($value);
         } elseif ($value instanceof ExprClause) {
             foreach ($value->getElements() as $v) {
-                $this->handleAsValue($v, $alias);
+                $this->handleAsValue($v, $alias, $isColumn);
             }
 
             $clause->value($value);
         } else {
-            [$value, $alias] = $this->handleAsValue($value, $alias);
+            [$value, $alias] = $this->handleAsValue($value, $alias, $isColumn);
 
             $clause->value($value);
         }
@@ -430,7 +430,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  array
      */
-    protected function handleAsValue(mixed $value, mixed $alias): array
+    protected function handleAsValue(mixed $value, mixed $alias, bool $isColumn = true): array
     {
         if ($value instanceof Closure) {
             $q = $value($q = $this->createSubQuery()) ?? $q;
@@ -443,7 +443,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             $this->injectSubQuery($value, $alias);
         }
 
-        if (is_string($value) && str_contains($value, '->')) {
+        if ($isColumn && is_string($value) && str_contains($value, '->')) {
             // For select
             if (stripos($value, ' as ') !== false) {
                 [$value, $alias] = (array) preg_split('/ as /i', $value);

@@ -9,6 +9,7 @@ use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
 use function Windwalker\raw;
@@ -165,10 +166,27 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         // Oracle requires JSON paths to be literals, so they can never be bound.
         $vc = $query->valueize(static::compileJsonPath($paths), true);
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int', 'decimal' => 'NUMBER',
+                'float' => 'BINARY_DOUBLE',
+                'string' => 'VARCHAR2(4000)',
+                'datetime' => 'TIMESTAMP',
+                'date' => 'DATE',
+            };
+
+            return clause(
+                'JSON_VALUE()',
+                [clause('', [qn($column, $query), $vc], ', '), "RETURNING $type"],
+                ' '
+            );
+        }
 
         $expr = $unQuoteLast
             ? expr('JSON_VALUE()', $vc)
@@ -255,5 +273,33 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
             ],
             ' '
         );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return $query->expr(
+            $not ? 'NOT JSON_EXISTS()' : 'JSON_EXISTS()',
+            qn($column, $query),
+            $query->valueize(static::compileJsonPath($paths), true)
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), true);
+        $value = $query->valueize(static::encodeJsonValue($value), false);
+
+        return clause(
+            'JSON_TRANSFORM()',
+            [qn($column, $query), clause('', ['SET', $path, '=', $value, 'FORMAT JSON'], ' ')],
+            ', '
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), true);
+
+        return clause('JSON_TRANSFORM()', [qn($column, $query), clause('', ['REMOVE', $path], ' ')], ', ');
     }
 }

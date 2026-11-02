@@ -941,6 +941,48 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function whereJsonExists(string $expr): static
+    {
+        $this->getQueryBuilder()->whereJsonExists($expr);
+
+        return $this;
+    }
+
+    public function whereJsonNotExists(string $expr): static
+    {
+        $this->getQueryBuilder()->whereJsonNotExists($expr);
+
+        return $this;
+    }
+
+    public function havingJsonExists(string $expr): static
+    {
+        $this->getQueryBuilder()->havingJsonExists($expr);
+
+        return $this;
+    }
+
+    public function havingJsonNotExists(string $expr): static
+    {
+        $this->getQueryBuilder()->havingJsonNotExists($expr);
+
+        return $this;
+    }
+
+    public function setJson(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->setJson($expr, $value);
+
+        return $this;
+    }
+
+    public function setJsonRemove(string $expr): static
+    {
+        $this->getQueryBuilder()->setJsonRemove($expr);
+
+        return $this;
+    }
+
     /**
      * @template T of Collection
      *

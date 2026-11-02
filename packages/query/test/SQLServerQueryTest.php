@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Test;
 
+use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\SQLServerGrammar;
@@ -270,5 +271,73 @@ SQL
     protected static function randomOrderSql(): string
     {
         return 'NEWID()';
+    }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT CAST(JSON_VALUE([a], \'$.n\') AS BIGINT) AS [n] FROM [t] WHERE CAST(JSON_VALUE([a], \'$.p\') AS DECIMAL(38, 10)) > 10 ORDER BY CAST(JSON_VALUE([a], \'$."x::y"\') AS DATE)',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM [t] WHERE JSON_PATH_EXISTS([a], \'$.b[1]\') = 1 AND JSON_PATH_EXISTS([a], \'$.c\') = 0',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE [t] SET [a] = JSON_MODIFY([a], \'$.b.c\', JSON_QUERY(\'{"x":1}\')), [a] = JSON_MODIFY([a], \'$.d\', \'str\'), [a] = JSON_MODIFY([a], \'$.e\', NULL)',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
+
+    #[Test]
+    public function jsonContainsRejectsEmptyArray(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->instance->select('*')->from('t')->whereJsonContainsAll('a->b', [])->render(true);
+    }
+
+    #[Test]
+    public function jsonContainsRejectsNonScalar(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->instance->select('*')->from('t')->whereJsonContainsAll('a->b', [['x']])->render(true);
     }
 }

@@ -17,7 +17,8 @@ interface JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause;
 
     /**
@@ -45,6 +46,31 @@ interface JsonGrammarInterface
     ): Clause;
 
     public function compileJsonLength(
+        Query $query,
+        string $column,
+        array $paths
+    ): Clause;
+
+    /**
+     * Whether the length expression can be used in a SELECT list.
+     */
+    public function supportsJsonSelectLength(): bool;
+
+    public function compileJsonExists(
+        Query $query,
+        string $column,
+        array $paths,
+        bool $not = false
+    ): Clause;
+
+    public function compileJsonSet(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value
+    ): Clause;
+
+    public function compileJsonRemove(
         Query $query,
         string $column,
         array $paths

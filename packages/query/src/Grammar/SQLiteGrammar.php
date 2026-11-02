@@ -7,6 +7,7 @@ namespace Windwalker\Query\Grammar;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
 
@@ -75,11 +76,22 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $expr = expr('JSON_EXTRACT()', qn($column, $query));
 
         $expr->append($query->valueize(static::compileJsonPath($paths), $instant));
+
+        if ($cast !== null) {
+            $expr = match (static::normalizeJsonCast($cast)) {
+                'int' => clause('CAST()', [$expr, 'AS INTEGER'], ' '),
+                'float', 'decimal' => clause('CAST()', [$expr, 'AS REAL'], ' '),
+                'string' => clause('CAST()', [$expr, 'AS TEXT'], ' '),
+                'datetime' => expr('DATETIME()', $expr),
+                'date' => expr('DATE()', $expr),
+            };
+        }
 
         return $expr;
     }
@@ -113,5 +125,33 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
     public function compileJsonLength(Query $query, string $column, array $paths): Clause
     {
         throw new \LogicException('SQLite does not supports JSON length now.');
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return clause(
+            '',
+            [
+                $this->compileJsonPathFunction($query, 'JSON_TYPE', $column, $paths),
+                $not ? 'IS NULL' : 'IS NOT NULL',
+            ],
+            ' '
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        return $this->compileJsonPathFunction(
+            $query,
+            'JSON_SET',
+            $column,
+            $paths,
+            expr('JSON()', $query->valueize(static::encodeJsonValue($value), false))
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return $this->compileJsonPathFunction($query, 'JSON_REMOVE', $column, $paths);
     }
 }

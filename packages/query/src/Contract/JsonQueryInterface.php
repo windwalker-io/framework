@@ -83,4 +83,16 @@ interface JsonQueryInterface
     public function selectJsonLength(string $expr, string $as = ''): static;
 
     public function whereJsonLength(array|string $expr, mixed ...$args): static;
+
+    public function whereJsonExists(string $expr): static;
+
+    public function whereJsonNotExists(string $expr): static;
+
+    public function havingJsonExists(string $expr): static;
+
+    public function havingJsonNotExists(string $expr): static;
+
+    public function setJson(string $expr, mixed $value): static;
+
+    public function setJsonRemove(string $expr): static;
 }

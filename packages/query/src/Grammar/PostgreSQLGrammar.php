@@ -97,7 +97,8 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $newPaths = [];
 
@@ -113,11 +114,26 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         $lastArrow = $unQuoteLast ? '->>' : '->';
         array_unshift($newPaths, qn($column, $query) . '::jsonb');
 
-        return clause(
+        $selector = clause(
             '',
             [clause('', $newPaths, '->'), $last],
             $lastArrow
         );
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int' => 'bigint',
+                'float' => 'double precision',
+                'decimal' => 'numeric',
+                'string' => 'text',
+                'datetime' => 'timestamp',
+                'date' => 'date',
+            };
+
+            return clause('', [clause('()', [$selector]), "::$type"], '');
+        }
+
+        return $selector;
     }
 
     /**
@@ -133,9 +149,7 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $value,
         bool $not = false
     ): Clause {
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
+        $value = static::normalizeLegacyJsonContainsValue($value);
 
         return clause(
             $not ? 'NOT ()' : '()',
@@ -183,5 +197,49 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
             ],
             ' '
         );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return clause(
+            '',
+            [
+                clause(
+                    '()',
+                    [
+                        qn($column, $query) . '::jsonb',
+                        '#>',
+                        $this->castJsonPathArray($query, $paths),
+                    ],
+                    ' '
+                ),
+                $not ? 'IS NULL' : 'IS NOT NULL',
+            ],
+            ' '
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        return $query->expr(
+            'jsonb_set()',
+            qn($column, $query) . '::jsonb',
+            $this->castJsonPathArray($query, $paths),
+            clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS jsonb'], ' ')
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return clause(
+            '',
+            [qn($column, $query) . '::jsonb', '#-', $this->castJsonPathArray($query, $paths)],
+            ' '
+        );
+    }
+
+    protected function castJsonPathArray(Query $query, array $paths): Clause
+    {
+        return clause('CAST()', [$query->valueize(static::compileJsonPathArray($paths), false), 'AS text[]'], ' ');
     }
 }

@@ -9,8 +9,10 @@ use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
+use function Windwalker\raw;
 
 /**
  * The SqlsrvGrammar class.
@@ -288,7 +290,8 @@ SQL;
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $vc = $query->valueize(static::compileJsonPath($paths), $instant);
 
@@ -296,7 +299,22 @@ SQL;
             ? expr('JSON_VALUE()', $vc)
             : expr('JSON_QUERY()', $vc);
 
-        return $expr->prepend(qn($column, $query));
+        $expr->prepend(qn($column, $query));
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int' => 'BIGINT',
+                'float' => 'FLOAT',
+                'decimal' => 'DECIMAL(38, 10)',
+                'string' => 'NVARCHAR(MAX)',
+                'datetime' => 'DATETIME2',
+                'date' => 'DATE',
+            };
+
+            return clause('CAST()', [$expr, "AS $type"], ' ');
+        }
+
+        return $expr;
     }
 
     /**
@@ -355,6 +373,11 @@ SQL;
             : $query->clause($not ? 'NOT ()' : '()', $exists, ' AND ');
     }
 
+    public function supportsJsonSelectLength(): bool
+    {
+        return false;
+    }
+
     public function compileJsonLength(Query $query, string $column, array $paths): Clause
     {
         $path = $query->valueize(static::compileJsonPath($paths), false);
@@ -368,6 +391,44 @@ SQL;
                     ->from(expr('OPENJSON()', qn($column, $query), $path))
             ),
             0
+        );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return clause(
+            '',
+            [
+                expr('JSON_PATH_EXISTS()', qn($column, $query), $query->valueize(static::compileJsonPath($paths), false)),
+                $not ? '= 0' : '= 1',
+            ],
+            ' '
+        );
+    }
+
+    /**
+     * Note: NULL value removes the key since JSON_MODIFY() treats NULL as delete.
+     */
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        $path = $query->valueize(static::compileJsonPath($paths), false);
+
+        if (is_array($value) || is_object($value)) {
+            $value = expr('JSON_QUERY()', $query->valueize(static::encodeJsonValue($value), false));
+        } else {
+            $value = $query->valueize($value, false);
+        }
+
+        return $query->expr('JSON_MODIFY()', qn($column, $query), $path, $value);
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return $query->expr(
+            'JSON_MODIFY()',
+            qn($column, $query),
+            $query->valueize(static::compileJsonPath($paths), false),
+            raw('NULL')
         );
     }
 }

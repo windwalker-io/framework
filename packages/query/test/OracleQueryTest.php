@@ -267,4 +267,56 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
 
         self::assertSqlEquals('INSERT INTO "bar" ("id") (SELECT "id" FROM "foo")', $i->render(true));
     }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT JSON_VALUE("A", \'$.n\' RETURNING NUMBER) AS "N" FROM "T" WHERE JSON_VALUE("A", \'$.p\' RETURNING NUMBER) > 10 ORDER BY JSON_VALUE("A", \'$."x::y"\' RETURNING DATE)',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM "T" WHERE JSON_EXISTS("A", \'$.b[1]\') AND NOT JSON_EXISTS("A", \'$.c\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE "T" SET "A" = JSON_TRANSFORM("A", SET \'$.b.c\' = \'{"x":1}\' FORMAT JSON), "A" = JSON_TRANSFORM("A", SET \'$.d\' = \'"str"\' FORMAT JSON), "A" = JSON_TRANSFORM("A", REMOVE \'$.e\')',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
 }

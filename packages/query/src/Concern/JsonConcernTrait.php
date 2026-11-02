@@ -7,7 +7,6 @@ namespace Windwalker\Query\Concern;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\JsonGrammarInterface;
-use Windwalker\Query\Grammar\SQLServerGrammar;
 
 /**
  * Trait JsonConcernTrait
@@ -31,19 +30,95 @@ trait JsonConcernTrait
     }
 
     /**
+     * Parse `column->path->>last` expression.
+     *
+     * Segments may be wrapped by single quotes (stripped) or double quotes (kept as is).
+     * Arrow signs inside quotes are treated as part of the segment.
+     *
      * @param  string  $expr
      *
-     * @return  array{ 0: string, 1: string[] }
+     * A `::type` suffix after the last segment is returned as cast type.
+     *
+     * @return  array{ 0: string, 1: string[], 2: bool, 3: ?string }
+     *                                                                Column, paths, whether the last arrow is `->>` (always true if cast), and cast type.
      */
     protected function splitColumnAndPaths(string $expr): array
     {
-        $paths = array_filter(array_map('trim', preg_split('/->+/', $expr)), 'strlen');
-        $paths = array_map(static fn($segment) => trim($segment, "'"), $paths);
+        $length = strlen($expr);
+        $tokens = [];
+        $current = '';
+        $unQuoteLast = false;
+        $cast = null;
+        $i = 0;
 
-        $column = array_shift($paths);
-        $column = $this->prependPrimaryAlias($column);
+        while ($i < $length) {
+            $char = $expr[$i];
 
-        return [$column, $paths];
+            if (($char === "'" || $char === '"') && trim($current) === '' && count($tokens) > 0) {
+                $end = strpos($expr, $char, $i + 1);
+
+                if ($end === false) {
+                    throw new \InvalidArgumentException(
+                        sprintf('Unclosed quote in JSON expression: %s', $expr)
+                    );
+                }
+
+                $quoted = substr($expr, $i + 1, $end - $i - 1);
+                $current = $char === '"' ? '"' . $quoted . '"' : $quoted;
+                $i = $end + 1;
+
+                continue;
+            }
+
+            if ($char === ':' && ($expr[$i + 1] ?? '') === ':' && count($tokens) > 0) {
+                if (!preg_match('/\G::([A-Za-z_]\w*)\s*$/', $expr, $matches, 0, $i)) {
+                    throw new \InvalidArgumentException(
+                        sprintf('JSON cast must be the last part of expression: %s', $expr)
+                    );
+                }
+
+                $cast = strtolower($matches[1]);
+                $i = $length;
+
+                continue;
+            }
+
+            if ($char === '-' && ($expr[$i + 1] ?? '') === '>') {
+                $tokens[] = trim($current);
+                $current = '';
+                $unQuoteLast = ($expr[$i + 2] ?? '') === '>';
+                $i += $unQuoteLast ? 3 : 2;
+
+                continue;
+            }
+
+            $current .= $char;
+            $i++;
+        }
+
+        $tokens[] = trim($current);
+
+        $column = $tokens[0];
+        $paths = array_values(array_filter(array_slice($tokens, 1), 'strlen'));
+
+        if ($column === '') {
+            throw new \InvalidArgumentException(
+                sprintf('JSON expression must start with a column name: %s', $expr)
+            );
+        }
+
+        if ($cast !== null && $paths === []) {
+            throw new \InvalidArgumentException(
+                sprintf('JSON cast requires at least one path: %s', $expr)
+            );
+        }
+
+        return [
+            $this->prependPrimaryAlias($column),
+            $paths,
+            ($unQuoteLast && $paths !== []) || $cast !== null,
+            $cast,
+        ];
     }
 
     /**
@@ -58,19 +133,31 @@ trait JsonConcernTrait
     {
         $grammar = $this->getJsonGrammar();
 
-        $unQuoteLast = str_contains($expr, '->>');
+        [$column, $paths, $unQuoteLast, $cast] = $this->splitColumnAndPaths($expr);
 
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $grammar->compileJsonSelector($this, $column, $paths, $unQuoteLast, $instant);
+        return $grammar->compileJsonSelector($this, $column, $paths, $unQuoteLast, $instant, $cast);
     }
 
     /**
      * @param  string  $expr
      * @param  mixed   $value
+     * @param  bool    $not
+     * @param  bool    $legacy  Use the deprecated {@see JsonGrammarInterface::compileJsonContains()}.
      *
-     * @return  $this
-     *
+     * @return  Clause
+     */
+    protected function compileJsonContainsClause(string $expr, mixed $value, bool $not, bool $legacy = false): Clause
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $legacy
+            ? $grammar->compileJsonContains($this, $column, $paths, $value, $not)
+            : $grammar->compileJsonContainsAll($this, $column, $paths, $value, $not);
+    }
+
+    /**
      * @throws  \JsonException
      *
      * @deprecated  Use {@see whereJsonContainsAll()} instead.
@@ -80,24 +167,12 @@ trait JsonConcernTrait
      */
     public function whereJsonContains(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->whereRaw(
-            $grammar->compileJsonContains($this, $column, $paths, $value),
-        );
+        return $this->whereRaw($this->compileJsonContainsClause($expr, $value, false, true));
     }
 
     public function whereJsonContainsAll(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->whereRaw(
-            $grammar->compileJsonContainsAll($this, $column, $paths, $value),
-        );
+        return $this->whereRaw($this->compileJsonContainsClause($expr, $value, false));
     }
 
     /**
@@ -108,24 +183,12 @@ trait JsonConcernTrait
      */
     public function whereJsonNotContains(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->whereRaw(
-            $grammar->compileJsonContains($this, $column, $paths, $value, true),
-        );
+        return $this->whereRaw($this->compileJsonContainsClause($expr, $value, true, true));
     }
 
     public function whereJsonNotContainsAll(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->whereRaw(
-            $grammar->compileJsonContainsAll($this, $column, $paths, $value, true),
-        );
+        return $this->whereRaw($this->compileJsonContainsClause($expr, $value, true));
     }
 
     /**
@@ -136,24 +199,12 @@ trait JsonConcernTrait
      */
     public function havingJsonContains(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->havingRaw(
-            $grammar->compileJsonContains($this, $column, $paths, $value),
-        );
+        return $this->havingRaw($this->compileJsonContainsClause($expr, $value, false, true));
     }
 
     public function havingJsonContainsAll(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->havingRaw(
-            $grammar->compileJsonContainsAll($this, $column, $paths, $value),
-        );
+        return $this->havingRaw($this->compileJsonContainsClause($expr, $value, false));
     }
 
     /**
@@ -164,31 +215,19 @@ trait JsonConcernTrait
      */
     public function havingJsonNotContains(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->havingRaw(
-            $grammar->compileJsonContains($this, $column, $paths, $value, true),
-        );
+        return $this->havingRaw($this->compileJsonContainsClause($expr, $value, true, true));
     }
 
     public function havingJsonNotContainsAll(string $expr, mixed $value): static
     {
-        $grammar = $this->getJsonGrammar();
-
-        [$column, $paths] = $this->splitColumnAndPaths($expr);
-
-        return $this->havingRaw(
-            $grammar->compileJsonContainsAll($this, $column, $paths, $value, true),
-        );
+        return $this->havingRaw($this->compileJsonContainsClause($expr, $value, true));
     }
 
     public function selectJsonLength(string $expr, string $as = ''): static
     {
         $grammar = $this->getJsonGrammar();
 
-        if ($grammar instanceof SQLServerGrammar) {
+        if (!$grammar->supportsJsonSelectLength()) {
             throw new \LogicException($grammar::class . ' does not supports selectJsonLength()');
         }
 
@@ -217,6 +256,72 @@ trait JsonConcernTrait
         return $this->where(
             $grammar->compileJsonLength($this, $column, $paths),
             ...$args
+        );
+    }
+
+    public function whereJsonExists(string $expr): static
+    {
+        return $this->whereRaw($this->compileJsonExistsClause($expr, false));
+    }
+
+    public function whereJsonNotExists(string $expr): static
+    {
+        return $this->whereRaw($this->compileJsonExistsClause($expr, true));
+    }
+
+    public function havingJsonExists(string $expr): static
+    {
+        return $this->havingRaw($this->compileJsonExistsClause($expr, false));
+    }
+
+    public function havingJsonNotExists(string $expr): static
+    {
+        return $this->havingRaw($this->compileJsonExistsClause($expr, true));
+    }
+
+    protected function compileJsonExistsClause(string $expr, bool $not): Clause
+    {
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->getJsonGrammar()->compileJsonExists($this, $column, $paths, $not);
+    }
+
+    /**
+     * Set a value at JSON path of a column, used in UPDATE queries.
+     * Value will be encoded to JSON, so arrays and objects are supported.
+     */
+    public function setJson(string $expr, mixed $value): static
+    {
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->setRaw(
+            $this->clause(
+                '',
+                [
+                    $this->quoteName($column),
+                    '=',
+                    $this->getJsonGrammar()->compileJsonSet($this, $column, $paths, $value),
+                ]
+            )
+        );
+    }
+
+    /**
+     * Remove a JSON path from a column, used in UPDATE queries.
+     */
+    public function setJsonRemove(string $expr): static
+    {
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->setRaw(
+            $this->clause(
+                '',
+                [
+                    $this->quoteName($column),
+                    '=',
+                    $this->getJsonGrammar()->compileJsonRemove($this, $column, $paths),
+                ]
+            )
         );
     }
 }

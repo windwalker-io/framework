@@ -206,4 +206,56 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
     {
         return 'RANDOM()';
     }
+
+    #[Test]
+    public function jsonCastSelector(): void
+    {
+        $query = $this->instance->select('a->n::int AS n')
+            ->from('t')
+            ->where('a->p::decimal', '>', 10)
+            ->order("a->'x::y'::date");
+
+        self::assertEquals(
+            'SELECT ("a"::jsonb->>\'n\')::bigint AS "n" FROM "t" WHERE ("a"::jsonb->>\'p\')::numeric > 10 ORDER BY ("a"::jsonb->>\'x::y\')::date',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonExists(): void
+    {
+        $query = $this->instance->select('*')
+            ->from('t')
+            ->whereJsonExists('a->b->1')
+            ->whereJsonNotExists('a->c');
+
+        self::assertEquals(
+            'SELECT * FROM "t" WHERE ("a"::jsonb #> CAST(\'{"b","1"}\' AS text[])) IS NOT NULL AND ("a"::jsonb #> CAST(\'{"c"}\' AS text[])) IS NULL',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonSetAndRemove(): void
+    {
+        $query = $this->instance->update('t')
+            ->setJson('a->b->c', ['x' => 1])
+            ->setJson('a->d', 'str')
+            ->setJsonRemove('a->e');
+
+        self::assertEquals(
+            'UPDATE "t" SET "a" = jsonb_set("a"::jsonb, CAST(\'{"b","c"}\' AS text[]), CAST(\'{"x":1}\' AS jsonb)), "a" = jsonb_set("a"::jsonb, CAST(\'{"d"}\' AS text[]), CAST(\'"str"\' AS jsonb)), "a" = "a"::jsonb #- CAST(\'{"e"}\' AS text[])',
+            $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function jsonCastAllTypes(): void
+    {
+        foreach (['int', 'integer', 'float', 'double', 'decimal', 'numeric', 'string', 'text', 'datetime', 'date'] as $type) {
+            $sql = (clone $this->instance)->select('a->n::' . $type . ' AS n')->from('t')->render(true);
+
+            self::assertStringNotContainsString('a->', $sql, $type);
+        }
+    }
 }

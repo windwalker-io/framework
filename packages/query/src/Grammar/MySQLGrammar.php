@@ -7,6 +7,7 @@ namespace Windwalker\Query\Grammar;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 
+use function Windwalker\Query\clause;
 use function Windwalker\Query\expr;
 use function Windwalker\Query\qn;
 use function Windwalker\raw;
@@ -116,7 +117,8 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $column,
         array $paths,
         bool $unQuoteLast = true,
-        bool $instant = false
+        bool $instant = false,
+        ?string $cast = null
     ): Clause {
         $expr = expr('JSON_EXTRACT()', qn($column, $query));
 
@@ -124,6 +126,19 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 
         if ($unQuoteLast) {
             $expr = expr('JSON_UNQUOTE()', $expr);
+        }
+
+        if ($cast !== null) {
+            $type = match (static::normalizeJsonCast($cast)) {
+                'int' => 'SIGNED',
+                'float' => 'DOUBLE',
+                'decimal' => 'DECIMAL(65, 30)',
+                'string' => 'CHAR',
+                'datetime' => 'DATETIME',
+                'date' => 'DATE',
+            };
+
+            $expr = clause('CAST()', [$expr, "AS $type"], ' ');
         }
 
         return $expr;
@@ -142,9 +157,7 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         string $value,
         bool $not = false
     ): Clause {
-        if (!is_json($value)) {
-            $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
-        }
+        $value = static::normalizeLegacyJsonContainsValue($value);
 
         return $query->expr(
             $not
@@ -179,12 +192,34 @@ class MySQLGrammar extends AbstractGrammar implements JsonGrammarInterface
     {
         return $query->expr(
             'IFNULL()',
-            $query->expr(
-                'JSON_LENGTH()',
-                qn($column, $query),
-                $query->valueize(static::compileJsonPath($paths), false)
-            ),
+            $this->compileJsonPathFunction($query, 'JSON_LENGTH', $column, $paths),
             0
         );
+    }
+
+    public function compileJsonExists(Query $query, string $column, array $paths, bool $not = false): Clause
+    {
+        return $query->expr(
+            $not ? 'NOT JSON_CONTAINS_PATH()' : 'JSON_CONTAINS_PATH()',
+            qn($column, $query),
+            raw("'one'"),
+            $query->valueize(static::compileJsonPath($paths), false)
+        );
+    }
+
+    public function compileJsonSet(Query $query, string $column, array $paths, mixed $value): Clause
+    {
+        return $this->compileJsonPathFunction(
+            $query,
+            'JSON_SET',
+            $column,
+            $paths,
+            clause('CAST()', [$query->valueize(static::encodeJsonValue($value), false), 'AS JSON'], ' ')
+        );
+    }
+
+    public function compileJsonRemove(Query $query, string $column, array $paths): Clause
+    {
+        return $this->compileJsonPathFunction($query, 'JSON_REMOVE', $column, $paths);
     }
 }
