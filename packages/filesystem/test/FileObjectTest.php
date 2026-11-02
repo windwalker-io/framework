@@ -554,4 +554,32 @@ class FileObjectTest extends AbstractVfsTestCase
 
         fs('vfs://root/files/file1.txt')->getPathnameAsync();
     }
+
+    #[Test]
+    public function deleteNestedDirectories(): void
+    {
+        $root = sys_get_temp_dir() . '/ww-del-' . uniqid();
+        mkdir($root . '/a/b/c', 0777, true);
+        touch($root . '/a/b/c/f.txt');
+        touch($root . '/a/x.txt');
+
+        self::assertTrue(fs($root)->delete());
+        self::assertDirectoryDoesNotExist($root);
+    }
+
+    #[Test]
+    public function deleteWithoutFollowLinksKeepsTarget(): void
+    {
+        $root = sys_get_temp_dir() . '/ww-del-' . uniqid();
+        mkdir($root . '/target', 0777, true);
+        touch($root . '/target/keep.txt');
+        symlink($root . '/target', $root . '/link');
+
+        fs($root . '/link')->delete(followLinks: false);
+
+        self::assertFalse(is_link($root . '/link'));
+        self::assertFileExists($root . '/target/keep.txt');
+
+        fs($root)->delete();
+    }
 }
