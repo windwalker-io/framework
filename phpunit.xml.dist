@@ -32,6 +32,7 @@
         <!--<env name="REDIS_ENABLED" value="1" />-->
         <!--<env name="MEMCACHED_ENABLED" value="1" />-->
         <!--<env name="SQS_ENABLED" value="1" />-->
+        <!--<env name="RABBITMQ_ENABLED" value="1" />-->
         <!--<env name="SWOOLE_ENABLED" value="1" />-->
 	</php>
 

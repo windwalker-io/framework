@@ -36,6 +36,12 @@ services:
   #   profiles:
   #     - disabled
 
+  # rabbitmq:
+  #   ports:
+  #     - "5673:5672"
+  #   profiles:
+  #     - disabled
+
   # oracle:
   #   ports:
   #     - "1522:1521"

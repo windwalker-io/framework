@@ -96,6 +96,22 @@ services:
     ports:
       - "${SQS_PORT:-9324}:9324"
 
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: windwalker_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 volumes:
   mysql_data:
   postgresql_data:

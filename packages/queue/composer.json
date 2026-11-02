@@ -19,6 +19,7 @@
         "phpunit/phpunit": "^13.0",
         "windwalker/test": "^4.0",
         "aws/aws-sdk-php": "^3.402",
+        "php-amqplib/php-amqplib": "^3.7",
         "windwalker/data": "^4.0",
         "windwalker/database": "^4.0",
         "asika/sql-splitter": "^1.0",
@@ -27,6 +28,7 @@
     },
     "suggest": {
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
+        "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
         "laravel/serializable-closure": "Install ^2.0 to support Closure jobs."
     },
     "minimum-stability": "beta",
