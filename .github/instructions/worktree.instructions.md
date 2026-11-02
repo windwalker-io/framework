@@ -20,3 +20,8 @@ These rules apply only when the task runs in a git worktree (worktree isolation 
   main repo's `vendor` into the worktree (`ln -s <main-repo>/vendor vendor`); if the link causes path problems
   that cannot be resolved effectively (or the main repo has no `vendor`), remove the link and run
   `composer install` instead. Do not commit `vendor/`.
+- **Keep the link until the end**: the `.githooks/pre-commit` hook runs `vendor/bin/php-cs-fixer` from the worktree
+  root and silently skips formatting when it is missing. So create the `vendor` link before the first commit
+  (even if no tests are run) and keep it for the whole session; only remove it when the whole task, including
+  every commit and merge, is finished. If the main repo's `vendor/bin/php-cs-fixer` is missing, run
+  `composer install` in the main repo first. Never stage `vendor/` (check `git status` before committing).

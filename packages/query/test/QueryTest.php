@@ -515,6 +515,22 @@ class QueryTest extends TestCase
     }
 
     #[Test]
+    public function unionAcceptsClosure(): void
+    {
+        $q = self::createQuery();
+
+        $q->union(fn(Query $q) => $q->select('*')->from('foo')->where('id', '>', 12));
+        $q->unionAll(function (Query $q) {
+            $q->select('*')->from('bar')->where('id', '<', 50);
+        });
+
+        self::assertSqlEquals(
+            '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50)',
+            $q
+        );
+    }
+
+    #[Test]
     public function insertBuildsInsertStatement(): void
     {
         $this->instance->insert('foo', true)

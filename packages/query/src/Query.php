@@ -546,7 +546,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      * Add a query to UNION with the current query.
      * Multiple unions each require separate statements and create an array of unions.
      *
-     * @param  mixed   $query  The Query object or string to union.
+     * @param  mixed   $query  The Query object, Closure(Query): mixed, string or array of them to union.
      * @param  string  $type   The union type, can be `DISTINCT` or `ALL`, default is empty.
      *
      * @return  static  The Query object on success or boolean false on failure.
@@ -563,6 +563,10 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             }
 
             return $this;
+        }
+
+        if ($query instanceof Closure) {
+            $query = $query($q = $this->createSubQuery()) ?? $q;
         }
 
         // Clear any ORDER BY clause in UNION query
