@@ -693,6 +693,109 @@ abstract class Arr
     }
 
     /**
+     * Compare two lists and split them into creating / deleting / keeping groups.
+     *
+     * - creating: items only in `$incoming`.
+     * - deleting: items only in `$existing`.
+     * - keeping: items in both, but the **incoming** data. Use the matching key
+     *   to get the existing one from `$existing` (e.g. with `Arr::keyBy()`).
+     *
+     * Every group preserves the original keys of its source list. If the match values are
+     * duplicated in one list, the latter one overrides the former.
+     *
+     * Match values can be int|string, UnitEnum (BackedEnum uses value, others use name),
+     * Stringable or any other object (compared by identity).
+     *
+     * @template TExisting
+     * @template TIncoming
+     *
+     * @param  iterable<TExisting>                        $existing
+     * @param  iterable<TIncoming>                        $incoming
+     * @param  string|callable(mixed, mixed): mixed|null  $by        Null to match by array key, a string to match
+     *                                                               by field name (supports path), or a callback `fn($item, $key)`.
+     *
+     * @return  array{ creating: array<TIncoming>, deleting: array<TExisting>, keeping: array<TIncoming> }
+     */
+    public static function sync(
+        iterable $existing,
+        iterable $incoming,
+        string|callable|null $by = null,
+    ): array {
+        $existingMap = static::buildSyncMap($existing, $by);
+        $incomingMap = static::buildSyncMap($incoming, $by);
+
+        $creating = [];
+        $keeping = [];
+        $deleting = [];
+
+        foreach ($incomingMap as $matchKey => [$key, $item]) {
+            if (isset($existingMap[$matchKey])) {
+                $keeping[$key] = $item;
+            } else {
+                $creating[$key] = $item;
+            }
+        }
+
+        foreach ($existingMap as $matchKey => [$key, $item]) {
+            if (!isset($incomingMap[$matchKey])) {
+                $deleting[$key] = $item;
+            }
+        }
+
+        return compact('creating', 'deleting', 'keeping');
+    }
+
+    /**
+     * @param  iterable<mixed>       $items
+     * @param  string|callable|null  $by
+     *
+     * @return  array<string, array{ 0: int|string, 1: mixed }>
+     */
+    private static function buildSyncMap(iterable $items, string|callable|null $by): array
+    {
+        $map = [];
+
+        foreach ($items as $key => $item) {
+            $value = match (true) {
+                $by === null => $key,
+                is_callable($by) => $by($item, $key),
+                default => static::getSyncField($item, $by),
+            };
+
+            $map[static::normalizeSyncValue($value)] = [$key, $item];
+        }
+
+        return $map;
+    }
+
+    private static function getSyncField(mixed $item, string $field): mixed
+    {
+        if (!is_array($item) && !is_object($item)) {
+            throw new InvalidArgumentException(
+                sprintf('Unable to get field "%s" from %s.', $field, get_debug_type($item))
+            );
+        }
+
+        return static::get($item, $field);
+    }
+
+    private static function normalizeSyncValue(mixed $value): string
+    {
+        $normalized = match (true) {
+            is_int($value), is_string($value) => $value,
+            $value instanceof \BackedEnum => $value->value,
+            $value instanceof \UnitEnum => $value->name,
+            $value instanceof \Stringable => (string) $value,
+            is_object($value) => 'object#' . spl_object_id($value),
+            default => throw new InvalidArgumentException(
+                sprintf('Sync match value must be int, string or object, %s given.', get_debug_type($value))
+            ),
+        };
+
+        return (string) $normalized;
+    }
+
+    /**
      * To get 2-dimensional array columns without native php array_column()
      *
      * @param  array|object  $src
