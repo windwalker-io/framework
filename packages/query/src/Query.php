@@ -191,6 +191,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     protected ?array $subQueries = [];
 
+    /**
+     * @var  array<int, string>  Explicit aliases of sub queries, keyed by spl_object_id.
+     */
+    protected array $subQueryAliases = [];
+
     protected ?AbstractGrammar $grammar = null;
 
     protected ?Expression $expression = null;
@@ -1166,9 +1171,14 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     private function injectSubQuery(Query $query, mixed $alias = null): void
     {
-        $alias = $alias ?: $query->getAlias() ?: spl_object_hash($query);
+        // Key by object identity, sub queries sharing the same alias must not overwrite each other.
+        $id = spl_object_id($query);
 
-        $this->subQueries[$alias] = $query;
+        $this->subQueries[$id] = $query;
+
+        if (is_string($alias) && $alias !== '') {
+            $this->subQueryAliases[$id] = $alias;
+        }
     }
 
     private function findAndInjectSubQueries(mixed $clause): void
@@ -1717,7 +1727,12 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function __toString(): string
     {
-        return $this->render();
+        // Stringifying (e.g. as a sub query inlined by a parent) only compiles SQL,
+        // bindings are collected and validated once by the top level render().
+        // Resolve placeholder ids in bind order first, keeping the numbering stable.
+        $this->mergeBounded();
+
+        return $this->handleVariadicParams($this->toRawSqlString());
     }
 
     public function render(bool $emulatePrepared = false, ?array &$bounded = null): string
@@ -1740,14 +1755,18 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 }
             }
 
-            // Convert the ValueClause to scalars,
-            // ValueClause objects will set to linked when they were converted to string,
-            // we only keep linked ValueClause and convert them to pure value.
-            // so that we can keep the correct bounded values numbers if you cleared any Query clauses.
+            // Only keep the ValueClause whose placeholder really appears in the final SQL (sub queries are
+            // already inlined), so that cleared clauses won't leave stale values.
+            $used = $this->findUsedPlaceholders($sql);
+
             $bounded = array_filter(
                 $bounded,
-                static fn(mixed $param) => !$param['value'] instanceof ValueClause || $param['value']->isLinked()
+                static fn(mixed $param) => !$param['value'] instanceof ValueClause
+                    || $param['value']->prefix === null
+                    || isset($used[$param['value']->getPlaceholder()])
             );
+
+            $this->assertPlaceholdersBound($used, $bounded);
             $bounded = array_map(
                 function (array $param) {
                     if ($param['value'] instanceof ValueClause) {
@@ -1803,6 +1822,28 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         return $this;
     }
 
+    /**
+     * @return  array<string, true>
+     */
+    private function findUsedPlaceholders(string $sql): array
+    {
+        preg_match_all('/:wqp__\d+/', $sql, $matches);
+
+        return array_fill_keys($matches[0], true);
+    }
+
+    private function assertPlaceholdersBound(array $used, array $bounded): void
+    {
+        $missing = array_diff_key($used, $bounded);
+
+        if ($missing !== []) {
+            throw new \LogicException(
+                'Query has no bound value for placeholder(s): ' . implode(', ', array_keys($missing))
+                . '. A sub query may be missing or its value was unbound.'
+            );
+        }
+    }
+
     public function forPDO(?array &$bounded = null): string
     {
         // Only top level query rendering should create sequence and get merged bounded
@@ -1832,12 +1873,6 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         foreach ($params as $key => $param) {
             if ($param['value'] instanceof ValueClause) {
                 $key = $param['value']->getPlaceholder();
-
-                // Pre-set every ValueClause to unlinked.
-                // They will be auto set to linked later if they are converting to string.
-                // At the top level Query object, will ignore all unlinked ValueClause,
-                // so that can keep the correct bounded values numbers if you cleared any Query clauses.
-                $param['value']->setLinked(false);
             }
             $bounded[$key] = $param;
         }
@@ -1860,7 +1895,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function getSubQuery(string $alias): ?Query
     {
-        return $this->subQueries[$alias] ?? null;
+        foreach ($this->subQueries as $id => $subQuery) {
+            if (($this->subQueryAliases[$id] ?? $subQuery->getAlias()) === $alias) {
+                return $subQuery;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -2042,6 +2083,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'with' => ['recursive'],
             'alias' => [],
             'subQueries' => [],
+            'subQueryAliases' => [],
             'bounded' => [],
             'defaultItemClass' => null,
         ];

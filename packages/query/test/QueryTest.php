@@ -2133,6 +2133,51 @@ SQL
         self::assertSame($supported, str_contains($sql, ' AS NOT MATERIALIZED ('));
     }
 
+    #[Test]
+    public function siblingSubQueriesWithSameAliasKeepTheirBindings(): void
+    {
+        $q = $this->instance
+            ->select('*')
+            ->from('a')
+            ->leftJoin(fn(Query $q) => $q->from('x')->where('x.id', 111), 'j', 'j.id', 'a.id')
+            ->leftJoin(fn(Query $q) => $q->from('y')->where('y.id', 222), 'j', 'j.id', 'a.id');
+
+        $sql = $q->render(false, $bounded);
+
+        self::assertStringNotContainsString(':wqp__', $q->render(true));
+        self::assertEqualsCanonicalizing([111, 222], array_column($bounded, 'value'));
+        self::assertSame(2, preg_match_all('/:wqp__\d+/', $sql));
+    }
+
+    #[Test]
+    public function clearedClausesDropTheirBindingsAndSharedValuesStayStable(): void
+    {
+        $q = $this->instance->select('*')->from('a')->where('a.foo', 'removed');
+        $q->clear('where');
+        $q->where('a.bar', 'kept');
+
+        $q->render(false, $bounded);
+
+        self::assertSame(['kept'], array_column($bounded, 'value'));
+
+        $clone = clone $q;
+        $clone->render(false, $bounded2);
+        $q->render(false, $bounded3);
+
+        self::assertSame(['kept'], array_column($bounded2, 'value'));
+        self::assertSame(['kept'], array_column($bounded3, 'value'));
+    }
+
+    #[Test]
+    public function renderThrowsWhenPlaceholderHasNoBinding(): void
+    {
+        $q = $this->instance->select('*')->from('a')->whereRaw(':wqp__99999 = a.id');
+
+        $this->expectException(\LogicException::class);
+
+        $q->render(false, $bounded);
+    }
+
     public static function createQuery($conn = null): Query
     {
         $connection = $conn ?? (static::$escaper ??= new MockEscaper());
