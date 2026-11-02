@@ -65,6 +65,8 @@ class OutputRules implements RulesInterface
 
     protected $encode = false;
 
+    protected bool $omitDoctype = false;
+
     protected $out;
 
     protected $outputMode;
@@ -170,6 +172,8 @@ class OutputRules implements RulesInterface
             $this->encode = $options['encode_entities'];
         }
 
+        $this->omitDoctype = (bool) ($options['omit_doctype'] ?? false);
+
         $this->outputMode = static::IM_IN_HTML;
         $this->out = $output;
         $this->hasHTML5 = defined('ENT_HTML5');
@@ -207,6 +211,10 @@ class OutputRules implements RulesInterface
 
     protected function doctype()
     {
+        if ($this->omitDoctype) {
+            return;
+        }
+
         $this->wr(static::DOCTYPE);
         $this->nl();
     }

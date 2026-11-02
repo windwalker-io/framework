@@ -218,7 +218,13 @@ class HTML5Factory
         return static::$html5;
     }
 
-    public static function saveHtml(Node $node): string
+    /**
+     * @param  Node                                                                        $node
+     * @param  array{encode_entities?: bool, disable_html_ns?: bool, omit_doctype?: bool}  $options
+     *
+     * @return  string
+     */
+    public static function saveHtml(Node $node, array $options = []): string
     {
         if (class_exists(HTML5::class)) {
             /*
@@ -226,10 +232,14 @@ class HTML5Factory
              * Some scanning software will consider it is a XSS vulnerabilities.
              * Use HTML5 package that can render it to correct `attr="foo &quote; bar"`
              */
-            return static::saveHTML5($node);
+            return static::saveHTML5($node, $options);
         }
 
         if ($node instanceof HTMLDocument) {
+            if ($options['omit_doctype'] ?? false) {
+                $node = $node->documentElement ?? $node;
+            }
+
             return $node->saveHtml($node);
         }
 
@@ -358,6 +368,9 @@ class HTML5Factory
 
             // Prevents the parser from automatically assigning the HTML5 namespace to the DOM document.
             'disable_html_ns' => false,
+
+            // Omit the leading `<!DOCTYPE html>` when serializing a whole document.
+            'omit_doctype' => false,
         ];
     }
 
