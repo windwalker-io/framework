@@ -85,8 +85,8 @@ class OracleQueryExecutionTest extends AbstractDatabaseTestCase
             ->$method(...$args)
             ->count();
 
-        self::assertEquals(1, $count('whereJsonContains', 'params -> foo ->> bar', 'yoo'));
-        self::assertEquals(1, $count('whereJsonNotContains', 'params -> foo ->> bar', 'yoo'));
+        self::assertEquals(1, $count('whereJsonContainsAll', 'params -> foo ->> bar', 'yoo'));
+        self::assertEquals(1, $count('whereJsonNotContainsAll', 'params -> foo ->> bar', 'yoo'));
         self::assertEquals(1, $count('whereJsonLength', 'params -> foo ->> bar', '>', 1));
     }
 

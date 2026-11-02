@@ -177,6 +177,12 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
         return $expr->prepend(qn($column, $query));
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
@@ -198,6 +204,38 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
                 )
                 ->where('value', $value)
         );
+    }
+
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
+        bool $not = false
+    ): Clause {
+        $path = static::compileJsonPath($paths) . '[*]';
+        $elements = static::normalizeJsonContainsElements($value);
+        $single = count($elements) === 1;
+        $exists = [];
+
+        foreach ($elements as $element) {
+            $exists[] = $query->expr(
+                $single && $not ? 'NOT EXISTS()' : 'EXISTS()',
+                $query->createSubQuery()
+                    ->selectRaw(1)
+                    ->from(
+                        raw(
+                            'JSON_TABLE(' . qn($column, $query) . ', ' . $query->valueize($path, true)
+                            . " COLUMNS (\"VALUE\" VARCHAR2(4000) PATH '$'))"
+                        )
+                    )
+                    ->where('value', $element)
+            );
+        }
+
+        return $single
+            ? $exists[0]
+            : $query->clause($not ? 'NOT ()' : '()', $exists, ' AND ');
     }
 
     public function compileJsonLength(Query $query, string $column, array $paths): Clause

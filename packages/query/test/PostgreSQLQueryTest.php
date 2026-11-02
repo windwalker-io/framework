@@ -98,7 +98,7 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params->foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params->foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL
@@ -117,7 +117,7 @@ class PostgreSQLQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonNotContains('params->foo ->> bar', 'yoo');
+            ->whereJsonNotContainsAll('params->foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL

@@ -187,7 +187,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertStringContainsString('JSON_TABLE("A"."PARAMS"', $q->render(true));
     }
@@ -198,7 +198,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
         $q = $this->instance->select();
         $q->from('articles', 'a')
             ->leftJoin('ww_categories', 'c', 'a.category_id', 'c.id')
-            ->whereJsonContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertSqlEquals(
             <<<SQL
@@ -215,7 +215,7 @@ class OracleQueryTest extends QueryTest implements QueryJsonTestInterface
     {
         $q = $this->instance->select();
         $q->from('articles', 'a')
-            ->whereJsonNotContains('params -> foo ->> bar', 'yoo');
+            ->whereJsonNotContainsAll('params -> foo ->> bar', 'yoo');
 
         self::assertStringContainsString('WHERE NOT EXISTS(SELECT 1 FROM JSON_TABLE(', $q->render(true));
     }

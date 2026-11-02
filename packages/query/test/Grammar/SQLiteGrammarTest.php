@@ -35,7 +35,7 @@ class SQLiteGrammarTest extends AbstractGrammarTestCase
         $query = $grammar->createQuery();
 
         try {
-            $grammar->compileJsonContains($query, 'data', ['a'], 'x');
+            $grammar->compileJsonContainsAll($query, 'data', ['a'], 'x');
             self::fail('Expected LogicException');
         } catch (LogicException) {
             self::assertTrue(true);

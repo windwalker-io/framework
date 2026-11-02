@@ -15,6 +15,8 @@ use function Windwalker\Query\qn;
  */
 class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
 {
+    use JsonGrammarTrait;
+
     public function compileMaterializedHint(?bool $materialized): string
     {
         return match ($materialized) {
@@ -118,6 +120,12 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         );
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
@@ -128,6 +136,26 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
         if (!is_json($value)) {
             $value = json_encode((array) $value, JSON_THROW_ON_ERROR);
         }
+
+        return clause(
+            $not ? 'NOT ()' : '()',
+            [
+                $this->compileJsonSelector($query, $column, $paths, false, false),
+                '@>',
+                $query->valueize($value, false),
+            ],
+            ' '
+        );
+    }
+
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
+        bool $not = false
+    ): Clause {
+        $value = static::encodeJsonContainsValue($value);
 
         return clause(
             $not ? 'NOT ()' : '()',

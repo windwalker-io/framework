@@ -847,6 +847,11 @@ trait QueryProxyTrait
      * @return  $this
      *
      * @throws  \JsonException
+     *
+     * @deprecated  Use {@see whereJsonContainsAll()} instead.
+     *               In the next major release, whereJsonContainsAll() will be renamed back to whereJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
      */
     public function whereJsonContains(string $expr, mixed $value): static
     {
@@ -855,6 +860,19 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function whereJsonContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->whereJsonContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see whereJsonNotContainsAll()} instead.
+     *               In the next major release, whereJsonNotContainsAll() will be renamed back to whereJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function whereJsonNotContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->whereJsonNotContains($expr, $value);
@@ -862,6 +880,19 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function whereJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->whereJsonNotContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonContainsAll()} instead.
+     *               In the next major release, havingJsonContainsAll() will be renamed back to havingJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->havingJsonContains($expr, $value);
@@ -869,9 +900,29 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function havingJsonContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->havingJsonContainsAll($expr, $value);
+
+        return $this;
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonNotContainsAll()} instead.
+     *               In the next major release, havingJsonNotContainsAll() will be renamed back to havingJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonNotContains(string $expr, mixed $value): static
     {
         $this->getQueryBuilder()->havingJsonNotContains($expr, $value);
+
+        return $this;
+    }
+
+    public function havingJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $this->getQueryBuilder()->havingJsonNotContainsAll($expr, $value);
 
         return $this;
     }

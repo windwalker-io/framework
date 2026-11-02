@@ -72,6 +72,11 @@ trait JsonConcernTrait
      * @return  $this
      *
      * @throws  \JsonException
+     *
+     * @deprecated  Use {@see whereJsonContainsAll()} instead.
+     *               In the next major release, whereJsonContainsAll() will be renamed back to whereJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
      */
     public function whereJsonContains(string $expr, mixed $value): static
     {
@@ -84,6 +89,23 @@ trait JsonConcernTrait
         );
     }
 
+    public function whereJsonContainsAll(string $expr, mixed $value): static
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->whereRaw(
+            $grammar->compileJsonContainsAll($this, $column, $paths, $value),
+        );
+    }
+
+    /**
+     * @deprecated  Use {@see whereJsonNotContainsAll()} instead.
+     *               In the next major release, whereJsonNotContainsAll() will be renamed back to whereJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function whereJsonNotContains(string $expr, mixed $value): static
     {
         $grammar = $this->getJsonGrammar();
@@ -95,6 +117,23 @@ trait JsonConcernTrait
         );
     }
 
+    public function whereJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->whereRaw(
+            $grammar->compileJsonContainsAll($this, $column, $paths, $value, true),
+        );
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonContainsAll()} instead.
+     *               In the next major release, havingJsonContainsAll() will be renamed back to havingJsonContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonContains(string $expr, mixed $value): static
     {
         $grammar = $this->getJsonGrammar();
@@ -106,6 +145,23 @@ trait JsonConcernTrait
         );
     }
 
+    public function havingJsonContainsAll(string $expr, mixed $value): static
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->havingRaw(
+            $grammar->compileJsonContainsAll($this, $column, $paths, $value),
+        );
+    }
+
+    /**
+     * @deprecated  Use {@see havingJsonNotContainsAll()} instead.
+     *               In the next major release, havingJsonNotContainsAll() will be renamed back to havingJsonNotContains()
+     *               and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function havingJsonNotContains(string $expr, mixed $value): static
     {
         $grammar = $this->getJsonGrammar();
@@ -114,6 +170,17 @@ trait JsonConcernTrait
 
         return $this->havingRaw(
             $grammar->compileJsonContains($this, $column, $paths, $value, true),
+        );
+    }
+
+    public function havingJsonNotContainsAll(string $expr, mixed $value): static
+    {
+        $grammar = $this->getJsonGrammar();
+
+        [$column, $paths] = $this->splitColumnAndPaths($expr);
+
+        return $this->havingRaw(
+            $grammar->compileJsonContainsAll($this, $column, $paths, $value, true),
         );
     }
 

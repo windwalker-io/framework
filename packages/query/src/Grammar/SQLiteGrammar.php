@@ -84,11 +84,27 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
         return $expr;
     }
 
+    /**
+     * @deprecated  Use {@see compileJsonContainsAll()} instead.
+     *               In the next major release, compileJsonContainsAll() will be renamed back
+     *               to compileJsonContains() and the new behavior will be adopted.
+     * @codeCoverageIgnore
+     */
     public function compileJsonContains(
         Query $query,
         string $column,
         array $paths,
         string $value,
+        bool $not = false
+    ): Clause {
+        throw new \LogicException('SQLite does not supports JSON contains now.');
+    }
+
+    public function compileJsonContainsAll(
+        Query $query,
+        string $column,
+        array $paths,
+        mixed $value,
         bool $not = false
     ): Clause {
         throw new \LogicException('SQLite does not supports JSON contains now.');

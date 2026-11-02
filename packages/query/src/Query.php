@@ -1069,6 +1069,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             foreach ($clause as $element) {
                 if ($element instanceof self) {
                     $this->injectSubQuery($element);
+                } elseif ($element instanceof Clause) {
+                    $this->findAndInjectSubQueries($element);
                 }
             }
         }

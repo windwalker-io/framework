@@ -32,14 +32,53 @@ interface JsonQueryInterface
      * @return  $this
      *
      * @throws  \JsonException
+     *
+     * @deprecated  Use {@see whereJsonContainsAll()} instead.
+     *               In the next major release, whereJsonContainsAll() will be renamed back to whereJsonContains()
+     *               and the new behavior will be adopted.
      */
     public function whereJsonContains(string $expr, mixed $value): static;
 
+    /**
+     * Arrays must have all elements contained, other values are treated as a single element.
+     */
+    public function whereJsonContainsAll(string $expr, mixed $value): static;
+
+    /**
+     * @deprecated  Use {@see whereJsonNotContainsAll()} instead.
+     *               In the next major release, whereJsonNotContainsAll() will be renamed back to whereJsonNotContains()
+     *               and the new behavior will be adopted.
+     */
     public function whereJsonNotContains(string $expr, mixed $value): static;
 
+    /**
+     * Arrays must have all elements contained, other values are treated as a single element.
+     */
+    public function whereJsonNotContainsAll(string $expr, mixed $value): static;
+
+    /**
+     * @deprecated  Use {@see havingJsonContainsAll()} instead.
+     *               In the next major release, havingJsonContainsAll() will be renamed back to havingJsonContains()
+     *               and the new behavior will be adopted.
+     */
     public function havingJsonContains(string $expr, mixed $value): static;
 
+    /**
+     * Arrays must have all elements contained, other values are treated as a single element.
+     */
+    public function havingJsonContainsAll(string $expr, mixed $value): static;
+
+    /**
+     * @deprecated  Use {@see havingJsonNotContainsAll()} instead.
+     *               In the next major release, havingJsonNotContainsAll() will be renamed back to havingJsonNotContains()
+     *               and the new behavior will be adopted.
+     */
     public function havingJsonNotContains(string $expr, mixed $value): static;
+
+    /**
+     * Arrays must have all elements contained, other values are treated as a single element.
+     */
+    public function havingJsonNotContainsAll(string $expr, mixed $value): static;
 
     public function selectJsonLength(string $expr, string $as = ''): static;
 
