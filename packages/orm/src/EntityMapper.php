@@ -1075,14 +1075,30 @@ class EntityMapper implements EventAwareInterface
         if ($aiColumn = $metadata->getAutoIncrementColumn()) {
             $aiColumnName = $aiColumn->getName();
 
-            if (!in_array($aiColumnName, $condFields, true)) {
+            $inCond = in_array($aiColumnName, $condFields, true);
+
+            // An empty AI id can never match a row, so it must not be sent (NULL identity breaks most platforms)
+            if (!$inCond || empty($data[$aiColumnName])) {
                 unset($data[$aiColumnName]);
+                $condFields = array_values(array_diff($condFields, [$aiColumnName]));
             }
 
             $returningIdField = $aiColumnName;
         }
 
-        if ($data !== []) {
+        if ($data !== [] && $condFields === []) {
+            // No usable key left (new AI entity), it is a plain insert.
+            $result = $this->getDb()->getWriter()->insertOne(
+                $metadata->getTableName(),
+                $data,
+                $returningIdField,
+                ['incrementField' => false]
+            );
+
+            if ($returningIdField && isset($result[$returningIdField])) {
+                $entity = $this->hydrate([$returningIdField => $result[$returningIdField]], $entity);
+            }
+        } elseif ($data !== []) {
             // @event
 
             $result = $this->getDb()->getWriter()->upsert(

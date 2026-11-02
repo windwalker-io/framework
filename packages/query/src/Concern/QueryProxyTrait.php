@@ -296,6 +296,41 @@ trait QueryProxyTrait
         return $this;
     }
 
+    public function upsert(string $table, bool $incrementField = false): static
+    {
+        $this->getQueryBuilder()->upsert($table, $incrementField);
+
+        return $this;
+    }
+
+    public function onConflict(string|array ...$keys): static
+    {
+        $this->getQueryBuilder()->onConflict(...$keys);
+
+        return $this;
+    }
+
+    public function onConflictUpdateColumns(string ...$columns): static
+    {
+        $this->getQueryBuilder()->onConflictUpdateColumns(...$columns);
+
+        return $this;
+    }
+
+    public function onConflictUpdateValues(string|array $column, mixed $value = null): static
+    {
+        $this->getQueryBuilder()->onConflictUpdateValues($column, $value);
+
+        return $this;
+    }
+
+    public function returning(?string $idField): static
+    {
+        $this->getQueryBuilder()->returning($idField);
+
+        return $this;
+    }
+
     /**
      * @param  string       $table
      * @param  string|null  $alias

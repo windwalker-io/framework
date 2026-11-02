@@ -132,6 +132,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public const string TYPE_INSERT = 'insert';
 
+    public const string TYPE_UPSERT = 'upsert';
+
     public const string TYPE_UPDATE = 'update';
 
     public const string TYPE_DELETE = 'delete';
@@ -181,6 +183,11 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     protected ?Clause $suffix = null;
 
     protected bool $incrementField = false;
+
+    /**
+     * @var  array{keys: string[], update: array<string, ValueClause|null>, returning: string|null}|null
+     */
+    protected ?array $upsert = null;
 
     protected ?array $subQueries = [];
 
@@ -852,6 +859,115 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $this->type = static::TYPE_INSERT;
         $this->insert = $this->clause('INSERT INTO', $this->as($table, false));
         $this->incrementField = $incrementField;
+
+        return $this;
+    }
+
+    /**
+     * Insert a row, or update it when a conflict occurs.
+     *
+     * Use set() or columns() + values() to provide the row data, and onConflict() / onConflictUpdateColumns() / onConflictUpdateValues()
+     * to define how conflicts are handled.
+     *
+     * @param  string  $table
+     * @param  bool    $incrementField
+     *
+     * @return  static
+     */
+    public function upsert(string $table, bool $incrementField = false): static
+    {
+        $this->type = static::TYPE_UPSERT;
+        $this->insert = $this->clause('INSERT INTO', $this->as($table, false));
+        $this->incrementField = $incrementField;
+        $this->upsert = ['keys' => [], 'update' => [], 'returning' => null];
+
+        return $this;
+    }
+
+    /**
+     * Add conflict target columns. Can be called multiple times, MySQL ignores the keys.
+     *
+     * @param  string|array  ...$keys
+     *
+     * @return  static
+     */
+    public function onConflict(string|array ...$keys): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        foreach (Arr::flatten($keys) as $key) {
+            if (!in_array($key, $this->upsert['keys'], true)) {
+                $this->upsert['keys'][] = $key;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update the given columns with the inserted values when a conflict occurs. Can be called multiple times.
+     *
+     * If neither this nor onConflictUpdateValues() is called, all inserted columns except the conflict keys
+     * will be updated.
+     *
+     * @param  string  ...$columns
+     *
+     * @return  static
+     */
+    public function onConflictUpdateColumns(string ...$columns): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        foreach ($columns as $column) {
+            $this->upsert['update'][$column] = null;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Update columns with custom values when a conflict occurs. Can be called multiple times.
+     *
+     * - `onConflictUpdateValues('count', raw('count + 1'))`
+     * - `onConflictUpdateValues(['count' => raw('count + 1'), 'state' => 1])`
+     *
+     * @param  string|array  $column  Column name or a `[column => value]` map.
+     * @param  mixed         $value
+     *
+     * @return  static
+     */
+    public function onConflictUpdateValues(string|array $column, mixed $value = null): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+
+        if (is_array($column)) {
+            foreach ($column as $col => $val) {
+                $this->onConflictUpdateValues((string) $col, $val);
+            }
+
+            return $this;
+        }
+
+        if ($value instanceof Closure) {
+            $value($value = $this->createSubQuery());
+        }
+
+        $this->upsert['update'][$column] = $this->castWriteValue($value);
+
+        return $this;
+    }
+
+    /**
+     * Set the ID column to return after upserting.
+     *
+     * @param  string|null  $idField
+     *
+     * @return  static
+     */
+    public function returning(?string $idField): static
+    {
+        $this->upsert ??= ['keys' => [], 'update' => [], 'returning' => null];
+        $this->upsert['returning'] = $idField;
 
         return $this;
     }
@@ -1617,6 +1733,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         $sql = $this->handleVariadicParams($sql);
 
         if ($topLevel) {
+            // Values bound while compiling (e.g. the upsert grammar) are not in the merged bounded yet.
+            foreach ($this->getBounded() as $param) {
+                if ($param['value'] instanceof ValueClause) {
+                    $bounded[$param['value']->getPlaceholder()] ??= $param;
+                }
+            }
+
             // Convert the ValueClause to scalars,
             // ValueClause objects will set to linked when they were converted to string,
             // we only keep linked ValueClause and convert them to pure value.
@@ -1900,6 +2023,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             'delete' => ['type'],
             'update' => ['type'],
             'insert' => ['type', 'incrementField'],
+            'upsert' => ['type', 'insert', 'incrementField'],
             'sql' => ['type'],
             'from' => [],
             'join' => [],

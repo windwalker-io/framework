@@ -278,16 +278,11 @@ class WriterManager
             throw new RuntimeException('Upsert is only supported in SQL Server 2008 (10) and later versions.');
         }
 
-        $query->sql(
-            $query->getGrammar()->compileUpsert(
-                $query,
-                $table,
-                $data,
-                $keys,
-                $updateFields,
-                $returningIdField
-            )
-        );
+        $query->upsert($table, $returningIdField !== null && in_array($returningIdField, $keys, true))
+            ->set($data)
+            ->onConflict($keys)
+            ->onConflictUpdateColumns(...array_values($updateFields))
+            ->returning($returningIdField);
 
         $statement = $query->execute();
 

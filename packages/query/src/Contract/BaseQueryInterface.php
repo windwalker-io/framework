@@ -195,6 +195,16 @@ interface BaseQueryInterface
      */
     public function insert(string $table, bool $incrementField = false): static;
 
+    public function upsert(string $table, bool $incrementField = false): static;
+
+    public function onConflict(string|array ...$keys): static;
+
+    public function onConflictUpdateColumns(string ...$columns): static;
+
+    public function onConflictUpdateValues(string|array $column, mixed $value = null): static;
+
+    public function returning(?string $idField): static;
+
     /**
      * @param  string       $table
      * @param  string|null  $alias

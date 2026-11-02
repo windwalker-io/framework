@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
-use InvalidArgumentException;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -87,39 +86,23 @@ class OracleGrammar extends BaseGrammar implements JsonGrammarInterface
     /**
      * Oracle MERGE cannot return the ID, so $returningIdField is ignored.
      */
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $srcOn = $query->clause('()', [], ' AND ');
-
-        foreach ($keys as $key) {
-            $srcOn->append($query->quoteName($key) . " = :key_$key");
-            $query->bind(
-                "key_$key",
-                $data[$key]
-                ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-            );
-        }
-
+        $srcOn = $this->compileUpsertMergeOn($query, $keys, $data);
         $updateSet = $query->clause('', [], ',');
 
         // Oracle forbids updating columns referenced in the ON clause.
-        foreach (array_diff($updateFields, $keys) as $k) {
-            $v = $data[$k];
-
-            if ($v instanceof RawWrapper) {
-                $updateSet->append($query->quoteName($k) . ' = ' . $v());
-            } else {
-                $query->bind('update_set_' . $k, $v);
-                $updateSet->append($query->quoteName($k) . " = :update_set_$k");
+        foreach ($update as $key => $value) {
+            if (!in_array($key, $keys, true)) {
+                $updateSet->append("$key = " . ($value ?? $this->reuseUpsertValue($query, $data[$key])));
             }
         }
 

@@ -37,29 +37,25 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
      */
     public static string $nullDate = '1970-01-01 00:00:00';
 
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $returning,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $conflictKeys = $query->clause('()', $query->qnMultiple($keys), ',');
+        $conflictKeys = $query->clause('()', $keys, ',');
         $updateSet = $query->clause('', [], ',');
 
-        foreach ($query->qnMultiple($updateFields) as $key) {
-            $updateSet->append("$key = EXCLUDED.$key");
+        foreach ($update as $key => $value) {
+            $updateSet->append("$key = " . ($value ?? "EXCLUDED.$key"));
         }
 
-        $returning = '';
-
-        if ($returningIdField) {
-            $returning = 'RETURNING ' . $query->quoteName($returningIdField);
-        }
+        $returning = $returning ? "RETURNING $returning" : '';
 
         return <<<SQL
         INSERT INTO $table $columns

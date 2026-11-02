@@ -22,7 +22,7 @@ class SQLiteGrammarTest extends AbstractGrammarTestCase
         [$sql] = self::compileUpsert(['id' => 1, 'title' => 'A'], ['id'], ['title'], 'id');
 
         self::assertSame(
-            'INSERT INTO `foo` (`id`,`title`) VALUES (:id,:title) '
+            'INSERT INTO `foo` (`id`,`title`) VALUES (:p1,:p2) '
             . 'ON CONFLICT (`id`) DO UPDATE SET `title` = excluded.`title` RETURNING `id`',
             $sql
         );

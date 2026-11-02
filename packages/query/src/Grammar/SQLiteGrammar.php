@@ -42,29 +42,25 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
         return 'RANDOM()';
     }
 
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $returning,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $returning = '';
-
-        if ($returningIdField) {
-            $returning = 'RETURNING ' . $query->quoteName($returningIdField);
-        }
-
-        $conflictKeys = $query->clause('()', $query->qnMultiple($keys), ',');
+        $conflictKeys = $query->clause('()', $keys, ',');
         $setActions = $query->clause('', [], ',');
 
-        foreach ($query->qnMultiple($updateFields) as $key) {
-            $setActions->append("$key = excluded.$key");
+        foreach ($update as $key => $value) {
+            $setActions->append("$key = " . ($value ?? "excluded.$key"));
         }
+
+        $returning = $returning ? "RETURNING $returning" : '';
 
         return "INSERT INTO $table $columns
                 VALUES $values

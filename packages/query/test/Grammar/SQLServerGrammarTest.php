@@ -28,14 +28,13 @@ class SQLServerGrammarTest extends AbstractGrammarTestCase
         );
 
         self::assertSame(
-            'MERGE INTO [foo] WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ([id] = :key_id) '
-            . 'WHEN NOT MATCHED THEN INSERT ([id],[title],[created]) VALUES (:id,:title,GETDATE()) '
-            . 'WHEN MATCHED THEN UPDATE SET [title] = :update_set_title,[created]=GETDATE() '
+            'MERGE INTO [foo] WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON ([id] = :p1) '
+            . 'WHEN NOT MATCHED THEN INSERT ([id],[title],[created]) VALUES (:p2,:p3,GETDATE()) '
+            . 'WHEN MATCHED THEN UPDATE SET [title] = :p4,[created] = GETDATE() '
             . 'OUTPUT INSERTED.[id];',
             $sql
         );
-        self::assertArrayHasKey('key_id', $query->getBounded());
-        self::assertArrayHasKey('update_set_title', $query->getBounded());
+        self::assertCount(4, $query->getBounded());
     }
 
     #[Test]

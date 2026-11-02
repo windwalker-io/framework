@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Windwalker\Query\Grammar;
 
-use InvalidArgumentException;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Wrapper\RawWrapper;
@@ -40,54 +39,40 @@ class SQLServerGrammar extends AbstractGrammar implements JsonGrammarInterface
      */
     public static string $nullDate = '1900-01-01 00:00:00';
 
-    public function compileUpsert(
-        Query $query,
-        string $table,
-        array $data,
-        array $keys,
-        array $updateFields,
-        ?string $returningIdField = null,
-    ): string {
-        $table = (string) $query->quoteName($table);
+    public function compileUpsert(Query $query): string
+    {
+        [
+            'table' => $table,
+            'data' => $data,
+            'keys' => $keys,
+            'update' => $update,
+            'returning' => $returning,
+        ] = $this->resolveUpsert($query);
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
-        $srcOn = $query->clause('()', [], ' AND ');
-
-        foreach ($keys as $key) {
-            $srcOn->append($query->quoteName($key) . " = :key_$key");
-            $query->bind(
-                "key_$key",
-                $data[$key]
-                ?? throw new InvalidArgumentException("Key field: $key not exists in data.")
-            );
-        }
-
+        $srcOn = $this->compileUpsertMergeOn($query, $keys, $data);
         $updateSet = $query->clause('', [], ',');
 
-        foreach ($updateFields as $k) {
-            $v = $data[$k];
-
-            if ($v instanceof RawWrapper) {
-                $updateSet->append($query->quoteName($k) . '=' . $v());
-            } else {
-                $query->bind('update_set_' . $k, $v);
-                $updateSet->append($query->quoteName($k) . " = :update_set_$k");
-            }
+        foreach ($update as $key => $value) {
+            $updateSet->append("$key = " . ($value ?? $this->reuseUpsertValue($query, $data[$key])));
         }
 
-        $output = '';
-
-        if ($returningIdField) {
-            $output = 'OUTPUT INSERTED.' . $query->quoteName($returningIdField);
-        }
+        $output = $returning ? "OUTPUT INSERTED.$returning" : '';
 
         // MERGE is only available since SQL Server 2008 and must be terminated by semicolon.
         // It also requires HOLDLOCK to avoid upsert race conditions.
-        return "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
+        $merge = "MERGE INTO $table WITH (HOLDLOCK) USING (SELECT 1 AS dummy) AS src ON $srcOn
                     WHEN NOT MATCHED THEN INSERT $columns
                     VALUES $values
                     WHEN MATCHED THEN UPDATE SET $updateSet
                     $output;";
+
+        // Explicit identity values require IDENTITY_INSERT, even if the matched branch is taken.
+        if ($query->getIncrementField()) {
+            return "SET IDENTITY_INSERT $table ON; $merge SET IDENTITY_INSERT $table OFF;";
+        }
+
+        return $merge;
     }
 
     public function compileInsert(Query $query): string

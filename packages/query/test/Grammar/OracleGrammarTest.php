@@ -37,12 +37,12 @@ class OracleGrammarTest extends AbstractGrammarTestCase
         [$sql, $query] = self::compileUpsert(['id' => 1, 'title' => 'A'], ['id'], ['title']);
 
         self::assertSame(
-            'MERGE INTO "FOO" USING DUAL ON ("ID" = :key_id) '
-            . 'WHEN NOT MATCHED THEN INSERT ("ID","TITLE") VALUES (:id,:title) '
-            . 'WHEN MATCHED THEN UPDATE SET "TITLE" = :update_set_title',
+            'MERGE INTO "FOO" USING DUAL ON ("ID" = :p1) '
+            . 'WHEN NOT MATCHED THEN INSERT ("ID","TITLE") VALUES (:p2,:p3) '
+            . 'WHEN MATCHED THEN UPDATE SET "TITLE" = :p4',
             $sql
         );
-        self::assertSame('A', $query->getBounded()['update_set_title']['value']);
+        self::assertCount(4, $query->getBounded());
     }
 
     #[Test]
