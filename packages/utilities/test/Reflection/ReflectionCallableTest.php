@@ -18,7 +18,7 @@ class ReflectionCallableTest extends TestCase
     #[DataProvider('callableProvider')]
     public function constructorDetectsCallableType(mixed $callable, int $type): void
     {
-        self::assertSame($type, (new ReflectionCallable($callable))->getType());
+        self::assertSame($type, new ReflectionCallable($callable)->getType());
     }
 
     public static function callableProvider(): array
@@ -46,7 +46,7 @@ class ReflectionCallableTest extends TestCase
     #[DataProvider('closureProvider')]
     public function getClosureReturnsWorkingClosure(mixed $callable, array $args, mixed $expected): void
     {
-        $closure = (new ReflectionCallable($callable))->getClosure();
+        $closure = new ReflectionCallable($callable)->getClosure();
 
         self::assertInstanceOf(\Closure::class, $closure);
         self::assertSame($expected, $closure(...$args));
@@ -73,25 +73,25 @@ class ReflectionCallableTest extends TestCase
     {
         $closure = fn() => 1;
 
-        self::assertSame($closure, (new ReflectionCallable($closure))->getClosure());
+        self::assertSame($closure, new ReflectionCallable($closure)->getClosure());
     }
 
     #[Test]
     public function getReflectorReturnsFunctionReflectionForFunctionsAndClosures(): void
     {
-        self::assertSame('strtoupper', (new ReflectionCallable('strtoupper'))->getReflector()->getName());
-        self::assertInstanceOf(ReflectionFunction::class, (new ReflectionCallable(fn() => 1))->getReflector());
+        self::assertSame('strtoupper', new ReflectionCallable('strtoupper')->getReflector()->getName());
+        self::assertInstanceOf(ReflectionFunction::class, new ReflectionCallable(fn() => 1)->getReflector());
     }
 
     #[Test]
     public function getReflectorReturnsMethodReflectionForMethods(): void
     {
-        $ref = (new ReflectionCallable([new StubReflectionCallable(), 'add']))->getReflector();
+        $ref = new ReflectionCallable([new StubReflectionCallable(), 'add'])->getReflector();
 
         self::assertInstanceOf(ReflectionMethod::class, $ref);
         self::assertSame('add', $ref->getName());
 
-        $ref = (new ReflectionCallable(StubReflectionCallable::class . '::twice'))->getReflector();
+        $ref = new ReflectionCallable(StubReflectionCallable::class . '::twice')->getReflector();
 
         self::assertInstanceOf(ReflectionMethod::class, $ref);
         self::assertSame('twice', $ref->getName());
@@ -100,7 +100,7 @@ class ReflectionCallableTest extends TestCase
     #[Test]
     public function getReflectorWrapsMagicMethodsWithFunctionReflection(): void
     {
-        $ref = (new ReflectionCallable([new StubReflectionCallable(), 'magic']))->getReflector();
+        $ref = new ReflectionCallable([new StubReflectionCallable(), 'magic'])->getReflector();
 
         self::assertInstanceOf(ReflectionFunction::class, $ref);
     }
@@ -122,12 +122,12 @@ class ReflectionCallableTest extends TestCase
     {
         $object = new StubReflectionCallable();
 
-        self::assertSame($object, (new ReflectionCallable([$object, 'add']))->getObjectOrClass());
+        self::assertSame($object, new ReflectionCallable([$object, 'add'])->getObjectOrClass());
         self::assertSame(
             StubReflectionCallable::class,
-            (new ReflectionCallable([StubReflectionCallable::class, 'twice']))->getObjectOrClass()
+            new ReflectionCallable([StubReflectionCallable::class, 'twice'])->getObjectOrClass()
         );
-        self::assertNull((new ReflectionCallable('strtoupper'))->getObjectOrClass());
+        self::assertNull(new ReflectionCallable('strtoupper')->getObjectOrClass());
     }
 }
 

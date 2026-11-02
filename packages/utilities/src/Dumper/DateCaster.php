@@ -17,7 +17,7 @@ class DateCaster
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $location = $d->getTimezone()->getLocation();
-        $fromNow = (new \DateTime())->diff($d);
+        $fromNow = new \DateTime()->diff($d);
 
         $title = $d->format(\DateTimeInterface::RFC3339_EXTENDED);
         $dst = $location ? ($d->format('I') ? 'On' : 'Off') : '';

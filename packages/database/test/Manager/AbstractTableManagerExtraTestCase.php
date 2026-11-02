@@ -175,13 +175,13 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
         $platform = self::$db->getPlatform();
 
         $expr = (string) $platform->getColumnExpression(
-            (new Column('name', 'varchar'))->length(100)->collation(static::$collation)
+            new Column('name', 'varchar')->length(100)->collation(static::$collation)
         );
 
         self::assertStringContainsString('COLLATE', $expr);
         self::assertStringContainsString(static::$collation, $expr);
 
-        $expr = (string) $platform->getColumnExpression((new Column('name', 'varchar'))->length(100));
+        $expr = (string) $platform->getColumnExpression(new Column('name', 'varchar')->length(100));
 
         self::assertStringNotContainsString('COLLATE', $expr);
     }
@@ -190,7 +190,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
     public function createAndModifyColumnWithCollation(): void
     {
         $this->table->addColumn(
-            (new Column('name', 'varchar'))->length(100)->collation(static::$collation)
+            new Column('name', 'varchar')->length(100)->collation(static::$collation)
         );
         $this->table->reset();
 
@@ -201,7 +201,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
         }
 
         $this->table->modifyColumn(
-            (new Column('title', 'varchar'))->length(100)->collation(static::$collation)
+            new Column('title', 'varchar')->length(100)->collation(static::$collation)
         );
         $this->table->reset();
 
@@ -295,7 +295,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
         $platform = self::$db->getPlatform();
 
         $expr = (string) $platform->getColumnExpression(
-            (new Column('double_price', 'integer'))->stored('price * 2')
+            new Column('double_price', 'integer')->stored('price * 2')
         );
 
         self::assertStringContainsString('AS (price * 2)', $expr);
@@ -331,7 +331,7 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
     #[Test]
     public function functionalIndex(): void
     {
-        $index = (new Index('idx_ww_lower_title'))->expression('LOWER(title)');
+        $index = new Index('idx_ww_lower_title')->expression('LOWER(title)');
 
         if (!static::$supportsFunctionalIndex) {
             $this->expectException(LogicException::class);

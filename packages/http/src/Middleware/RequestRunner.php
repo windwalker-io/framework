@@ -18,6 +18,6 @@ class RequestRunner extends AbstractRequestHandler
     {
         reset($this->queue);
 
-        return (new RequestHandler($this->queue, $this->resolver))->handle($request);
+        return new RequestHandler($this->queue, $this->resolver)->handle($request);
     }
 }

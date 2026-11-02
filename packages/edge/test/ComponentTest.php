@@ -37,7 +37,7 @@ class ComponentTest extends TestCase
                     __DIR__ . '/tmpl',
                 ]
             ),
-            (new EdgeFileCache(__DIR__ . '/../tmp'))->setDebug(true)
+            new EdgeFileCache(__DIR__ . '/../tmp')->setDebug(true)
         );
 
         $this->instance->addExtension($ext = new ComponentExtension($this->instance));

@@ -61,7 +61,7 @@ class UuidWrapperTest extends TestCase
 
         $uuid = Uuid::fromString(self::UUID);
 
-        self::assertSame($uuid, (new UuidWrapper($uuid))->getRaw());
+        self::assertSame($uuid, new UuidWrapper($uuid)->getRaw());
     }
 
     #[Test]

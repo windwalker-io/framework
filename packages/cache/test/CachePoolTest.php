@@ -150,7 +150,7 @@ class CachePoolTest extends TestCase
             ->with('flip')
             ->willReturn(null);
 
-        $pool = (new CachePool())->withStorage($storageMock);
+        $pool = new CachePool()->withStorage($storageMock);
         $item = $pool->getItem('flip');
 
         self::assertFalse($item->isHit());

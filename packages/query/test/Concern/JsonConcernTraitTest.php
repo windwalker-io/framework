@@ -24,7 +24,7 @@ class JsonConcernTraitTest extends TestCase
 
     private static function query(AbstractGrammar $grammar): Query
     {
-        return (new Query(self::$escaper ??= new MockEscaper(), $grammar))->select('*')->from('t');
+        return new Query(self::$escaper ??= new MockEscaper(), $grammar)->select('*')->from('t');
     }
 
     #[Test]

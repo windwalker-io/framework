@@ -31,7 +31,7 @@ abstract class AbstractGrammarTestCase extends TestCase
     {
         $class = static::grammarClass();
 
-        return (new $class())->setEscaper(new Escaper(self::$conn ??= new MockEscaper()));
+        return new $class()->setEscaper(new Escaper(self::$conn ??= new MockEscaper()));
     }
 
     protected static function createQuery(): Query

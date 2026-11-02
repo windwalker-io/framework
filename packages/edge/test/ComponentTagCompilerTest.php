@@ -173,7 +173,7 @@ class ComponentTagCompilerTest extends TestCase
         $component = new DynamicComponent();
         $component->edge = $edge;
 
-        $compiler = (new ReflectionMethod($component, 'createCompiler'))->invoke($component);
+        $compiler = new ReflectionMethod($component, 'createCompiler')->invoke($component);
 
         self::assertInstanceOf(ComponentTagCompiler::class, $compiler);
     }

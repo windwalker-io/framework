@@ -27,7 +27,7 @@ class RulesBehaviorTest extends TestCase
     #[DataProvider('clampProvider')]
     public function clampKeepsNumericValueWithinBounds(mixed $value, int|float|null $min, int|float|null $max, mixed $expected): void
     {
-        self::assertSame($expected, (new Clamp($min, $max))->filter($value));
+        self::assertSame($expected, new Clamp($min, $max)->filter($value));
     }
 
     public static function clampProvider(): array
@@ -44,14 +44,14 @@ class RulesBehaviorTest extends TestCase
     #[Test]
     public function lengthTruncatesByBytesWhenUtf8IsDisabled(): void
     {
-        self::assertSame(3, strlen((new Length(3, false))->filter('中文')));
-        self::assertSame('中文', (new Length(2))->filter('中文字'));
+        self::assertSame(3, strlen(new Length(3, false)->filter('中文')));
+        self::assertSame('中文', new Length(2)->filter('中文字'));
     }
 
     #[Test]
     public function lengthReturnsStringUntouchedWhenShortEnough(): void
     {
-        self::assertSame('123', (new Length(5))->filter(123));
+        self::assertSame('123', new Length(5)->filter(123));
     }
 
     #[Test]

@@ -78,7 +78,7 @@ class BasicSerializersTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('can not handle an array or non-stringable object.');
 
-        (new StringSerializer())->serialize(['not' => 'stringable']);
+        new StringSerializer()->serialize(['not' => 'stringable']);
     }
 
     #[Test]

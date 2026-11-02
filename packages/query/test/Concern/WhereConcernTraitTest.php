@@ -21,7 +21,7 @@ class WhereConcernTraitTest extends TestCase
 
     private static function createQuery(): Query
     {
-        return (new Query(self::$escaper ??= new MockEscaper(), new BaseGrammar()))
+        return new Query(self::$escaper ??= new MockEscaper(), new BaseGrammar())
             ->select('*')
             ->from('a');
     }

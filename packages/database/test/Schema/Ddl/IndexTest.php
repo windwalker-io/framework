@@ -16,7 +16,7 @@ class IndexTest extends TestCase
     #[Test]
     public function expressionAddsFunctionalKeyPart(): void
     {
-        $index = (new Index('idx_lower'))
+        $index = new Index('idx_lower')
             ->columns(['title'])
             ->expression('LOWER(email)');
 

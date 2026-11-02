@@ -26,7 +26,7 @@ class HttpUploadStringFileTest extends TestCase
     #[Test]
     public function toCurlFileCarriesDataMimeAndPostname(): void
     {
-        $curl = (new HttpUploadStringFile('abc', 'text/plain', 'a.txt'))->toCurlFile();
+        $curl = new HttpUploadStringFile('abc', 'text/plain', 'a.txt')->toCurlFile();
 
         self::assertInstanceOf(CURLStringFile::class, $curl);
         self::assertSame('abc', $curl->data);
@@ -37,7 +37,7 @@ class HttpUploadStringFileTest extends TestCase
     #[Test]
     public function toCurlFileConvertsEmptyMetadataToDefaults(): void
     {
-        $curl = (new HttpUploadStringFile('abc', '', ''))->toCurlFile();
+        $curl = new HttpUploadStringFile('abc', '', '')->toCurlFile();
 
         self::assertSame('application/octet-stream', $curl->mime);
         self::assertSame('', $curl->postname);

@@ -122,7 +122,7 @@ class OneToManyTest extends AbstractORMTestCase
 
         $sakuras->detach($sakuras->all()[0]);
 
-        $sakura = (new StubSakura())
+        $sakura = new StubSakura()
             ->setTitle('New Sakura 3')
             ->setNo('SC0003')
             ->setState(1);
@@ -158,7 +158,7 @@ class OneToManyTest extends AbstractORMTestCase
         $sakurasCollection = $location->getSakuras();
         $sakuras = $sakurasCollection->all(StubSakura::class);
 
-        $sakuras[0] = (new StubSakura())
+        $sakuras[0] = new StubSakura()
             ->setTitle('Create Sakura 2')
             ->setNo('SC0004')
             ->setState(1);
@@ -194,7 +194,7 @@ class OneToManyTest extends AbstractORMTestCase
 
         $sakuras->detach($sakuras->all()[0]);
 
-        $sakura = (new StubSakura())
+        $sakura = new StubSakura()
             ->setTitle('New Sakura 4')
             ->setNo('SC0005')
             ->setState(1);
@@ -239,7 +239,7 @@ class OneToManyTest extends AbstractORMTestCase
         $sakurasCollection = $location->getSakuras();
         $sakuras = $sakurasCollection->all();
 
-        $sakuras[0] = (new StubSakura())
+        $sakuras[0] = new StubSakura()
             ->setTitle('Create Sakura 2')
             ->setNo('SC0006')
             ->setState(1);

@@ -25,7 +25,7 @@ class FilterFactoryExtraTest extends TestCase
         $this->expectException(OutOfRangeException::class);
         $this->expectExceptionMessageIs('Filter type: nope not found.');
 
-        (new FilterFactory())->getFactory('nope');
+        new FilterFactory()->getFactory('nope');
     }
 
     #[Test]
@@ -48,7 +48,7 @@ class FilterFactoryExtraTest extends TestCase
     #[Test]
     public function addFilterCallbackRegistersCallbackBackedFilter(): void
     {
-        $factory = (new FilterFactory([]))->addFilterCallback('shout', fn($v) => strtoupper($v));
+        $factory = new FilterFactory([])->addFilterCallback('shout', fn($v) => strtoupper($v));
 
         self::assertSame('HI', $factory->createFromSyntax('shout')->filter('hi'));
     }
@@ -76,7 +76,7 @@ class FilterFactoryExtraTest extends TestCase
     #[Test]
     public function createChainFromSyntaxSplitsPipesAndRunsFiltersInOrder(): void
     {
-        $chain = (new FilterFactory())->createChainFromSyntax('alnum|length(max:3)|func(strtoupper)');
+        $chain = new FilterFactory()->createChainFromSyntax('alnum|length(max:3)|func(strtoupper)');
 
         self::assertInstanceOf(ChainFilter::class, $chain);
         self::assertSame('ABC', $chain->filter('a-b-c-d'));
@@ -85,7 +85,7 @@ class FilterFactoryExtraTest extends TestCase
     #[Test]
     public function createChainFromSyntaxAcceptsArrayOfCallablesAndClasses(): void
     {
-        $chain = (new FilterFactory())->createChainFromSyntax([Alnum::class, fn($v) => $v . '!']);
+        $chain = new FilterFactory()->createChainFromSyntax([Alnum::class, fn($v) => $v . '!']);
 
         self::assertSame('ab!', $chain->filter('a-b'));
     }
@@ -95,7 +95,7 @@ class FilterFactoryExtraTest extends TestCase
     {
         $options = [];
 
-        (new FilterFactory())->createFromSyntax('length(max:5, utf8)', $options);
+        new FilterFactory()->createFromSyntax('length(max:5, utf8)', $options);
 
         self::assertSame(['max' => '5', 'utf8' => true], $options);
     }
@@ -106,7 +106,7 @@ class FilterFactoryExtraTest extends TestCase
     {
         $options = [];
 
-        (new FilterFactory())->createFromSyntax($syntax, $options);
+        new FilterFactory()->createFromSyntax($syntax, $options);
 
         self::assertSame($expected, $options);
     }
@@ -127,7 +127,7 @@ class FilterFactoryExtraTest extends TestCase
     #[Test]
     public function createChainFromSyntaxKeepsPipesInsideQuotes(): void
     {
-        $chain = (new FilterFactory())->createChainFromSyntax('regex(regex:"/[a|b]+/")|func(strtoupper)');
+        $chain = new FilterFactory()->createChainFromSyntax('regex(regex:"/[a|b]+/")|func(strtoupper)');
 
         self::assertSame('AB|A', $chain->filter('a-b|c-a'));
     }

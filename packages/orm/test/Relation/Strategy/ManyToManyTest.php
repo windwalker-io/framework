@@ -168,7 +168,7 @@ class ManyToManyTest extends AbstractORMTestCase
         $sakurasCollection = $rose->getSakuras();
         $sakuras = $sakurasCollection->all(StubSakura::class);
 
-        $sakuras[0] = (new StubSakura())
+        $sakuras[0] = new StubSakura()
             ->setTitle('Create Sakura 2')
             ->setNo('S10002')
             ->setState(1);
@@ -285,7 +285,7 @@ class ManyToManyTest extends AbstractORMTestCase
         $sakurasCollection = $rose->getSakuras();
         $sakuras = $sakurasCollection->all(StubSakura::class);
 
-        $sakuras[0] = (new StubSakura())
+        $sakuras[0] = new StubSakura()
             ->setTitle('Create Sakura 3')
             ->setNo('S10003')
             ->setState(1);

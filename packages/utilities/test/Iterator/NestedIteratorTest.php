@@ -645,7 +645,7 @@ class NestedIteratorTest extends TestCase
     #[DataProvider('filterFlagsProvider')]
     public function filterPassesArgumentsAccordingToFlags(int $flags, callable $callback, array $expected): void
     {
-        $iter = (new NestedIterator(['a' => 1, 'b' => 2, 'c' => 3]))->filter($callback, $flags);
+        $iter = new NestedIterator(['a' => 1, 'b' => 2, 'c' => 3])->filter($callback, $flags);
 
         self::assertSame($expected, iterator_to_array($iter));
     }
@@ -665,7 +665,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function concatReindexesNumericKeysAndKeepsStringKeys(): void
     {
-        $iter = (new NestedIterator(['a', 'x' => 'b']))->concat(['c', 'y' => 'd']);
+        $iter = new NestedIterator(['a', 'x' => 'b'])->concat(['c', 'y' => 'd']);
 
         self::assertSame([0 => 'a', 'x' => 'b', 1 => 'c', 'y' => 'd'], iterator_to_array($iter));
     }
@@ -676,7 +676,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function chainIsAliasOfConcat(): void
     {
-        $iter = (new NestedIterator([1, 2]))->chain([3], [4]);
+        $iter = new NestedIterator([1, 2])->chain([3], [4]);
 
         self::assertSame([1, 2, 3, 4], iterator_to_array($iter));
     }
@@ -687,7 +687,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function sliceKeepsStringKeysAndReindexesNumericKeys(): void
     {
-        $iter = (new NestedIterator([10, 'a' => 20, 30, 40]))->slice(1, 2);
+        $iter = new NestedIterator([10, 'a' => 20, 30, 40])->slice(1, 2);
 
         self::assertSame(['a' => 20, 0 => 30], iterator_to_array($iter));
     }
@@ -698,7 +698,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function sliceWithZeroLengthYieldsNothing(): void
     {
-        $iter = (new NestedIterator([1, 2, 3]))->slice(0, 0);
+        $iter = new NestedIterator([1, 2, 3])->slice(0, 0);
 
         self::assertSame([], iterator_to_array($iter));
     }
@@ -710,7 +710,7 @@ class NestedIteratorTest extends TestCase
     #[DataProvider('invalidSliceProvider')]
     public function sliceRejectsNegativeOffsetOrLength(int $start, ?int $length, string $message): void
     {
-        $iter = (new NestedIterator([1, 2, 3]))->slice($start, $length);
+        $iter = new NestedIterator([1, 2, 3])->slice($start, $length);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains($message);
@@ -744,7 +744,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function parallelResolvesCallableIteratorsAndZipsValues(): void
     {
-        $iter = (new NestedIterator([1, 2]))->parallel([[10, 20], static fn() => new \ArrayIterator([100, 200])]);
+        $iter = new NestedIterator([1, 2])->parallel([[10, 20], static fn() => new \ArrayIterator([100, 200])]);
 
         self::assertSame([[1, 10, 100], [2, 20, 200]], iterator_to_array($iter, false));
     }
@@ -755,7 +755,7 @@ class NestedIteratorTest extends TestCase
     #[Test]
     public function parallelRejectsNonTraversableCallableResult(): void
     {
-        $iter = (new NestedIterator([1, 2]))->parallel([static fn() => 'foo']);
+        $iter = new NestedIterator([1, 2])->parallel([static fn() => 'foo']);
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('Iterator must be callable or iterable');

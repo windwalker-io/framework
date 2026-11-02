@@ -29,7 +29,7 @@ class SwooleSchedulerTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageIsOrContains('Cursor should be');
 
-        (new SwooleScheduler())->wait(new ScheduleCursor('not a channel'));
+        new SwooleScheduler()->wait(new ScheduleCursor('not a channel'));
     }
 
     #[Test]
@@ -38,13 +38,13 @@ class SwooleSchedulerTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessageIsOrContains('got string');
 
-        (new SwooleScheduler())->done(new ScheduleCursor('not a channel'));
+        new SwooleScheduler()->done(new ScheduleCursor('not a channel'));
     }
 
     #[Test]
     public function doneWithoutCursorDoesNothing(): void
     {
-        (new SwooleScheduler(5))->done(null);
+        new SwooleScheduler(5)->done(null);
 
         $this->expectNotToPerformAssertions();
     }
@@ -56,7 +56,7 @@ class SwooleSchedulerTest extends TestCase
             $this->markTestSkipped('Swoole is not installed.');
         }
 
-        $cursor = (new SwooleScheduler())->createCursor();
+        $cursor = new SwooleScheduler()->createCursor();
 
         self::assertInstanceOf(\Swoole\Coroutine\Channel::class, $cursor->get());
     }

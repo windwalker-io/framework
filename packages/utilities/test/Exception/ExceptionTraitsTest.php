@@ -26,9 +26,9 @@ class ExceptionTraitsTest extends TestCase
     #[Test]
     public function multiMessagesAcceptsStringAndNull(): void
     {
-        self::assertSame('hello', (new StubMultiMessagesException('hello'))->getMessage());
-        self::assertSame('', (new StubMultiMessagesException())->getMessage());
-        self::assertSame([], (new StubMultiMessagesException())->getMessages());
+        self::assertSame('hello', new StubMultiMessagesException('hello')->getMessage());
+        self::assertSame('', new StubMultiMessagesException()->getMessage());
+        self::assertSame([], new StubMultiMessagesException()->getMessages());
     }
 
     #[Test]

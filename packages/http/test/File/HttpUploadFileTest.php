@@ -71,7 +71,7 @@ class HttpUploadFileTest extends TestCase
     #[Test]
     public function toCurlFileUsesDetectedMimeAndBasename(): void
     {
-        $curl = (new HttpUploadFile('vfs://root/hello.txt'))->toCurlFile();
+        $curl = new HttpUploadFile('vfs://root/hello.txt')->toCurlFile();
 
         self::assertSame('text/plain', $curl->getMimeType());
         self::assertSame('hello.txt', $curl->getPostFilename());

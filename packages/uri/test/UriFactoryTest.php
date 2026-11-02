@@ -14,7 +14,7 @@ class UriFactoryTest extends TestCase
     #[Test]
     public function createUriReturnsUriInstanceParsedFromString(): void
     {
-        $uri = (new UriFactory())->createUri('http://example.com/foo?a=1');
+        $uri = new UriFactory()->createUri('http://example.com/foo?a=1');
 
         self::assertInstanceOf(Uri::class, $uri);
         self::assertSame('example.com', $uri->getHost());

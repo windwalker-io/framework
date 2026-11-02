@@ -128,6 +128,6 @@ class SwooleRequestFactory
 
     public static function createFromSwooleFrame(Frame $frame): WebSocketRequest
     {
-        return (new WebSocketRequest())->withFrame(new WebSocketFrameWrapper($frame));
+        return new WebSocketRequest()->withFrame(new WebSocketFrameWrapper($frame));
     }
 }

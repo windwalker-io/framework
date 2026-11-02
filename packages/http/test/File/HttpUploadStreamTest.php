@@ -48,7 +48,7 @@ class HttpUploadStreamTest extends TestCase
     #[Test]
     public function toCurlFileCarriesStreamContentsMimeAndPostname(): void
     {
-        $curl = (new HttpUploadStream(self::memory('Hello'), 'text/plain', 'a.txt'))->toCurlFile();
+        $curl = new HttpUploadStream(self::memory('Hello'), 'text/plain', 'a.txt')->toCurlFile();
 
         self::assertInstanceOf(CURLStringFile::class, $curl);
         self::assertSame('Hello', $curl->data);

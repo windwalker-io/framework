@@ -115,7 +115,7 @@ class Index
      */
     public function expression(string $expression): static
     {
-        $this->columns[$expression] = (new Column($expression))->indexExpression($expression);
+        $this->columns[$expression] = new Column($expression)->indexExpression($expression);
 
         return $this;
     }

@@ -21,7 +21,7 @@ class ResponseHelperTest extends TestCase
     #[After]
     public function resetOutputObject(): void
     {
-        (new ReflectionProperty(ResponseHelper::class, 'outputObject'))->setValue(null, null);
+        new ReflectionProperty(ResponseHelper::class, 'outputObject')->setValue(null, null);
     }
 
     #[Test]
@@ -146,7 +146,7 @@ class ResponseHelperTest extends TestCase
             }
         };
 
-        (new ReflectionProperty(ResponseHelper::class, 'outputObject'))->setValue(null, $captured);
+        new ReflectionProperty(ResponseHelper::class, 'outputObject')->setValue(null, $captured);
 
         return $captured;
     }

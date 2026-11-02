@@ -9,7 +9,7 @@ use Windwalker\ORM\Test\Entity\StubArticle;
 include __DIR__ . '/../../../vendor/autoload.php';
 
 $orm = new ORM(
-    (new DatabaseFactory())->create('pdo_mysql', [])
+    new DatabaseFactory()->create('pdo_mysql', [])
 );
 
 $meta = $orm->getEntityMetadata(StubArticle::class);

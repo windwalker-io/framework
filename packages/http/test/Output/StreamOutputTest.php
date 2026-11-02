@@ -118,7 +118,7 @@ class StreamOutputTest extends TestCase
                 return null;
             }
         };
-        $response = (new Response())->withBody($body);
+        $response = new Response()->withBody($body);
 
         self::assertFalse(StubStreamOutput::prepareContentLength($response)->hasHeader('content-length'));
     }

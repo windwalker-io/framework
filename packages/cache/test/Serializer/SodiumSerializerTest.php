@@ -61,7 +61,7 @@ class SodiumSerializerTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Unable to decrypt sodium-encrypted cache payload');
 
-        (new SodiumSerializer($wrongKeypair, serializer: new PhpSerializer()))->unserialize($payload);
+        new SodiumSerializer($wrongKeypair, serializer: new PhpSerializer())->unserialize($payload);
     }
 
     public function testUnserializeRejectsInvalidBase64Payload(): void

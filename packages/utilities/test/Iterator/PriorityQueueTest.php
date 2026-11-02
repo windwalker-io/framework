@@ -59,7 +59,7 @@ class PriorityQueueTest extends TestCase
     #[Test]
     public function insertArrayUsesKeysAsPriority(): void
     {
-        $queue = (new PriorityQueue())->insertArray([10 => 'low', 50 => 'high', 30 => 'mid']);
+        $queue = new PriorityQueue()->insertArray([10 => 'low', 50 => 'high', 30 => 'mid']);
 
         self::assertSame(['high', 'mid', 'low'], $queue->toArray());
     }
@@ -105,7 +105,7 @@ class PriorityQueueTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('Only \SplPriorityQueue can merge.');
 
-        (new PriorityQueue())->merge(['not a queue']);
+        new PriorityQueue()->merge(['not a queue']);
     }
 
     /**

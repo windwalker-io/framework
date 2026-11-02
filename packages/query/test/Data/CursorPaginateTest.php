@@ -14,7 +14,7 @@ class CursorPaginateTest extends TestCase
 {
     private function query(): Query
     {
-        return (new Query(new MockEscaper(), new BaseGrammar()))->select('*')->from('a');
+        return new Query(new MockEscaper(), new BaseGrammar())->select('*')->from('a');
     }
 
     private function sql(Query $query): string

@@ -76,7 +76,7 @@ class OutputRulesTest extends TestCase
             );
         }
 
-        (new Traverser($node, $stream, $rules))->walk();
+        new Traverser($node, $stream, $rules)->walk();
         rewind($stream);
         $output = stream_get_contents($stream);
         fclose($stream);

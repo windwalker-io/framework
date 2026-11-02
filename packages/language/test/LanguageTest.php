@@ -309,7 +309,7 @@ class LanguageTest extends TestCase
     #[Test]
     public function findLooksUpParentWhenChildHasNoString(): void
     {
-        $child = (new Language())->setParent($this->instance);
+        $child = new Language()->setParent($this->instance);
 
         self::assertSame(
             ['en-GB', 'Sakura'],

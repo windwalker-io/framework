@@ -48,7 +48,7 @@ class TransientServiceTest extends TestCase
             $container->get(StubInstantService::class),
             $container->get(StubInstantService::class),
         );
-        self::assertTrue((new Service())->shared);
+        self::assertTrue(new Service()->shared);
     }
 
     #[Test]

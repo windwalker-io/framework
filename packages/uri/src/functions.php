@@ -20,7 +20,7 @@ namespace Windwalker\Uri {
     if (!function_exists('\Windwalker\Uri\uri_extract')) {
         function uri_extract(string $template, string $uri, bool $strict = false): array
         {
-            return (new UriTemplate($template))->extract($uri, $strict);
+            return new UriTemplate($template)->extract($uri, $strict);
         }
     }
 }

@@ -85,6 +85,6 @@ class ColumnTest extends TestCase
         $column = new Column('created', 'timestamp(3)');
 
         self::assertSame('timestamp(3)', $column->getTypeExpression(new MySQLDataType()));
-        self::assertSame('date', (new Column('d', 'date'))->length(6)->getTypeExpression(new MySQLDataType()));
+        self::assertSame('date', new Column('d', 'date')->length(6)->getTypeExpression(new MySQLDataType()));
     }
 }

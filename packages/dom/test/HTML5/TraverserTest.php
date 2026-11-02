@@ -71,7 +71,7 @@ class TraverserTest extends TestCase
     private static function render(Node|\Dom\NodeList $node): string
     {
         $stream = fopen('php://temp', 'w+b');
-        (new Traverser($node, $stream, new OutputRules($stream)))->walk();
+        new Traverser($node, $stream, new OutputRules($stream))->walk();
         rewind($stream);
         $output = stream_get_contents($stream);
         fclose($stream);

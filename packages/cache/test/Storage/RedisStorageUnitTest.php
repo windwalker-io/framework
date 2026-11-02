@@ -32,7 +32,7 @@ class RedisStorageUnitTest extends TestCase
             ->method('del')
             ->with('users:one');
 
-        self::assertTrue((new RedisStorage($redis, 'users'))->clear());
+        self::assertTrue(new RedisStorage($redis, 'users')->clear());
     }
 
     #[Test]
@@ -45,7 +45,7 @@ class RedisStorageUnitTest extends TestCase
             ->willReturn([]);
         $redis->expects($this->never())->method('del');
 
-        self::assertTrue((new RedisStorage($redis, 'users'))->clear());
+        self::assertTrue(new RedisStorage($redis, 'users')->clear());
     }
 
     #[Test]
@@ -59,7 +59,7 @@ class RedisStorageUnitTest extends TestCase
 
         self::assertSame(
             ['first' => 'VALUE'],
-            (new RedisStorage($redis, 'users'))->getMultiple(['first', 'missing'])
+            new RedisStorage($redis, 'users')->getMultiple(['first', 'missing'])
         );
     }
 
@@ -69,7 +69,7 @@ class RedisStorageUnitTest extends TestCase
         $redis = $this->createMock(Redis::class);
         $redis->expects($this->never())->method('mGet');
 
-        self::assertSame([], (new RedisStorage($redis))->getMultiple([]));
+        self::assertSame([], new RedisStorage($redis)->getMultiple([]));
     }
 
     #[Test]
@@ -82,7 +82,7 @@ class RedisStorageUnitTest extends TestCase
             ->willReturn(false);
         $redis->expects($this->never())->method('expire');
 
-        self::assertFalse((new RedisStorage($redis, 'users'))->save('entry', 'VALUE', time() + 60));
+        self::assertFalse(new RedisStorage($redis, 'users')->save('entry', 'VALUE', time() + 60));
     }
 
     #[Test]
@@ -93,6 +93,6 @@ class RedisStorageUnitTest extends TestCase
             ->method('mGet')
             ->willReturn(false);
 
-        self::assertSame([], (new RedisStorage($redis))->getMultiple(['first']));
+        self::assertSame([], new RedisStorage($redis)->getMultiple(['first']));
     }
 }

@@ -46,7 +46,7 @@ class SchemaDifferTest extends TestCase
     public function columnDiffIgnoresUndefinedOptionalProperties(): void
     {
         $desired = new Column('title', 'varchar(255)', false, '');
-        $actual = (new Column('title', 'varchar(255)', false, ''))
+        $actual = new Column('title', 'varchar(255)', false, '')
             ->comment('Title')
             ->collation('utf8mb4_general_ci');
 
@@ -101,13 +101,13 @@ class SchemaDifferTest extends TestCase
         $schema->addUniqueKey(['alias'], 'uq_alias');
 
         $actualIndexes = [
-            'idx_title' => (new Index('idx_title'))->columns(['title']),
-            'idx_alias' => (new Index('idx_alias'))->columns(['alias', 'title']),
-            'idx_old' => (new Index('idx_old'))->columns(['old']),
+            'idx_title' => new Index('idx_title')->columns(['title']),
+            'idx_alias' => new Index('idx_alias')->columns(['alias', 'title']),
+            'idx_old' => new Index('idx_old')->columns(['old']),
         ];
         $actualConstraints = [
-            'uq_alias' => (new Constraint(Constraint::TYPE_UNIQUE, 'uq_alias'))->columns(['alias']),
-            'PRIMARY' => (new Constraint(Constraint::TYPE_PRIMARY_KEY, 'PRIMARY'))->columns(['id']),
+            'uq_alias' => new Constraint(Constraint::TYPE_UNIQUE, 'uq_alias')->columns(['alias']),
+            'PRIMARY' => new Constraint(Constraint::TYPE_PRIMARY_KEY, 'PRIMARY')->columns(['id']),
         ];
 
         $diff = $this->createDiffer()->diff('articles', $schema, [], $actualIndexes, $actualConstraints, true);

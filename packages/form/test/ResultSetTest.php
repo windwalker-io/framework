@@ -32,7 +32,7 @@ class ResultSetTest extends TestCase
     public function addResultStoresResultsByName(): void
     {
         $ok = $this->makeResult(ValidateResult::STATUS_SUCCESS);
-        $set = (new ResultSet())->addResult('a', $ok);
+        $set = new ResultSet()->addResult('a', $ok);
 
         self::assertSame($ok, $set->getResult('a'));
         self::assertNull($set->getResult('missing'));

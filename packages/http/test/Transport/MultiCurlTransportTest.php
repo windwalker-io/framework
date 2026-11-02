@@ -26,7 +26,7 @@ class MultiCurlTransportTest extends TestCase
 
     protected function createRequest(string $url): Request
     {
-        return (new Request())->withUri(new Uri($url))->withMethod('GET');
+        return new Request()->withUri(new Uri($url))->withMethod('GET');
     }
 
     #[Test]

@@ -38,7 +38,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function readReturnsFileContents(): void
     {
-        $str = (new FileObject('vfs://root/files/folder2/file2.html'))->read();
+        $str = new FileObject('vfs://root/files/folder2/file2.html')->read();
 
         self::assertEquals('file2.html', (string) $str);
     }
@@ -46,7 +46,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function readStreamReturnsStreamOfFileContents(): void
     {
-        $stream = (new FileObject('vfs://root/files/folder2/file2.html'))->readStream();
+        $stream = new FileObject('vfs://root/files/folder2/file2.html')->readStream();
 
         self::assertEquals('file2.html', (string) $stream);
     }
@@ -54,7 +54,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function writeCreatesMissingParentDirectoriesAndFile(): void
     {
-        (new FileObject('vfs://root/files/folder2/foo/bar/new-file.txt'))->write('Hello');
+        new FileObject('vfs://root/files/folder2/foo/bar/new-file.txt')->write('Hello');
 
         self::assertEquals('Hello', file_get_contents('vfs://root/files/folder2/foo/bar/new-file.txt'));
     }
@@ -64,7 +64,7 @@ class FileObjectTest extends AbstractVfsTestCase
     {
         $stream = new StringStream('Hello');
 
-        (new FileObject('vfs://root/files/folder2/foo/bar/new-file.txt'))->writeStream($stream);
+        new FileObject('vfs://root/files/folder2/foo/bar/new-file.txt')->writeStream($stream);
 
         self::assertEquals('Hello', file_get_contents('vfs://root/files/folder2/foo/bar/new-file.txt'));
     }
@@ -83,7 +83,7 @@ class FileObjectTest extends AbstractVfsTestCase
     public function deleteNonExistentPathDoesNotThrowUnexpectedException(): void
     {
         try {
-            (new FileObject(static::$baseDir . '/hello/no/exists'))->delete();
+            new FileObject(static::$baseDir . '/hello/no/exists')->delete();
         } catch (FilesystemException $e) {
             self::assertInstanceOf(FilesystemException::class, $e);
         }
@@ -133,7 +133,7 @@ class FileObjectTest extends AbstractVfsTestCase
             $dest->delete();
         }
 
-        (new FileObject(static::$baseDir))->copyTo($dest);
+        new FileObject(static::$baseDir)->copyTo($dest);
 
         $this->assertDirectoryExists($dest->getPathname());
         $this->assertFileExists($dest . '/folder1/level2/file3');
@@ -148,7 +148,7 @@ class FileObjectTest extends AbstractVfsTestCase
             $dest->delete();
         }
 
-        (new FileObject(static::$baseDir))->moveTo($dest);
+        new FileObject(static::$baseDir)->moveTo($dest);
 
         $this->assertDirectoryExists($dest->getPathname());
         $this->assertFileExists($dest . '/folder1/level2/file3');
@@ -159,7 +159,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function itemsRecursiveListsNestedFolderItems(): void
     {
-        $items = (new FileObject(static::$baseDir . '/folder1/level2'))->items(true);
+        $items = new FileObject(static::$baseDir . '/folder1/level2')->items(true);
 
         $this->assertEquals(
             static::cleanPaths([static::$baseDir . '/folder1/level2/file3']),
@@ -170,7 +170,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function itemsRecursiveListsAllFilesAndFolders(): void
     {
-        $items = (new FileObject(static::$baseDir))->items(true);
+        $items = new FileObject(static::$baseDir)->items(true);
 
         $this->assertEquals(
             static::cleanPaths(static::getItemsRecursive()),
@@ -181,7 +181,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function itemsReturnsRewindableFilesIterator(): void
     {
-        $items = (new FileObject(static::$baseDir))->items(true);
+        $items = new FileObject(static::$baseDir)->items(true);
 
         $this->assertInstanceOf(FilesIterator::class, $items);
 
@@ -200,13 +200,13 @@ class FileObjectTest extends AbstractVfsTestCase
     {
         $this->expectException(FileNotFoundException::class);
 
-        (new FileObject(__DIR__ . '/not/exists'))->items();
+        new FileObject(__DIR__ . '/not/exists')->items();
     }
 
     #[Test]
     public function foldersRecursiveListsNestedFolders(): void
     {
-        $folders = (new FileObject(static::$baseDir . '/folder1'))->folders(true);
+        $folders = new FileObject(static::$baseDir . '/folder1')->folders(true);
 
         $this->assertEquals(
             static::cleanPaths([static::$baseDir . '/folder1/level2']),
@@ -217,7 +217,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function foldersRecursiveListsAllFolders(): void
     {
-        $folders = (new FileObject(static::$baseDir))->folders(true);
+        $folders = new FileObject(static::$baseDir)->folders(true);
 
         $this->assertEquals(
             static::cleanPaths(static::getFoldersRecursive()),
@@ -228,7 +228,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function foldersReturnsFilesIteratorOfFileObjects(): void
     {
-        $folders = (new FileObject(static::$baseDir))->folders(true);
+        $folders = new FileObject(static::$baseDir)->folders(true);
 
         $this->assertInstanceOf(FilesIterator::class, $folders);
 
@@ -237,7 +237,7 @@ class FileObjectTest extends AbstractVfsTestCase
             static::cleanPaths($folders->toArray())
         );
 
-        $folders = (new FileObject(static::$baseDir))->folders(true);
+        $folders = new FileObject(static::$baseDir)->folders(true);
 
         $this->assertInstanceOf(FileObject::class, $folders->current());
     }
@@ -245,7 +245,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function filesRecursiveListsNestedFolderFiles(): void
     {
-        $files = (new FileObject('vfs://root/files/folder1/level2'))->files(true);
+        $files = new FileObject('vfs://root/files/folder1/level2')->files(true);
 
         $this->assertEquals(
             static::cleanPaths(['vfs://root/files/folder1/level2/file3']),
@@ -256,7 +256,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function filesRecursiveListsAllFiles(): void
     {
-        $files = (new FileObject(static::$baseDir))->files(true);
+        $files = new FileObject(static::$baseDir)->files(true);
 
         $this->assertEquals(
             static::cleanPaths(static::getFilesRecursive()),
@@ -267,7 +267,7 @@ class FileObjectTest extends AbstractVfsTestCase
     #[Test]
     public function filesReturnsRewindableFilesIteratorOfFileObjects(): void
     {
-        $files = (new FileObject(static::$baseDir))->files(true);
+        $files = new FileObject(static::$baseDir)->files(true);
 
         $this->assertInstanceOf(FilesIterator::class, $files);
 

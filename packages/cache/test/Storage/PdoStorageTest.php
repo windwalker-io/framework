@@ -246,7 +246,7 @@ class PdoStorageTest extends TestCase
                 ->with($this->stringContains($expectedSql))
                 ->willReturn($statement);
 
-            self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+            self::assertTrue(new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0)->save('key', 'VALUE'));
         }
     }
 
@@ -275,7 +275,7 @@ class PdoStorageTest extends TestCase
             ->method('prepare')
             ->willReturnOnConsecutiveCalls($update, $insert);
 
-        self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+        self::assertTrue(new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0)->save('key', 'VALUE'));
     }
 
     #[Test]
@@ -302,7 +302,7 @@ class PdoStorageTest extends TestCase
             ->method('prepare')
             ->willReturnOnConsecutiveCalls($update, $insert);
 
-        self::assertTrue((new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0))->save('key', 'VALUE'));
+        self::assertTrue(new PdoStorage($pdo, 'flower', 'cache_items', pruneProbability: 0.0)->save('key', 'VALUE'));
     }
 
     #[Test]
@@ -377,7 +377,7 @@ class PdoStorageTest extends TestCase
         $exception = new PDOException($message, $code);
         $exception->errorInfo = $errorInfo;
 
-        self::assertSame($expected, (new InspectablePdoStorage($pdo))->detectsMissingTable($exception));
+        self::assertSame($expected, new InspectablePdoStorage($pdo)->detectsMissingTable($exception));
     }
 
     /**

@@ -55,7 +55,7 @@ class DependencyResolverCoverageTest extends TestCase
     #[Test]
     public function detectsLazyAttributesAndExplicitLazyOptions(): void
     {
-        $resolver = (new Container())->getDependencyResolver();
+        $resolver = new Container()->getDependencyResolver();
 
         self::assertTrue($resolver->canLazy(new ReflectionClass(LazyResolverDependency::class), new DIOptions()));
         self::assertFalse($resolver->canLazy(new ReflectionClass(ResolverDependency::class), new DIOptions()));

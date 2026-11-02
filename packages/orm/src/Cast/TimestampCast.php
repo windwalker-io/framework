@@ -22,7 +22,7 @@ class TimestampCast implements CastInterface
         }
 
         if (!is_numeric($value)) {
-            $value = (new DateTimeImmutable($value))->getTimestamp();
+            $value = new DateTimeImmutable($value)->getTimestamp();
         }
 
         return TypeCast::tryNumeric($value);

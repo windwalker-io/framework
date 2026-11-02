@@ -44,13 +44,13 @@ class HttpUploadBase64Test extends TestCase
     #[Test]
     public function getContentReturnsDecodedBinary(): void
     {
-        self::assertSame('Hello', (new HttpUploadBase64(self::URI))->getContent());
+        self::assertSame('Hello', new HttpUploadBase64(self::URI)->getContent());
     }
 
     #[Test]
     public function toCurlFileCarriesMimeAndPostname(): void
     {
-        $curl = (new HttpUploadBase64(self::URI, null, 'a.txt'))->toCurlFile();
+        $curl = new HttpUploadBase64(self::URI, null, 'a.txt')->toCurlFile();
 
         self::assertSame('Hello', $curl->data);
         self::assertSame('text/plain', $curl->mime);

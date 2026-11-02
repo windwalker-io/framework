@@ -29,7 +29,7 @@ class CipherSerializerTest extends TestCase
         $cipher = $this->createMock(CipherInterface::class);
         $cipher->expects($this->never())->method('encrypt');
 
-        self::assertNull((new CipherSerializer($cipher, 'key', $inner))->serialize(null));
+        self::assertNull(new CipherSerializer($cipher, 'key', $inner)->serialize(null));
     }
 
     public function testSerializeAndUnserializeRoundTripUsingCipherInterface(): void

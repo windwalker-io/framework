@@ -75,7 +75,7 @@ class RequestHandlerTest extends TestCase
             }
         };
 
-        $res = (new RequestHandler([$middleware, $final]))->handle($this->createRequest());
+        $res = new RequestHandler([$middleware, $final])->handle($this->createRequest());
 
         self::assertSame('final', (string) $res->getBody());
         self::assertSame('yes', $res->getHeaderLine('X-Mw'));

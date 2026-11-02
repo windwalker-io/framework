@@ -39,7 +39,7 @@ class DefinitionCoverageTest extends TestCase
             self::assertFalse($definition->validateProvidedIn($child));
         }
 
-        self::assertTrue((new StoreDefinition('service', 'value'))->validateProvidedIn($child));
+        self::assertTrue(new StoreDefinition('service', 'value')->validateProvidedIn($child));
     }
 
     #[Test]
@@ -87,14 +87,14 @@ class DefinitionCoverageTest extends TestCase
     #[Test]
     public function isolationAttributeCanBeOverriddenByAnExplicitOption(): void
     {
-        self::assertTrue((new StoreDefinition(IsolatedDefinitionTarget::class, null))->isIsolation());
+        self::assertTrue(new StoreDefinition(IsolatedDefinitionTarget::class, null)->isIsolation());
         self::assertFalse(
-            (new StoreDefinition(IsolatedDefinitionTarget::class, null, new DIOptions(isolation: false)))
+            new StoreDefinition(IsolatedDefinitionTarget::class, null, new DIOptions(isolation: false))
                 ->isIsolation()
         );
-        self::assertFalse((new StoreDefinition(DefinitionBuildTarget::class, null))->isIsolation());
+        self::assertFalse(new StoreDefinition(DefinitionBuildTarget::class, null)->isIsolation());
         self::assertTrue(
-            (new StoreDefinition(DefinitionBuildTarget::class, null, new DIOptions(isolation: true)))
+            new StoreDefinition(DefinitionBuildTarget::class, null, new DIOptions(isolation: true))
                 ->isIsolation()
         );
     }

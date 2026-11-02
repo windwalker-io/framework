@@ -152,7 +152,7 @@ trait BaseAssertionTrait
     {
         $options['return'] = false;
 
-        $export = (new PhpFormat())->dump(TypeCast::toArray($array, true), $options);
+        $export = new PhpFormat()->dump(TypeCast::toArray($array, true), $options);
 
         if ($asString) {
             return $export;

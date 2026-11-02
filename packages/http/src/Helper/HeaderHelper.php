@@ -33,7 +33,7 @@ abstract class HeaderHelper
             $headers = new Response('php://memory', 200, $headers);
         }
 
-        (new Output())->sendHeaders($headers);
+        new Output()->sendHeaders($headers);
     }
 
     /**

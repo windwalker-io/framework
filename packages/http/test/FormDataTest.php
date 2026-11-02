@@ -13,8 +13,8 @@ class FormDataTest extends TestCase
     #[Test]
     public function constructsFromNullArrayOrObject(): void
     {
-        self::assertSame([], (new FormData())->all());
-        self::assertSame(['a' => 1], (new FormData(['a' => 1]))->all());
+        self::assertSame([], new FormData()->all());
+        self::assertSame(['a' => 1], new FormData(['a' => 1])->all());
         self::assertSame(['a' => 1], FormData::create((object) ['a' => 1])->all());
     }
 

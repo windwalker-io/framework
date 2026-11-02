@@ -16,7 +16,7 @@ class DecoratorStreamTest extends TestCase
     {
         $inner = new StringStream('FOO');
 
-        $this->assertSame($inner, (new DecoratorStream($inner))->getInnerStream());
+        $this->assertSame($inner, new DecoratorStream($inner)->getInnerStream());
     }
 
     #[Test]
@@ -55,7 +55,7 @@ class DecoratorStreamTest extends TestCase
         $inner = new StringStream('FOO BAR');
         $inner->seek(4);
 
-        (new DecoratorStream($inner))->rewind();
+        new DecoratorStream($inner)->rewind();
 
         $this->assertEquals(0, $inner->tell());
     }
@@ -84,7 +84,7 @@ class DecoratorStreamTest extends TestCase
     {
         $inner = new StringStream('FOO');
 
-        (new DecoratorStream($inner))->close();
+        new DecoratorStream($inner)->close();
 
         $this->assertEmpty($inner->getResource());
     }

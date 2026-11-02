@@ -109,7 +109,7 @@ class AttributesAccessorTest extends TestCase
     #[Test]
     public function runAttributeIfExistsAcceptsPreparedAttributeList(): void
     {
-        $attrs = (new ReflectionClass(StubMarkedChild::class))->getAttributes();
+        $attrs = new ReflectionClass(StubMarkedChild::class)->getAttributes();
         $names = [];
 
         $count = AttributesAccessor::runAttributeIfExists(

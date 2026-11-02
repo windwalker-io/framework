@@ -82,7 +82,7 @@ class BacktraceHelper
             if (is_array($arg)) {
                 $arg = 'Array';
             } elseif (is_object($arg)) {
-                $arg = (new ReflectionClass($arg))->getShortName();
+                $arg = new ReflectionClass($arg)->getShortName();
             } elseif (is_string($arg)) {
                 if (Utf8String::strlen($arg) > 20) {
                     $arg = Utf8String::substr($arg, 0, 20) . '...';

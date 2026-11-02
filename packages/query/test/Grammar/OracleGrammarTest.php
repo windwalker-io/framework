@@ -64,7 +64,7 @@ class OracleGrammarTest extends AbstractGrammarTestCase
     #[Test]
     public function multiRowInsertCompilesUnionAllFromDual(): void
     {
-        $query = (new Query(null, new OracleGrammar()))
+        $query = new Query(null, new OracleGrammar())
             ->insert('foo')
             ->columns('id', 'title')
             ->values([1, 'a'], [2, 'b']);
@@ -78,7 +78,7 @@ class OracleGrammarTest extends AbstractGrammarTestCase
     #[Test]
     public function limitCompilesOffsetFetch(): void
     {
-        $query = (new Query(null, new OracleGrammar()))
+        $query = new Query(null, new OracleGrammar())
             ->select('id')
             ->from('foo')
             ->order('id')

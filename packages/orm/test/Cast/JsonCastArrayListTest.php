@@ -18,19 +18,19 @@ class JsonCastArrayListTest extends TestCase
     #[Test]
     public function extractReturnsExistingJsonUntouched(): void
     {
-        self::assertSame('{"a":1}', (new JsonCastArrayList())->extract('{"a":1}'));
+        self::assertSame('{"a":1}', new JsonCastArrayList()->extract('{"a":1}'));
     }
 
     #[Test]
     public function extractEncodesEmptyArrayAsList(): void
     {
-        self::assertSame('[]', (new JsonCastArrayList())->extract([]));
+        self::assertSame('[]', new JsonCastArrayList()->extract([]));
     }
 
     #[Test]
     public function extractEncodesArrayWithoutForcingObject(): void
     {
-        self::assertSame('["a","b"]', (new JsonCastArrayList())->extract(['a', 'b']));
+        self::assertSame('["a","b"]', new JsonCastArrayList()->extract(['a', 'b']));
     }
 
     #[Test]
@@ -44,13 +44,13 @@ class JsonCastArrayListTest extends TestCase
     #[Test]
     public function hydrateReturnsNullForEmptyString(): void
     {
-        self::assertNull((new JsonCast())->hydrate(''));
+        self::assertNull(new JsonCast()->hydrate(''));
     }
 
     #[Test]
     public function hydrateReturnsEmptyArrayForJsonNull(): void
     {
-        self::assertSame([], (new JsonCast())->hydrate('null'));
+        self::assertSame([], new JsonCast()->hydrate('null'));
     }
 
     #[Test]
@@ -70,7 +70,7 @@ class JsonCastArrayListTest extends TestCase
             CastAttributeInterface::NULLABLE | CastAttributeInterface::EMPTY_STRING_TO_NULL,
             $cast->getOptions()
         );
-        self::assertSame(0, (new JsonCast(0))->getOptions());
+        self::assertSame(0, new JsonCast(0)->getOptions());
     }
 
     #[Test]
@@ -85,11 +85,11 @@ class JsonCastArrayListTest extends TestCase
     #[Test]
     public function serializeForcesListOrObjectByOptions(): void
     {
-        self::assertSame([1, 2], (new JsonCast(JsonCast::FORCE_ARRAY_LIST))->serialize(['x' => 1, 'y' => 2]));
+        self::assertSame([1, 2], new JsonCast(JsonCast::FORCE_ARRAY_LIST)->serialize(['x' => 1, 'y' => 2]));
         self::assertEquals(
             new \stdClass(),
-            (new JsonCast(JsonCast::EMPTY_ARRAY_AS_OBJECT))->serialize([])
+            new JsonCast(JsonCast::EMPTY_ARRAY_AS_OBJECT)->serialize([])
         );
-        self::assertSame(['a' => 1], (new JsonCast())->serialize(['a' => 1]));
+        self::assertSame(['a' => 1], new JsonCast()->serialize(['a' => 1]));
     }
 }

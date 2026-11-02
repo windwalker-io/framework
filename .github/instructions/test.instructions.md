@@ -14,6 +14,22 @@ database, service, or package suites. If the requested scope is disabled, do not
 passing: use a temporary configuration based on `phpunit.xml.dist` and remove it when finished, or supply the needed
 settings through PHPUnit CLI options where available. Preserve any pre-existing local `phpunit.xml`.
 
+## Prefer `#[Test]` for test methods
+
+Prefer the `#[Test]` attribute (`PHPUnit\Framework\Attributes\Test`) over the `test` method-name prefix, and give
+methods descriptive names that state the behavior under test. Do not use the `@test` docblock annotation.
+
+```php
+// Bad
+public function testFindReturnsNullWhenMissing(): void
+
+// Good
+#[Test]
+public function findReturnsNullWhenMissing(): void
+```
+
+Keep the existing style when only editing a few methods in a file that consistently uses the `test` prefix.
+
 ## Prefer attributes for lifecycle hooks
 
 Prefer `#[Before]` / `#[After]`, `#[BeforeClass]` / `#[AfterClass]`, and `#[PreCondition]` / `#[PostCondition]`

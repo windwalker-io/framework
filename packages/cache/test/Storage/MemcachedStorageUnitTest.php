@@ -27,7 +27,7 @@ class MemcachedStorageUnitTest extends TestCase
         $driver->expects($this->once())->method('get')->with('key')->willReturn('VALUE');
         $driver->expects($this->once())->method('getResultCode')->willReturn(Memcached::RES_SUCCESS);
 
-        self::assertSame('VALUE', (new MemcachedStorage($driver))->get('key'));
+        self::assertSame('VALUE', new MemcachedStorage($driver)->get('key'));
     }
 
     #[Test]
@@ -37,7 +37,7 @@ class MemcachedStorageUnitTest extends TestCase
         $driver->expects($this->once())->method('get')->with('missing');
         $driver->expects($this->once())->method('getResultCode')->willReturn(Memcached::RES_NOTFOUND);
 
-        self::assertFalse((new MemcachedStorage($driver))->has('missing'));
+        self::assertFalse(new MemcachedStorage($driver)->has('missing'));
     }
 
     #[Test]
@@ -63,7 +63,7 @@ class MemcachedStorageUnitTest extends TestCase
         $driver->expects($this->once())->method('set')->with('key', 'VALUE', 1234)->willReturn(true);
         $driver->expects($this->once())->method('getResultCode')->willReturn(Memcached::RES_SUCCESS);
 
-        self::assertTrue((new MemcachedStorage($driver))->save('key', 'VALUE', 1234));
+        self::assertTrue(new MemcachedStorage($driver)->save('key', 'VALUE', 1234));
     }
 
     #[Test]
@@ -75,7 +75,7 @@ class MemcachedStorageUnitTest extends TestCase
             ->with(['present', 'missing'])
             ->willReturn(['present' => 'VALUE']);
 
-        self::assertSame(['present' => 'VALUE'], (new MemcachedStorage($driver))->getMultiple(['present', 'missing']));
+        self::assertSame(['present' => 'VALUE'], new MemcachedStorage($driver)->getMultiple(['present', 'missing']));
     }
 
     #[Test]
@@ -87,7 +87,7 @@ class MemcachedStorageUnitTest extends TestCase
             ->with(['key'])
             ->willReturn(false);
 
-        self::assertSame([], (new MemcachedStorage($driver))->getMultiple([]));
-        self::assertSame([], (new MemcachedStorage($driver))->getMultiple(['key']));
+        self::assertSame([], new MemcachedStorage($driver)->getMultiple([]));
+        self::assertSame([], new MemcachedStorage($driver)->getMultiple(['key']));
     }
 }

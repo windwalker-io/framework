@@ -309,7 +309,7 @@ class ComponentTagCompiler
             return [collect($attributes), collect($attributes)];
         }
 
-        $properties = (new ReflectionClass($class))->getProperties();
+        $properties = new ReflectionClass($class)->getProperties();
         $props = [];
 
         foreach ($properties as $property) {

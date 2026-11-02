@@ -1221,7 +1221,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
     public function alter(string $target, string $targetName): AlterClause
     {
-        return (new AlterClause($this))->target($target, $targetName);
+        return new AlterClause($this)->target($target, $targetName);
     }
 
     /**
@@ -2100,7 +2100,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             return $this;
         }
 
-        $props = (new ReflectionClass($this))->getDefaultProperties();
+        $props = new ReflectionClass($this)->getDefaultProperties();
         $this->$clauses = $props[$clauses] ?? null;
 
         foreach ($handlers[$clauses] ?? [] as $field) {

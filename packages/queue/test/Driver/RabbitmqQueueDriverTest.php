@@ -91,7 +91,7 @@ class RabbitmqQueueDriverTest extends TestCase
     public function popFromOtherChannel(): void
     {
         $other = $this->channel . 'b';
-        $this->driver->push((new QueueMessage(new TestJob(['rabbit'])))->setChannel($other));
+        $this->driver->push(new QueueMessage(new TestJob(['rabbit']))->setChannel($other));
 
         self::assertNull($this->driver->pop());
         self::assertNotNull($this->driver->pop($other));
