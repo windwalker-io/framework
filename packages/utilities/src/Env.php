@@ -21,4 +21,20 @@ class Env
     {
         return $_SERVER[$name] ?? $_ENV[$name] ?? $default;
     }
+
+    /**
+     * Set env.
+     *
+     * @param  string  $name
+     * @param  string  $value
+     *
+     * @return  void
+     */
+    public static function set(string $name, string $value): void
+    {
+        $_SERVER[$name] = $value;
+        $_ENV[$name] = $value;
+
+        putenv($name . '=' . $value);
+    }
 }
