@@ -119,4 +119,61 @@ class SchemaDifferTest extends TestCase
         self::assertSame([], array_keys($diff->modifiedConstraints));
         self::assertSame([], $diff->droppedConstraints);
     }
+
+    #[Test]
+    public function functionalIndexIsNotModifiedWhenActualColumnNameIsTheRealExpression(): void
+    {
+        $schema = $this->createSchema();
+        $schema->addIndex(new Index('idx_email_lower')->expression('LOWER(email)'), 'idx_email_lower');
+
+        // Simulates introspection output after the fix: the real expression text is read back
+        // as the column name instead of a placeholder like `(expression 1)`.
+        $actualIndexes = [
+            'idx_email_lower' => new Index('idx_email_lower')->columns(
+                ['LOWER(email)' => ['column_name' => 'LOWER(email)', 'erratas' => ['expression' => 'LOWER(email)']]]
+            ),
+        ];
+
+        $diff = $this->createDiffer()->diff('users', $schema, [], $actualIndexes, [], true);
+
+        self::assertSame([], array_keys($diff->addedIndexes));
+        self::assertSame([], array_keys($diff->modifiedIndexes));
+        self::assertSame([], $diff->droppedIndexes);
+    }
+
+    #[Test]
+    public function functionalIndexIsModifiedWhenActualColumnNameIsAPlaceholder(): void
+    {
+        $schema = $this->createSchema();
+        $schema->addIndex(new Index('idx_email_lower')->expression('LOWER(email)'), 'idx_email_lower');
+
+        // Simulates introspection output before the fix (or a platform/version that still falls
+        // back to the placeholder): the expression text cannot be read back.
+        $actualIndexes = [
+            'idx_email_lower' => new Index('idx_email_lower')->columns(
+                ['(expression 1)' => ['column_name' => '(expression 1)', 'erratas' => ['expression' => '(expression 1)']]]
+            ),
+        ];
+
+        $diff = $this->createDiffer()->diff('users', $schema, [], $actualIndexes, [], true);
+
+        self::assertSame(['idx_email_lower'], array_keys($diff->modifiedIndexes));
+    }
+
+    #[Test]
+    public function functionalIndexIsModifiedWhenExpressionReallyDiffers(): void
+    {
+        $schema = $this->createSchema();
+        $schema->addIndex(new Index('idx_email_lower')->expression('LOWER(email)'), 'idx_email_lower');
+
+        $actualIndexes = [
+            'idx_email_lower' => new Index('idx_email_lower')->columns(
+                ['UPPER(email)' => ['column_name' => 'UPPER(email)', 'erratas' => ['expression' => 'UPPER(email)']]]
+            ),
+        ];
+
+        $diff = $this->createDiffer()->diff('users', $schema, [], $actualIndexes, [], true);
+
+        self::assertSame(['idx_email_lower'], array_keys($diff->modifiedIndexes));
+    }
 }

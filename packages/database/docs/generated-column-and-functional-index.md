@@ -94,4 +94,15 @@ SQLite cannot add a `STORED` generated column to an existing table with `ALTER T
 creating the table.
 
 When an existing index is read back, expression key parts have no real column. They are listed under a column name
-that is the expression itself (PostgreSQL) or a placeholder like `(expression 1)` (MySQL, SQLite).
+that is the expression itself:
+
+- PostgreSQL: always resolves the real expression (e.g. `lower((email)::text)`).
+- MySQL 8.0.13+ (not MariaDB): resolves the real expression from `INFORMATION_SCHEMA.STATISTICS.EXPRESSION`
+  (e.g. `lower(\`email\`)`). MariaDB and MySQL < 8.0.13 don't expose this column, so a placeholder like
+  `(expression 1)` is used instead.
+- SQLite: parses the real expression text back out of the `CREATE INDEX` statement stored in `sqlite_master`
+  (e.g. `LOWER(email)`), falling back to a placeholder if parsing fails.
+
+This matters for `SchemaDiffer`: when the real expression is available, re-running a migration that declares the
+same functional index is a no-op; when only the placeholder is available (MariaDB, MySQL < 8.0.13), the differ
+cannot tell whether the expression changed and will always report the index as modified.

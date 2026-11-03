@@ -253,9 +253,18 @@ class SQLitePlatform extends AbstractPlatform
                 $this->pragma('index_info', $row['name'], $schema)
             );
 
+            $expressions = null;
+
             foreach ($info as $column) {
                 $isExpression = $column['name'] === null;
-                $colName = $column['name'] ?? '(expression ' . $column['seqno'] . ')';
+                $colName = $column['name'];
+
+                if ($isExpression) {
+                    // Functional key parts have no column name, so the real expression is
+                    // parsed back from the `CREATE INDEX` statement stored in `sqlite_master`.
+                    $expressions ??= $this->listIndexExpressions($row['name'], $schema);
+                    $colName = $expressions[$column['seqno']] ?? '(expression ' . $column['seqno'] . ')';
+                }
 
                 $index['columns'][$colName] = [
                     'column_name' => $colName,
@@ -273,6 +282,94 @@ class SQLitePlatform extends AbstractPlatform
         }
 
         return $indexes;
+    }
+
+    /**
+     * Parse the real expression text of each key part from the `CREATE INDEX` statement stored
+     * in `sqlite_master`, since `PRAGMA index_info` reports no column name for functional key parts.
+     *
+     * @return  string[]  Expression text keyed by the zero-based key part position (`seqno`).
+     */
+    protected function listIndexExpressions(string $indexName, ?string $schema): array
+    {
+        $schema ??= static::getDefaultSchema();
+
+        $sql = (string) $this->db->prepare(
+            $this->createQuery()
+                ->select('sql')
+                ->from(trim($schema . '.sqlite_master', '.'))
+                ->where('type', 'index')
+                ->where('name', $indexName)
+        )->result();
+
+        if ($sql === '' || !preg_match('/\((.*)\)\s*(?:WHERE\s+.*)?$/is', $sql, $matches)) {
+            return [];
+        }
+
+        return array_map(
+            fn(string $part) => $this->stripOuterParens(trim($part)),
+            $this->splitIndexKeyParts($matches[1])
+        );
+    }
+
+    /**
+     * Split index key parts by top-level commas, expressions may contain commas in parentheses.
+     *
+     * @return  string[]
+     */
+    protected function splitIndexKeyParts(string $keys): array
+    {
+        $parts = [];
+        $depth = 0;
+        $current = '';
+
+        foreach (str_split($keys) as $char) {
+            if ($char === '(') {
+                $depth++;
+            } elseif ($char === ')') {
+                $depth--;
+            }
+
+            if ($char === ',' && $depth === 0) {
+                $parts[] = trim($current);
+                $current = '';
+                continue;
+            }
+
+            $current .= $char;
+        }
+
+        $parts[] = trim($current);
+
+        return $parts;
+    }
+
+    /**
+     * Remove one matching outer pair of parentheses added by `addIndex()` when wrapping an
+     * expression key part, e.g. `(LOWER(email))` becomes `LOWER(email)`.
+     */
+    protected function stripOuterParens(string $expression): string
+    {
+        if (!str_starts_with($expression, '(') || !str_ends_with($expression, ')')) {
+            return $expression;
+        }
+
+        $depth = 0;
+        $length = strlen($expression);
+
+        for ($i = 0; $i < $length; $i++) {
+            if ($expression[$i] === '(') {
+                $depth++;
+            } elseif ($expression[$i] === ')') {
+                $depth--;
+
+                if ($depth === 0 && $i !== $length - 1) {
+                    return $expression;
+                }
+            }
+        }
+
+        return substr($expression, 1, -1);
     }
 
     public function pragma(string $name, ?string $value = null, ?string $schema = null): Query

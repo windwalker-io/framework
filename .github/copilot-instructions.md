@@ -7,6 +7,10 @@ See `/AGENTS.md` for general guidelines on how to use Copilot effectively.
 See `/.github/STRUCTURE.md` for how this `.github` directory is organized (instructions / prompts / skills / docs)
 and where to place new AI-facing content.
 
+When creating temporary/scratch test files for exploration or debugging (not part of the actual test suite under
+`packages/*/test`), put them in the repo-root `tmp/` directory (already git-ignored via `/tmp/*`). Clean them up
+when done.
+
 ## Others
 
 - Code Style

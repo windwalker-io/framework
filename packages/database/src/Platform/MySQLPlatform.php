@@ -129,19 +129,23 @@ class MySQLPlatform extends AbstractPlatform
 
     public function listIndexesQuery(string $table, ?string $schema): Query
     {
-        $query = $this->db->select(
-            [
-                'TABLE_SCHEMA',
-                'TABLE_NAME',
-                'NON_UNIQUE',
-                'INDEX_NAME',
-                'COLUMN_NAME',
-                'COLLATION',
-                'CARDINALITY',
-                'SUB_PART',
-                'INDEX_COMMENT',
-            ]
-        )
+        $columns = [
+            'TABLE_SCHEMA',
+            'TABLE_NAME',
+            'NON_UNIQUE',
+            'INDEX_NAME',
+            'COLUMN_NAME',
+            'COLLATION',
+            'CARDINALITY',
+            'SUB_PART',
+            'INDEX_COMMENT',
+        ];
+
+        if ($this->supportsIndexExpression()) {
+            $columns[] = 'EXPRESSION';
+        }
+
+        $query = $this->db->select($columns)
             ->from('INFORMATION_SCHEMA.STATISTICS')
             ->where('TABLE_NAME', $this->db->replacePrefix($table));
 
@@ -447,7 +451,8 @@ class MySQLPlatform extends AbstractPlatform
 
             foreach ($keys as $i => $key) {
                 $isExpression = $key['COLUMN_NAME'] === null;
-                $colName = $key['COLUMN_NAME'] ?? '(expression ' . ($i + 1) . ')';
+                $expression = $isExpression ? ($key['EXPRESSION'] ?? null) : null;
+                $colName = $key['COLUMN_NAME'] ?? $expression ?? '(expression ' . ($i + 1) . ')';
 
                 $index['columns'][$colName] = [
                     'column_name' => $colName,
@@ -778,6 +783,24 @@ class MySQLPlatform extends AbstractPlatform
             strtolower($this->db->getDriver()->getVersion()),
             'mariadb'
         );
+    }
+
+    /**
+     * Whether `INFORMATION_SCHEMA.STATISTICS.EXPRESSION` is available to read back the real
+     * expression text of functional key parts. MariaDB does not expose this column, and it was
+     * only added to MySQL in 8.0.13 (the same version that introduced functional indexes).
+     */
+    public function supportsIndexExpression(): bool
+    {
+        if ($this->isMariaDB()) {
+            return false;
+        }
+
+        $version = (string) $this->db->getDriver()->getVersion();
+
+        preg_match('/^\d+\.\d+\.\d+/', $version, $matches);
+
+        return isset($matches[0]) && version_compare($matches[0], '8.0.13', '>=');
     }
 
     public function enableStrictMode(?array $modes = null): StatementInterface
