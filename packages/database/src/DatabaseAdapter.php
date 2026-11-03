@@ -56,7 +56,15 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      */
     protected ?array $pretendLog = null;
 
-    protected ?ORM $orm = null;
+    public ORM $orm {
+        get => $this->orm();
+    }
+
+    protected ?ORM $ormInstance = null;
+
+    public WriterManager $writer {
+        get => $this->getWriter();
+    }
 
     /**
      * DatabaseAdapter constructor.
@@ -514,7 +522,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
             throw new DomainException('Please install windwalker/orm ^4.0 first.');
         }
 
-        return $this->orm ??= new ORM($this);
+        return $this->ormInstance ??= new ORM($this);
     }
 
     /**
@@ -524,7 +532,7 @@ class DatabaseAdapter implements EventAwareInterface, HydratorAwareInterface
      */
     public function setORM(?ORM $orm): static
     {
-        $this->orm = $orm;
+        $this->ormInstance = $orm;
 
         return $this;
     }
