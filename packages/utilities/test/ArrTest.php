@@ -1027,6 +1027,12 @@ Array
 
     [3] => ArrayObject Object
         (
+            [\0ArrayObject\0storage] => Array
+                (
+                    [flower] => sakura
+                    [fruit] => apple
+                )
+
         )
 
     [4] => Array

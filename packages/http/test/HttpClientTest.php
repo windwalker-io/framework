@@ -896,7 +896,7 @@ class HttpClientTest extends TestCase
         $cmd = $this->instance->toCurlCmd('POST', 'http://example.com', ['a' => 'b&c']);
 
         self::assertStringContainsString("--request POST 'http://example.com'", $cmd);
-        self::assertStringContainsString("-d '{\"a\":\"b&c\"}'", $cmd);
+        self::assertStringContainsString("--data-raw '{\"a\":\"b&c\"}'", $cmd);
     }
 
     #[Test]
