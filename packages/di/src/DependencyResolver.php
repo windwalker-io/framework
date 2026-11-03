@@ -85,7 +85,7 @@ class DependencyResolver
             if (!$options->ignoreAttributes) {
                 $builder = $this->container
                     ->getAttributesResolver()
-                    ->resolveClassCreate($class, $builder);
+                    ->resolveClassCreate($class, $builder, $this->toAttributeOptions($options));
             }
 
             try {
@@ -125,7 +125,7 @@ class DependencyResolver
             if (!$options->ignoreAttributes) {
                 $instance = $this->container
                     ->getAttributesResolver()
-                    ->decorateObject($instance);
+                    ->decorateObject($instance, $this->toAttributeOptions($options));
             }
 
             // If is definition object, means this callable is a factory, let's resolve definition.
@@ -148,7 +148,7 @@ class DependencyResolver
         if (!$options->ignoreAttributes) {
             $instance = $this->container
                 ->getAttributesResolver()
-                ->resolveObjectMembers($instance);
+                ->resolveObjectMembers($instance, $this->toAttributeOptions($options));
         }
 
         return $instance;
@@ -524,7 +524,7 @@ class DependencyResolver
         if (!$options->ignoreAttributes && $param->getAttributes()) {
             $value = &$this->container
                 ->getAttributesResolver()
-                ->resolveParameter($value, $param);
+                ->resolveParameter($value, $param, $this->toAttributeOptions($options));
         }
 
         return $value;
@@ -565,7 +565,7 @@ class DependencyResolver
             if (!$options->ignoreAttributes) {
                 $callable = $this->container
                     ->getAttributesResolver()
-                    ->resolveCallable($callable, $context);
+                    ->resolveCallable($callable, $context, $this->toAttributeOptions($options));
             }
 
             return $callable(...$args);
@@ -592,6 +592,20 @@ class DependencyResolver
     public function mergeOptionsDefaults(int|DIOptions $options): DIOptions
     {
         return DIOptions::wrap($options)->withDefaults($this->container->options);
+    }
+
+    /**
+     * Build the `$options` array expected by the base `AttributesResolver` methods from the given `DIOptions`.
+     *
+     * @param  DIOptions  $options
+     *
+     * @return  array{excludes: class-string[]}
+     */
+    protected function toAttributeOptions(DIOptions $options): array
+    {
+        return [
+            'excludes' => $options->excludeAttributes ?? [],
+        ];
     }
 
     /**

@@ -36,6 +36,13 @@ class DIOptions
          */
         public ?bool $ignoreAttributes = null,
         /**
+         * A list of attribute class names (e.g. [Decorator::class]) to skip when resolving/creating this object,
+         * without disabling every other attribute like `ignoreAttributes` would.
+         *
+         * @var  class-string[]|null
+         */
+        public ?array $excludeAttributes = null,
+        /**
          * Use PHP 8.4 Lazy Proxy to wrap resolved instance, the real object is created on first property access
          * (calling a method which does not touch properties will not initialize it).
          *

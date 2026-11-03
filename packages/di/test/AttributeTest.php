@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Windwalker\DI\Test;
 
 use Attribute;
-use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\DI\Attributes\AttributeType;
 use Windwalker\DI\Attributes\Autowire;
 use Windwalker\DI\Attributes\Decorator;
 use Windwalker\DI\Container;
+use Windwalker\DI\DIOptions;
 use Windwalker\DI\Test\Injection\Attrs\ParamLower;
 use Windwalker\DI\Test\Injection\Attrs\ToUpper;
 use Windwalker\DI\Test\Injection\InnerStub;
@@ -57,6 +58,41 @@ class AttributeTest extends TestCase
 
         self::assertInstanceOf(Wrapped::class, $result);
         self::assertInstanceOf(InnerStub::class, $result->instance);
+    }
+
+    #[Test]
+    public function excludeAttributesSkipsOnlySpecifiedAttribute(): void
+    {
+        $this->instance
+            ->getAttributesResolver()
+            ->registerAttribute(Decorator::class, Attribute::TARGET_CLASS)
+            ->registerAttribute(Autowire::class, Attribute::TARGET_CLASS);
+
+        $result = $this->instance->newInstance(
+            InnerStub::class,
+            [],
+            new DIOptions(excludeAttributes: [Decorator::class]),
+        );
+
+        self::assertInstanceOf(InnerStub::class, $result);
+        self::assertNotInstanceOf(Wrapped::class, $result);
+    }
+
+    #[Test]
+    public function excludeAttributesStillRunsOtherAttributes(): void
+    {
+        $this->instance
+            ->getAttributesResolver()
+            ->registerAttribute(Autowire::class, Attribute::TARGET_CLASS);
+
+        $result = $this->instance->newInstance(
+            WiredClass::class,
+            [],
+            new DIOptions(excludeAttributes: [Decorator::class]),
+        );
+
+        self::assertInstanceOf(WiredClass::class, $result);
+        self::assertInstanceOf(StringObject::class, $result->logs[0]);
     }
 
     #[Test]
