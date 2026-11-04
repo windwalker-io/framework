@@ -14,6 +14,8 @@ use Attribute;
  *
  * Lazy is silently skipped (normal eager flow) when the class does not exist, is not instantiable
  * (interface, abstract class, trait, enum), or is/extends an internal class (e.g. ArrayObject, SplStack).
+ * Any class-level attribute other than Lazy also disables proxy creation, even when ignored or excluded,
+ * because attributes may replace the instance with an incompatible type.
  * A nullable parameter is only lazy if the container has the service registered.
  *
  * If the first access throws a DefinitionResolveException "Unable to initialize lazy object", the resolved real

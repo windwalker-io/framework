@@ -43,6 +43,8 @@ use Windwalker\Utilities\Contract\ArrayAccessibleInterface;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
+use function Windwalker\unwrap_lazy_object;
+
 /**
  * The Container class.
  */
@@ -997,6 +999,10 @@ class Container implements ContainerInterface, IteratorAggregate, Countable, Arr
 
                             foreach ($extends as $extend) {
                                 $instance = $extend($instance, $this);
+                            }
+
+                            if (is_object($instance)) {
+                                $instance = unwrap_lazy_object($instance);
                             }
 
                             DependencyResolver::assertProxyCompatible($ref, $instance);
