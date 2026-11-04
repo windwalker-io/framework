@@ -6,12 +6,15 @@ namespace Windwalker\Queue\Test;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\AbstractLogger;
+use Psr\Log\LogLevel;
 use Windwalker\Queue\Driver\NullQueueDriver;
 use Windwalker\Queue\Driver\QueueDriverInterface;
 use Windwalker\Queue\Enqueuer;
 use Windwalker\Queue\Enqueuer\EnqueuerController;
 use Windwalker\Queue\Event\AfterEnqueueEvent;
 use Windwalker\Queue\Event\BeforeEnqueueEvent;
+use Windwalker\Queue\Event\DebugOutputEvent;
 use Windwalker\Queue\Event\EnqueueFailureEvent;
 use Windwalker\Queue\Queue;
 use Windwalker\Queue\RunnerOptions;
@@ -159,5 +162,37 @@ class EnqueuerTest extends TestCase
 
         self::assertInstanceOf(EnqueuerController::class, $custom);
         self::assertSame('foo', $custom->channel);
+    }
+
+    #[Test]
+    public function noticeLogsAreOnlyEmittedAsDebugOutput(): void
+    {
+        $logs = [];
+        $logger = new class ($logs) extends AbstractLogger {
+            public function __construct(private array &$logs) {}
+
+            public function log($level, string|\Stringable $message, array $context = []): void
+            {
+                $this->logs[] = [$level, (string) $message];
+            }
+        };
+        $enqueuer = new Enqueuer(new Queue(new NullQueueDriver()), logger: $logger);
+        $events = [];
+        $enqueuer->on(DebugOutputEvent::class, function (DebugOutputEvent $event) use (&$events) {
+            $events[] = [$event->level, $event->message, $event->context];
+        });
+
+        $controllerLogger = $enqueuer->createEnqueuerController('default')->logger;
+        $controllerLogger->log(LogLevel::NOTICE, 'routine notice');
+        $controllerLogger->log(LogLevel::WARNING, 'important warning');
+
+        self::assertSame([[LogLevel::WARNING, 'important warning']], $logs);
+        self::assertSame(
+            [
+                [LogLevel::NOTICE, 'routine notice', []],
+                [LogLevel::WARNING, 'important warning', []],
+            ],
+            $events
+        );
     }
 }

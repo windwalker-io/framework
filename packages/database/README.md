@@ -24,10 +24,22 @@
 composer require windwalker/database ^4.0
 ```
 
+### Lost connections
+
+`AbstractDriver::useConnection()` reconnects and retries its callback once when
+execution reports a lost connection. Detection includes MySQL gone-away/lost-
+connection errors, timeouts, connection reset by peer, unexpectedly closed
+server/SSL connections, communication-link failures, and query-packet send errors.
+Initial connection failures, failed reconnects, and failed retries propagate to
+the caller; this is not an unlimited retry loop.
+
+The callback can execute SQL again. A disconnect does not restore a transaction,
+and retrying a write after an ambiguous response can duplicate effects. Callers
+must handle failed operations and use idempotent writes where necessary.
+
 ### Resources
 
 - [Documentation](https://windwalker.io/documentation/components/database/)
 - [Bug report](https://github.com/windwalker-io/framework)
 - [Contributing](https://github.com/windwalker-io/framework)
 - [Discussion](https://github.com/windwalker-io/framework/discussions)
-

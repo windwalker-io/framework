@@ -267,7 +267,13 @@ abstract class AbstractDriver implements HydratorAwareInterface
             'lost connection',
             'went away',
             'connection timed out',
-            'operation timed out'
+            'operation timed out',
+            'connection reset by peer',
+            'server closed the connection unexpectedly',
+            'ssl connection has been closed unexpectedly',
+            'no connection to the server',
+            'communication link failure',
+            'error while sending query packet'
         ];
 
         return array_any($keywords, static fn($keyword) => str_contains($message, strtolower($keyword)));
