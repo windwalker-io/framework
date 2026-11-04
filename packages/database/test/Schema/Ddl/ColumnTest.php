@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Database\Platform\Type\MySQLDataType;
+use Windwalker\Database\Platform\Type\OracleDataType;
 use Windwalker\Database\Platform\Type\PostgreSQLDataType;
 use Windwalker\Database\Platform\Type\SQLServerDataType;
 use Windwalker\Database\Platform\Type\SQLiteDataType;
@@ -86,5 +87,18 @@ class ColumnTest extends TestCase
 
         self::assertSame('timestamp(3)', $column->getTypeExpression(new MySQLDataType()));
         self::assertSame('date', new Column('d', 'date')->length(6)->getTypeExpression(new MySQLDataType()));
+    }
+
+    #[Test]
+    public function blobTypeHasNoLengthAndNoDefault(): void
+    {
+        $column = new Column('data', 'blob');
+
+        self::assertFalse($column->canHasDefaultValue());
+        self::assertSame('blob', $column->getTypeExpression(new MySQLDataType()));
+        self::assertSame('blob', $column->getTypeExpression(new SQLiteDataType()));
+        self::assertSame('bytea', new Column('data', 'bytea')->getTypeExpression(new PostgreSQLDataType()));
+        self::assertSame('varbinary', new Column('data', 'varbinary')->getTypeExpression(new SQLServerDataType()));
+        self::assertSame('blob', new Column('data', 'blob')->getTypeExpression(new OracleDataType()));
     }
 }

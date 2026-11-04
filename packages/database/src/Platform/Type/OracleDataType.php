@@ -97,5 +97,6 @@ class OracleDataType extends DataType
         self::BINARY_DOUBLE,
         self::DATE,
         self::TIMESTAMP,
+        DataType::BLOB,
     ];
 }

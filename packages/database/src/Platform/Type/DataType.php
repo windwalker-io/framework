@@ -72,6 +72,8 @@ class DataType
 
     public const LONGTEXT = 'longtext';
 
+    public const BLOB = 'blob';
+
     public const TINYINT = 'tinyint';
 
     public const DATETIME = 'datetime';
@@ -96,6 +98,7 @@ class DataType
         self::VARCHAR => [255, '', 'string'],
         self::TEXT => [null, '', 'string'],
         self::LONGTEXT => [null, '', 'string'],
+        self::BLOB => [null, false, 'string'],
 
         self::BIT => [1, 0, 'int'],
         self::BIT_VARYING => [1, 0, 'int'],

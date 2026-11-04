@@ -665,6 +665,7 @@ class MySQLPlatform extends AbstractPlatform
             'text',
             'longtext',
             'mediumtext',
+            'blob',
             'json',
         ];
 

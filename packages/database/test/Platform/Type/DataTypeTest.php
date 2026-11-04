@@ -7,7 +7,10 @@ namespace Windwalker\Database\Test\Platform\Type;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Windwalker\Database\Platform\Type\DataType;
+use Windwalker\Database\Platform\Type\MySQLDataType;
+use Windwalker\Database\Platform\Type\OracleDataType;
 use Windwalker\Database\Platform\Type\PostgreSQLDataType;
+use Windwalker\Database\Platform\Type\SQLServerDataType;
 use Windwalker\Database\Schema\Ddl\Column;
 
 class DataTypeTest extends TestCase
@@ -42,5 +45,23 @@ class DataTypeTest extends TestCase
         $column = new Column('c', PostgreSQLDataType::INTEGER);
 
         self::assertSame(7, PostgreSQLDataType::castForSave('7', $column));
+    }
+
+    #[Test]
+    public function blobTypeHasNoLengthAndNoDefaultValue(): void
+    {
+        self::assertNull(DataType::getLength(DataType::BLOB));
+        self::assertFalse(DataType::getDefaultValue(DataType::BLOB));
+        self::assertSame('string', DataType::getPhpType(DataType::BLOB));
+        self::assertTrue(MySQLDataType::isNoLength(DataType::BLOB));
+    }
+
+    #[Test]
+    public function blobTypeMapsToPlatformSpecificType(): void
+    {
+        self::assertSame(DataType::BLOB, MySQLDataType::getAvailableType(DataType::BLOB));
+        self::assertSame(PostgreSQLDataType::BYTEA, PostgreSQLDataType::getAvailableType(DataType::BLOB));
+        self::assertSame(SQLServerDataType::VARBINARY, SQLServerDataType::getAvailableType(DataType::BLOB));
+        self::assertSame(DataType::BLOB, OracleDataType::getAvailableType(DataType::BLOB));
     }
 }

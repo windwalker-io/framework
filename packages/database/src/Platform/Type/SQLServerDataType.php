@@ -22,6 +22,8 @@ class SQLServerDataType extends DataType
 
     public const NTEXT = 'ntext';
 
+    public const VARBINARY = 'varbinary';
+
     // EXACT NUMERIC
     public const INTEGER = 'int';
 
@@ -62,6 +64,7 @@ class SQLServerDataType extends DataType
         DataType::DATETIME => self::DATETIME2,
         DataType::TIMESTAMP => self::DATETIME2,
         'json' => self::NVARCHAR,
+        DataType::BLOB => self::VARBINARY,
     ];
 
     /**
@@ -74,5 +77,6 @@ class SQLServerDataType extends DataType
         self::SMALLINT,
         self::NTEXT,
         self::BIT,
+        self::VARBINARY,
     ];
 }

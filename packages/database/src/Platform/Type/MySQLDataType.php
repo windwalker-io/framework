@@ -69,6 +69,7 @@ class MySQLDataType extends DataType
     protected static array $noLength = [
         self::TEXT,
         self::LONGTEXT,
+        self::BLOB,
         self::DATE,
     ];
 }

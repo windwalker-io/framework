@@ -40,6 +40,7 @@ class PostgreSQLDataType extends DataType
         MySQLDataType::FLOAT => self::REAL,
         MySQLDataType::CHAR => self::VARCHAR,
         MySQLDataType::BINARY => self::BYTEA,
+        DataType::BLOB => self::BYTEA,
     ];
 
     /**
