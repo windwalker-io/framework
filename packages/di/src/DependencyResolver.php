@@ -444,6 +444,15 @@ class DependencyResolver
                     function () use ($create, $ref) {
                         $value = $this->resolveParameterValue($create());
 
+                        // $create() may itself return a still-uninitialized lazy object, e.g. when
+                        // the dependency is registered in the container with its own lazy definition.
+                        // A lazy proxy's factory must return a realized (non-lazy) instance, so force
+                        // initialization here instead of letting PHP throw "Lazy proxy factory must
+                        // return a non-lazy object".
+                        if (is_object($value) && $ref->isUninitializedLazyObject($value)) {
+                            $value = $ref->initializeLazyObject($value);
+                        }
+
                         static::assertProxyCompatible($ref, $value);
 
                         return $value;
