@@ -129,7 +129,7 @@ class ContainerLazyTest extends TestCase
         $container->registerDefaultAttributes();
 
         $consumer = $container->newInstance(
-            static fn() => new class {
+            static fn() => new class () {
                 #[Inject]
                 #[Lazy]
                 public AttributedLazyService $service;
