@@ -83,6 +83,11 @@ class OraclePlatform extends AbstractPlatform
             )
             ->from('ALL_TABLES')
             ->where('NESTED', 'NO')
+            ->whereRaw(
+                'NOT EXISTS (SELECT 1 FROM ALL_OBJECTS O WHERE O.OWNER = ALL_TABLES.OWNER'
+                . " AND O.OBJECT_NAME = ALL_TABLES.TABLE_NAME AND O.OBJECT_TYPE = 'TABLE'"
+                . " AND O.ORACLE_MAINTAINED = 'Y')"
+            )
             ->tap(fn(Query $query) => $this->whereOwner($query, 'OWNER', $schema))
             ->order('TABLE_NAME');
     }
