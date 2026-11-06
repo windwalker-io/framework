@@ -93,6 +93,7 @@ use function Windwalker\value;
  * @method  $this         outerJoin($table, ?string $alias = null, ...$on)
  * @method  $this         innerJoin($table, ?string $alias = null, ...$on)
  * @method  $this         leftJoinLateral($table, ?string $alias = null, ...$on)
+ * @method  $this         rightJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         innerJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         whereIn($column, iterable $values)
  * @method  $this         whereNotIn($column, iterable $values)
@@ -635,13 +636,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @param  mixed  $query  The Query object or string to union.
      *
-     * @return  mixed  The Query object on success or boolean false on failure.
+     * @return  static
      *
      * @see     union
      *
      * @since   2.0
      */
-    public function unionAll(mixed $query): mixed
+    public function unionAll(mixed $query): static
     {
         // Apply the distinct flag to the union.
         return $this->union($query, 'ALL');
@@ -2157,7 +2158,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
         $aliases = [
             'leftJoinLateral' => 'LEFT',
-            'innerJoinLateral' => 'RIGHT',
+            'rightJoinLateral' => 'RIGHT',
+            'innerJoinLateral' => 'INNER',
         ];
 
         if (isset($aliases[$name])) {
