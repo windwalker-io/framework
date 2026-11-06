@@ -11,6 +11,7 @@ use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\raw;
 
@@ -764,6 +765,11 @@ class OraclePlatform extends AbstractPlatform
         }
 
         $type = $column->getDataType();
+
+        // Raw SQL expressions (e.g. defaultCurrent()) must not get a type literal prefix.
+        if ($default instanceof RawWrapper) {
+            return 'DEFAULT ' . $default();
+        }
 
         if ($default !== null && $type === 'timestamp') {
             return 'DEFAULT TIMESTAMP ' . $this->db->quote($default);
