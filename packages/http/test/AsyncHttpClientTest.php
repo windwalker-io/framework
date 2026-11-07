@@ -93,9 +93,9 @@ class AsyncHttpClientTest extends TestCase
     }
 
     #[Test]
-    public function senRequestQueuesTaskAndReturnsPromise(): void
+    public function sendRequestQueuesTaskAndReturnsPromise(): void
     {
-        $promise = $this->instance->senRequest($this->createRequest('/json?a=1'));
+        $promise = $this->instance->sendRequest($this->createRequest('/json?a=1'));
 
         self::assertInstanceOf(PromiseResponse::class, $promise);
         self::assertCount(1, $this->instance->getHandles());
@@ -105,8 +105,8 @@ class AsyncHttpClientTest extends TestCase
     #[Test]
     public function resolveReturnsResponsesForAllQueuedRequests(): void
     {
-        $this->instance->senRequest($this->createRequest('/json?a=1'));
-        $this->instance->senRequest($this->createRequest('/json?a=2'));
+        $this->instance->sendRequest($this->createRequest('/json?a=1'));
+        $this->instance->sendRequest($this->createRequest('/json?a=2'));
 
         $responses = $this->instance->resolve();
 
@@ -122,7 +122,7 @@ class AsyncHttpClientTest extends TestCase
     {
         $received = [];
 
-        $promise = $this->instance->senRequest($this->createRequest('/json?a=3'));
+        $promise = $this->instance->sendRequest($this->createRequest('/json?a=3'));
         $promise->then(
             function (Response $res) use (&$received) {
                 $received[] = (string) $res->getBody();
@@ -139,7 +139,7 @@ class AsyncHttpClientTest extends TestCase
     #[Test]
     public function resolveInvokesCallbackWithResponsesErrorsAndClient(): void
     {
-        $this->instance->senRequest($this->createRequest('/json?a=1'));
+        $this->instance->sendRequest($this->createRequest('/json?a=1'));
 
         $args = null;
 
@@ -159,7 +159,7 @@ class AsyncHttpClientTest extends TestCase
     {
         $failure = null;
 
-        $promise = $this->instance->senRequest(
+        $promise = $this->instance->sendRequest(
             $this->createUrlRequest('http://127.0.0.1:1/unreachable'),
         );
         $promise->fail(
@@ -187,7 +187,7 @@ class AsyncHttpClientTest extends TestCase
     #[Test]
     public function resolveResetsQueueAfterCompletion(): void
     {
-        $this->instance->senRequest($this->createRequest('/json?a=1'));
+        $this->instance->sendRequest($this->createRequest('/json?a=1'));
         $this->instance->resolve();
 
         self::assertSame([], $this->instance->getHandles());
@@ -197,7 +197,7 @@ class AsyncHttpClientTest extends TestCase
     #[Test]
     public function resetClearsTasksAndMainHandle(): void
     {
-        $this->instance->senRequest($this->createRequest('/json?a=1'));
+        $this->instance->sendRequest($this->createRequest('/json?a=1'));
         $mh = $this->instance->getMainHandle();
 
         self::assertSame($this->instance, $this->instance->reset());

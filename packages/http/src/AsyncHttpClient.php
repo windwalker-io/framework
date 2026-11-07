@@ -116,7 +116,7 @@ class AsyncHttpClient extends HttpClient
      * @return  Promise
      * @throws  RangeException
      */
-    public function senRequest(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
