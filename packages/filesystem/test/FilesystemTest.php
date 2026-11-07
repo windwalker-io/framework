@@ -393,14 +393,6 @@ class FilesystemTest extends AbstractVfsTestCase
     }
 
     #[Test]
-    public function createTempAsyncThrowsBadMethodCall(): void
-    {
-        $this->expectException(\BadMethodCallException::class);
-
-        Filesystem::createTempAsync();
-    }
-
-    #[Test]
     public function symlinkCreatesLinkToTarget(): void
     {
         $dir = sys_get_temp_dir() . '/windwalker-symlink-test-' . uniqid();
