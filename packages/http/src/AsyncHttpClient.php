@@ -137,6 +137,20 @@ class AsyncHttpClient extends HttpClient
     }
 
     /**
+     * Send a request to remote.
+     *
+     * @param  RequestInterface  $request  The PSR request object.
+     *
+     * @return  Promise
+     *
+     * @deprecated  Use sendRequest() instead.
+     */
+    public function senRequest(RequestInterface $request): ResponseInterface
+    {
+        return $this->sendRequest($request);
+    }
+
+    /**
      * resolve
      *
      * @param  callable|null  $callback

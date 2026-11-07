@@ -103,6 +103,16 @@ class AsyncHttpClientTest extends TestCase
     }
 
     #[Test]
+    public function senRequestForwardsToSendRequest(): void
+    {
+        $promise = $this->instance->senRequest($this->createRequest('/json?a=1'));
+
+        self::assertInstanceOf(PromiseResponse::class, $promise);
+        self::assertCount(1, $this->instance->getHandles());
+        self::assertCount(1, $this->instance->getTasks());
+    }
+
+    #[Test]
     public function resolveReturnsResponsesForAllQueuedRequests(): void
     {
         $this->instance->sendRequest($this->createRequest('/json?a=1'));
