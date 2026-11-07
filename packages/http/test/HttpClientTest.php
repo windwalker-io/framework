@@ -248,6 +248,40 @@ class HttpClientTest extends TestCase
     }
 
     #[Test]
+    public function querySendsQueryMethodWithBodyAndOptions(): void
+    {
+        $url = 'http://example.com/?foo=bar';
+        $body = ['filter' => ['status' => 'active']];
+        $headers = ['X-Foo' => 'Bar'];
+
+        $this->instance->query($url, $body, compact('headers'));
+
+        self::assertSame('QUERY', $this->transport->request->getMethod());
+        self::assertSame($url, $this->transport->request->getRequestTarget());
+        self::assertSame('{"filter":{"status":"active"}}', (string) $this->transport->request->getBody());
+        self::assertSame('Bar', $this->transport->request->getHeaderLine('X-Foo'));
+    }
+
+    #[Test]
+    public function queryAsyncUsesUppercaseQueryMethod(): void
+    {
+        $client = new class ([], new MockTransport()) extends HttpClient {
+            public ?RequestInterface $request = null;
+
+            public function sendAsyncRequest(RequestInterface $request): mixed
+            {
+                $this->request = $request;
+
+                return null;
+            }
+        };
+
+        $client->queryAsync('http://example.com', ['filter' => 'active']);
+
+        self::assertSame('QUERY', $client->request?->getMethod());
+    }
+
+    #[Test]
     public function putSendsFormDataBodyWithPutMethod(): void
     {
         $url = 'http://example.com/?foo=bar';
