@@ -183,6 +183,49 @@ EOT,
     }
 
     #[Test]
+    public function resolveConstantsWithClassConstantTarget(): void
+    {
+        $this->instance->registerAttribute(StubMemberResolver::class, Attribute::TARGET_CLASS_CONSTANT);
+
+        $foo = new class () {
+            #[StubMemberResolver]
+            public const FLOWER = 'sakura';
+
+            public array $output = [];
+        };
+
+        $foo = $this->instance->resolveConstants($foo);
+
+        self::assertSame(['ReflectionClassConstant = FLOWER'], $foo->output);
+    }
+
+    #[Test]
+    public function resolveObjectMembersWithClassConstantTarget(): void
+    {
+        $this->instance->registerAttribute(StubMemberResolver::class, Attribute::TARGET_CLASS_CONSTANT);
+
+        $foo = new class () {
+            #[StubMemberResolver]
+            public const FLOWER = 'sakura';
+
+            #[StubMemberResolver]
+            protected ?string $foo = 'bar';
+
+            public array $output = [];
+
+            #[StubMemberResolver]
+            protected function hello(): string
+            {
+                return '';
+            }
+        };
+
+        $foo = $this->instance->resolveObjectMembers($foo);
+
+        self::assertSame(['ReflectionClassConstant = FLOWER'], $foo->output);
+    }
+
+    #[Test]
     public function methodCall(): void
     {
         $this->instance->registerAttribute(StrUpper::class, Attribute::TARGET_PARAMETER);

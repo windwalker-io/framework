@@ -402,7 +402,7 @@ class AttributesResolver extends ObjectBuilder
 
             foreach ($constant->getAttributes() as $attribute) {
                 if (
-                    $this->hasAttribute($attribute, Attribute::TARGET_METHOD)
+                    $this->hasAttribute($attribute, Attribute::TARGET_CLASS_CONSTANT)
                     && !$this->isAttributeExcluded($attribute, $options)
                 ) {
                     $handler    = $this->runAttribute($attribute, $handler);
