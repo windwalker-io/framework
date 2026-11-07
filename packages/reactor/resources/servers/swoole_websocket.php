@@ -16,7 +16,6 @@ use Windwalker\Reactor\Swoole\Event\OpenEvent;
 use Windwalker\Reactor\Swoole\Event\StartEvent;
 use Windwalker\Reactor\Swoole\Room\RoomMapping;
 use Windwalker\Reactor\Swoole\Room\UserFdMapping;
-use Windwalker\Reactor\Swoole\SwooleHttpServer;
 use Windwalker\Reactor\Swoole\SwooleServer;
 use Windwalker\Reactor\Swoole\SwooleWebsocketServer;
 use Windwalker\WebSocket\Swoole\RequestRegistry;
@@ -105,7 +104,6 @@ $app->loadConfig(WINDWALKER_ETC . '/app/websocket.php');
  */
 
 $container->share(SwooleServer::class, $server);
-$container->share(SwooleHttpServer::class, $server);
 $container->share(SwooleWebsocketServer::class, $server);
 
 // Register custom services
