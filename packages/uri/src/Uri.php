@@ -585,7 +585,7 @@ class Uri implements ExtendedUriInterface
     {
         $new = clone $this;
 
-        $new->path .= $suffix;
+        $new->path = UriHelper::filterPath($new->path . $suffix);
 
         return $new;
     }
@@ -619,8 +619,9 @@ class Uri implements ExtendedUriInterface
         $uri = ($parts & static::SCHEME) ? (!empty($this->scheme) ? $this->scheme . '://' : '') : '';
         $uri .= ($parts & static::USER) ? $this->user : '';
         $uri .= ($parts & static::PASSWORD)
-            ? (!empty($this->pass) ? ':' : '') . $this->pass . (!empty($this->user) ? '@' : '')
+            ? (!empty($this->pass) ? ':' : '') . $this->pass
             : '';
+        $uri .= ($parts & static::USER_INFO) && !empty($this->user) ? '@' : '';
         $uri .= ($parts & static::HOST) ? $this->host : '';
         $uri .= ($parts & static::PORT) ? (!empty($this->port) ? ':' : '') . $this->port : '';
 
