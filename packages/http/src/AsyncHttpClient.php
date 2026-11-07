@@ -116,7 +116,7 @@ class AsyncHttpClient extends HttpClient
      * @return  Promise
      * @throws  RangeException
      */
-    public function senRequest(RequestInterface $request): ResponseInterface
+    public function sendRequest(RequestInterface $request): ResponseInterface
     {
         /** @var CurlTransport $transport */
         $transport = $this->getTransport();
@@ -134,6 +134,20 @@ class AsyncHttpClient extends HttpClient
         curl_multi_add_handle($this->getMainHandle(), $handle);
 
         return $promise;
+    }
+
+    /**
+     * Send a request to remote.
+     *
+     * @param  RequestInterface  $request  The PSR request object.
+     *
+     * @return  Promise
+     *
+     * @deprecated  Use sendRequest() instead.
+     */
+    public function senRequest(RequestInterface $request): ResponseInterface
+    {
+        return $this->sendRequest($request);
     }
 
     /**
