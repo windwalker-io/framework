@@ -328,6 +328,34 @@ class LanguageTest extends TestCase
     }
 
     #[Test]
+    public function loadFlattensNestedJsonAndPhpTranslations(): void
+    {
+        $json = new Language();
+        $json->load(__DIR__ . '/fixtures/json/en-GB.json', 'json', 'en-GB');
+
+        $php = new Language();
+        $php->load(__DIR__ . '/fixtures/php/en-GB.php', 'php', 'en-GB');
+
+        self::assertSame('Sakura', $json->trans('windwalker.language.test.sakura'));
+        self::assertSame('Olive', $json->trans('windwalker.language.test.olive'));
+        self::assertSame('Sakura', $php->trans('windwalker.language.test.sakura'));
+    }
+
+    #[Test]
+    public function loadFlattensNestedYamlTranslationsWhenYamlIsAvailable(): void
+    {
+        if (!class_exists(\Symfony\Component\Yaml\Yaml::class)) {
+            self::markTestSkipped('Symfony YAML is not installed.');
+        }
+
+        $lang = new Language();
+        $lang->load(__DIR__ . '/fixtures/yaml/en-GB.yml', 'yaml', 'en-GB');
+
+        self::assertSame('Sakura', $lang->trans('windwalker.language.test.sakura'));
+        self::assertSame('Olive', $lang->trans('windwalker.language.test.olive'));
+    }
+
+    #[Test]
     public function getSelectorReturnsSameLazyInstance(): void
     {
         self::assertSame($this->instance->getSelector(), $this->instance->getSelector());
