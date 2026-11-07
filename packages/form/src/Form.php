@@ -354,6 +354,9 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
 
     public function wrap(?string $fieldset = null, ?string $namespace = null, ?callable $handler = null): static
     {
+        $prevFieldset = $this->fieldset;
+        $prevNamespaceDepth = count($this->namespaceStack);
+
         if ($fieldset) {
             $fs = $this->fieldsets[$fieldset] ??= new Fieldset($fieldset, null);
             $this->fieldset = $fs;
@@ -365,16 +368,13 @@ class Form implements IteratorAggregate, Countable, \ArrayAccess
             $this->namespaceStack[] = $namespace;
         }
 
-        if ($handler) {
-            $this->register($handler);
-        }
-
-        if ($namespace) {
-            array_pop($this->namespaceStack);
-        }
-
-        if ($fieldset) {
-            $this->fieldset = null;
+        try {
+            if ($handler) {
+                $this->register($handler);
+            }
+        } finally {
+            $this->namespaceStack = array_slice($this->namespaceStack, 0, $prevNamespaceDepth);
+            $this->fieldset = $prevFieldset;
         }
 
         return $this;
