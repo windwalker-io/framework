@@ -168,6 +168,24 @@ class HttpServerTest extends TestCase
     }
 
     #[Test]
+    public function handleEmitsLegacyResponseEvent(): void
+    {
+        $server = $this->createPhpServer();
+        $called = false;
+
+        $server->on('response', function () use (&$called) {
+            $called = true;
+        });
+        $server->onRequest(function (RequestEvent $event) {
+            $event->response = Response::fromString('body');
+        });
+
+        $server->handle($this->request());
+
+        self::assertTrue($called);
+    }
+
+    #[Test]
     public function handleDispatchesErrorEventAndSwallowsWhenPropagationStopped(): void
     {
         $server = $this->createPhpServer();
