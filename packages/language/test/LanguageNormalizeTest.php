@@ -72,7 +72,7 @@ class LanguageNormalizeTest extends TestCase
     #[Test]
     public function normalizeLangCodeKeepsLanguageOnlyCodeWithoutRegion(): void
     {
-        self::assertEquals('en-', LanguageNormalizer::normalizeLangCode('EN'));
+        self::assertEquals('en', LanguageNormalizer::normalizeLangCode('EN'));
     }
 
     #[Test]
