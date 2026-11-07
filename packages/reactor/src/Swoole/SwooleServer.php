@@ -270,7 +270,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
         $this->subServers[] = $subServer;
 
         if ($protocol > 0) {
-            $this->setProtocols($protocol);
+            $subServer->setProtocols($protocol);
         }
 
         return $subServer;

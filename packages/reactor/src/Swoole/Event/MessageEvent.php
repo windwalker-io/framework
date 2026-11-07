@@ -22,7 +22,7 @@ class MessageEvent extends BaseEvent
         get => $this->frame->getFd();
     }
 
-    public int $data {
+    public string $data {
         get => $this->frame->getData();
     }
 

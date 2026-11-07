@@ -131,7 +131,7 @@ trait HttpServerTrait
         $this->on(
             ResponseEvent::class,
             function (ResponseEvent $event) {
-                $this->eventPassthrough('reponse', $event);
+                $this->eventPassthrough('response', $event);
             },
         );
 
