@@ -524,6 +524,16 @@ class CachePoolTest extends TestCase
         self::assertEquals('HELLO-' . 1, $r);
     }
 
+    #[Test]
+    public function fetchUsesDefaultTtlWhenTtlIsNull(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $pool = new CachePool($storage)->withDefaultTtl(1800);
+
+        self::assertSame('VALUE', $pool->fetch('key', static fn() => 'VALUE', lock: false));
+        self::assertEqualsWithDelta(time() + 1800, $storage->getData()['key'][0], 2);
+    }
+
     /** @see CachePool::fetch — beta=INF always forces recomputation */
     public function testCallWithBetaInfAlwaysRecomputes(): void
     {
@@ -1084,6 +1094,16 @@ class CachePoolTest extends TestCase
 
         self::assertInstanceOf(Promise::class, $promise);
         self::assertSame('COMPUTED', $promise->wait());
+    }
+
+    #[Test]
+    public function fetchAsyncUsesDefaultTtlWhenTtlIsNull(): void
+    {
+        $storage = new ArrayStorage(0.0);
+        $pool = new CachePool($storage)->withDefaultTtl(1800);
+
+        self::assertSame('VALUE', $pool->fetchAsync('key', static fn() => 'VALUE', beta: 0.0, lock: false)->wait());
+        self::assertEqualsWithDelta(time() + 1800, $storage->getData()['key'][0], 2);
     }
 
     /** @see CachePool::fetchAsync — resolves with cached value on hit (handler not called) */

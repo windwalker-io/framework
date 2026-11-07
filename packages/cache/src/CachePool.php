@@ -390,7 +390,7 @@ class CachePool implements CachePoolInterface
     ): mixed {
         $locked = $lock && CacheLock::lock($key, $isNew);
 
-        $ttl = static::normalizeTtl($ttl);
+        $ttl = static::normalizeTtl($ttl ?? $this->defaultTtl);
 
         try {
             // Re-fetch after acquiring the lock so we see any value a competing
@@ -616,7 +616,7 @@ class CachePool implements CachePoolInterface
                     return;
                 }
 
-                $ttl = static::normalizeTtl($ttl);
+                $ttl = static::normalizeTtl($ttl ?? $this->defaultTtl);
 
                 $item->expiresAfter($ttl);
 
