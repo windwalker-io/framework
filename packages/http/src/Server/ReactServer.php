@@ -21,7 +21,7 @@ use Windwalker\Http\Output\Output;
 use Windwalker\Http\Request\ServerRequest;
 
 /**
- * The ReactServerAdapter class.
+ * The ReactServerAdapter class. It dispatches events directly and does not run middleware.
  */
 class ReactServer implements ServerInterface
 {
