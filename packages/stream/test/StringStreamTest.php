@@ -284,6 +284,8 @@ class StringStreamTest extends TestCase
         $stream->seek(2);
 
         $this->assertEquals('O BAR', $stream->getContents());
+        $this->assertSame(7, $stream->tell());
+        $this->assertSame('', $stream->getContents());
     }
 
     #[Test]
@@ -383,5 +385,17 @@ class StringStreamTest extends TestCase
         $stream->writable(true);
 
         $this->assertTrue($stream->isWritable());
+    }
+
+    #[Test]
+    public function writableFalseBlocksWrite(): void
+    {
+        $stream = new StringStream('FOO', READ_WRITE_FROM_BEGIN);
+        $stream->writable(false);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessageIs('Stream is not writable');
+
+        $stream->write('BAR');
     }
 }

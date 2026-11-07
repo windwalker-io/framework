@@ -15,9 +15,7 @@ class DecoratorStream implements StreamInterface
 
     public function __construct(?StreamInterface $target = null)
     {
-        if ($target) {
-            $this->stream = $target;
-        }
+        $this->stream = $target ?? new Stream();
     }
 
     public function __toString(): string

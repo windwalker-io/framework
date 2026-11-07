@@ -20,6 +20,14 @@ class DecoratorStreamTest extends TestCase
     }
 
     #[Test]
+    public function constructWithoutTargetCreatesEmptyStream(): void
+    {
+        $decorator = new DecoratorStream();
+
+        $this->assertSame('', $decorator->getContents());
+    }
+
+    #[Test]
     public function setInnerStreamReplacesTarget(): void
     {
         $decorator = new DecoratorStream(new StringStream('FOO'));

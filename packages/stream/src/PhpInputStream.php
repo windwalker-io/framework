@@ -29,7 +29,7 @@ class PhpInputStream extends CachingStream
 
     public static function getInstance(?StreamInterface $cache = null): self
     {
-        return self::$instance ?? new PhpInputStream($cache);
+        return self::$instance ??= new self($cache);
     }
 
     public static function getInstanceAndCached(?StreamInterface $cache = null): self
