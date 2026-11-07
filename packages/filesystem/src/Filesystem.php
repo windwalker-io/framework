@@ -55,7 +55,6 @@ use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
  * @method  static  Promise          filesAsync(string $path, bool $recursive = false, ?int $flags = null)
  * @method  static  Promise          foldersAsync(string $path, bool $recursive = false, ?int $flags = null)
  * @method  static  Promise          itemsAsync(string $path, bool $recursive = false, ?int $flags = null)
- * @method  static  Promise          createTempAsync(?string $dir = null, ?string $prefix = null)
  *
  * @since 2.0
  */
@@ -344,7 +343,6 @@ class Filesystem
             'filesAsync',
             'foldersAsync',
             'itemsAsync',
-            'createTempAsync',
         ];
 
         if (isset($maps[$name])) {
