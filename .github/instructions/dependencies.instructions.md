@@ -18,6 +18,6 @@ applyTo: "**/*.php,**/composer.json"
   introduced, after user approval and declaration in the owning package's manifest. Review the resulting root
   `composer.json` diff and any version warnings; do not declare package dependencies only in the root manifest.
 - Internal `windwalker/*` dependencies must still be declared in the owning package, but do not require running
-  `merge-composer.php`: workspace packages are already included through root `replace`, and the script skips
+  `merge-composer-dev.php`: workspace packages are already included through root `replace`, and the script skips
   them in root `require` / `require-dev`.
 

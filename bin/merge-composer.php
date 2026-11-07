@@ -22,7 +22,7 @@ class MergeComposer extends Console
      */
     protected function doExecute(): int
     {
-        $packages = Filesystem::folders(PACKAGES_PATH);
+        $packages = Filesystem::folders(VENDOR_PATH);
 
         $rootJsonFile = PROJECT_ROOT . '/composer.json';
         $rootJson = Collection::from($rootJsonFile);
@@ -125,4 +125,4 @@ class MergeComposer extends Console
     }
 }
 
-new MergeComposer()->execute($argv);
+new MergeComposerDev()->execute($argv);
