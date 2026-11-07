@@ -42,7 +42,7 @@ abstract class LanguageNormalizer
 
         $a = strtolower($a);
 
-        return implode($sep, [$a, $b]);
+        return $b === '' ? $a : implode($sep, [$a, $b]);
     }
 
     public static function sanitize(string $string): string
