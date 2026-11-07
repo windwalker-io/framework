@@ -114,7 +114,7 @@ class HttpServerTest extends TestCase
 
         $server->getAdapter()->handle($this->request());
 
-        self::assertContains('request', $called);
+        self::assertSame(['request', 'response'], $called);
     }
 
     #[Test]
