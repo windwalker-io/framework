@@ -262,6 +262,10 @@ class StringStream extends Stream
      */
     public function write($string): int
     {
+        if (!$this->isWritable()) {
+            throw new RuntimeException('Stream is not writable');
+        }
+
         $length = strlen($string);
 
         $start = substr($this->resource, 0, $this->pointer);
@@ -325,6 +329,9 @@ class StringStream extends Stream
         if ($result === false) {
             return '';
         }
+
+        $this->pointer += strlen($result);
+        $this->readPosition = $this->pointer;
 
         return $result;
     }
