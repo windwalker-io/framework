@@ -13,7 +13,6 @@
         "php": ">=8.4.6",
         "psr/http-message": "^1.0||^2.0",
         "windwalker/data": "^4.0",
-        "windwalker/promise": "^4.0",
         "windwalker/scalars": "^4.0",
         "windwalker/stream": "^4.0",
         "windwalker/utilities": "^4.0"
@@ -21,6 +20,7 @@
     "require-dev": {
         "phpunit/phpunit": "^13.0",
         "windwalker/test": "^4.0",
+        "windwalker/promise": "^4.0",
         "mikey179/vfsstream": "^1.6",
         "webmozart/glob": "^4.1",
         "symfony/mime": "^6.0||^7.0||^8.0"

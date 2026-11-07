@@ -6,6 +6,7 @@ namespace Windwalker\Filesystem;
 
 use BadMethodCallException;
 use InvalidArgumentException;
+use LogicException;
 use Psr\Http\Message\StreamInterface;
 use SplFileInfo;
 use Symfony\Component\Mime\MimeTypesInterface;
@@ -900,6 +901,10 @@ class FileObject extends SplFileInfo
      */
     protected function doAsync(string $name, array $args = []): Promise
     {
+        if (!class_exists(Promise::class)) {
+            throw new LogicException('Please install windwalker/promise to use async methods.');
+        }
+
         return async(fn() => $this->$name(...$args));
     }
 
