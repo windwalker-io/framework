@@ -29,9 +29,21 @@ use Windwalker\Http\Transport\TransportInterface;
  * @method Promise request($method, $url, mixed $body = null, $options = []):HttpClientResponse
  *
  * @since  3.2
+ *
+ * @deprecated  Use HttpClient::requestAsync() or HttpClient::sendAsyncRequest() instead.
  */
-class AsyncHttpClient extends HttpClient
+class AsyncHttpClient implements AsyncHttpClientInterface
 {
+    /**
+     * Property options.
+     */
+    protected HttpClientOptions $options;
+
+    /**
+     * Property transport.
+     */
+    protected CurlTransport $transport;
+
     /**
      * Property mh.
      *
@@ -63,12 +75,41 @@ class AsyncHttpClient extends HttpClient
     /**
      * Class init.
      *
-     * @param  array               $options    The options of this client object.
-     * @param  CurlTransport|null  $transport  The Transport handler, default is CurlTransport.
+     * @param  array|HttpClientOptions  $options    The options of this client object.
+     * @param  CurlTransport|null       $transport  The Transport handler, default is CurlTransport.
      */
-    public function __construct($options = [], ?CurlTransport $transport = null)
+    public function __construct(
+        array|HttpClientOptions $options = new HttpClientOptions(),
+        ?CurlTransport $transport = null,
+    ) {
+        $this->options = HttpClientOptions::wrap($options);
+        $this->transport = $transport ?? new CurlTransport();
+    }
+
+    /**
+     * Get the transport handler, with transport options applied.
+     *
+     * @return  CurlTransport
+     */
+    public function getTransport(): CurlTransport
     {
-        parent::__construct($options, $transport);
+        foreach ($this->options['transport'] ?? [] as $key => $value) {
+            $this->transport->setOption((string) $key, $value);
+        }
+
+        return $this->transport;
+    }
+
+    /**
+     * sendAsyncRequest
+     *
+     * @param  RequestInterface  $request
+     *
+     * @return  Promise
+     */
+    public function sendAsyncRequest(RequestInterface $request): mixed
+    {
+        return $this->sendRequest($request);
     }
 
     /**

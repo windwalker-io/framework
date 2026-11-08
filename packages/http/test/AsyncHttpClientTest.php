@@ -12,6 +12,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use Windwalker\Http\AsyncHttpClient;
+use Windwalker\Http\HttpClientOptions;
 use Windwalker\Http\Promise\PromiseResponse;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Response\Response;
@@ -90,6 +91,26 @@ class AsyncHttpClientTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $this->instance->setTransport(new StreamTransport());
+    }
+
+    #[Test]
+    public function getTransportAppliesTransportOptionsFromClientOptions(): void
+    {
+        $client = new AsyncHttpClient(
+            new HttpClientOptions(transport: ['timeout' => 7]),
+            new CurlTransport(),
+        );
+
+        self::assertSame(7, $client->getTransport()->getOption('timeout'));
+    }
+
+    #[Test]
+    public function sendAsyncRequestDelegatesToSendRequest(): void
+    {
+        $promise = $this->instance->sendAsyncRequest($this->createRequest('/json?a=1'));
+
+        self::assertInstanceOf(PromiseResponse::class, $promise);
+        self::assertCount(1, $this->instance->getTasks());
     }
 
     #[Test]
