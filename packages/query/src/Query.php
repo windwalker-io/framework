@@ -2253,4 +2253,42 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     {
         return new CursorPaginate($length, $cursorBy);
     }
+
+    /**
+     * Return a cloned query sorted by cursor columns, with the keyset condition after the last seen values.
+     *
+     * Usage:
+     * $query->withCursor('id', 'DESC', 10)
+     * $query->withCursor([
+     *     ['created', 'DESC', $created],
+     *     ['id', 'DESC', $id],
+     * ])
+     * $query->withCursor($paginate)                          // first page, uses the paginate length as LIMIT
+     * $query->withCursor($paginate, ['created' => $created, 'id' => $id])  // next page
+     *
+     * @param  string|array|CursorPaginate  $column   Column name, list of [column, direction, value],
+     *                                                or CursorPaginate with the last seen item or values.
+     * @param  mixed                        ...$args  Direction and value when $column is a string,
+     *                                                or the optional item / values when $column is a CursorPaginate.
+     *
+     * @return  static  A new query instance, the original query is not changed.
+     */
+    public function withCursor(string|array|CursorPaginate $column, mixed ...$args): static
+    {
+        $query = clone $this;
+
+        if ($column instanceof CursorPaginate) {
+            if (count($args) > 1 || (isset($args[0]) && !(is_array($args[0]) || is_object($args[0])))) {
+                throw new \InvalidArgumentException('CursorPaginate accepts at most one item or values array.');
+            }
+
+            return $column->applyPage($query, $args[0] ?? null);
+        }
+
+        $conditions = is_string($column) ? [[$column, ...$args]] : $column;
+
+        CursorPaginate::applyTo($query, $conditions);
+
+        return $query;
+    }
 }
