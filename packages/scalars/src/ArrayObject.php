@@ -318,13 +318,13 @@ class ArrayObject implements AccessibleInterface
      */
     public function avg(): float|int|null
     {
-        $sum = $this->sum();
+        $count = $this->count();
 
-        if ($sum === 0 || $sum === 0.0) {
+        if ($count === 0) {
             return null;
         }
 
-        return $sum / $this->count();
+        return $this->sum() / $count;
     }
 
     /**
