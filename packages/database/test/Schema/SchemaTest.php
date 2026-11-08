@@ -204,6 +204,8 @@ class SchemaTest extends AbstractDatabaseTestCase
     {
         $fk = $this->instance->addForeignKey('category_id', 'ww_categories', 'id');
 
+        self::assertTrue($fk->isForeignKey());
+        self::assertFalse($fk->isPrimary());
         self::assertSame(['category_id'], $fk->getColumnNames());
         self::assertSame('ww_categories', $fk->referencedTableName);
         self::assertSame(['id'], array_keys($fk->getReferencedColumns()));
