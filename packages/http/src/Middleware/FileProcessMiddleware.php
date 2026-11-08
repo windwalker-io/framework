@@ -38,9 +38,14 @@ class FileProcessMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $path = ltrim($request->getUri()->getPath(), '/');
+        $path = rawurldecode($request->getUri()->getPath());
+        $path = str_replace('\\', '/', $path);
 
-        $file = new SplFileInfo($this->publicPath . '/' . $path);
+        if (in_array('..', explode('/', $path), true)) {
+            return $handler->handle($request);
+        }
+
+        $file = new SplFileInfo($this->publicPath . '/' . ltrim($path, '/'));
 
         if (is_file($file->getPathname())) {
             $segments = explode('.', $file->getPathname());
