@@ -23,6 +23,9 @@ class PhpInputStreamTest extends TestCase
     #[Test]
     public function getInstanceCreatesStreamWithGivenCache(): void
     {
-        $this->assertInstanceOf(PhpInputStream::class, PhpInputStream::getInstance());
+        $stream = PhpInputStream::getInstance();
+
+        $this->assertInstanceOf(PhpInputStream::class, $stream);
+        $this->assertSame($stream, PhpInputStream::getInstance());
     }
 }
