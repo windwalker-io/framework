@@ -149,6 +149,10 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
      */
     public function __call(string $name, array $args): mixed
     {
+        if ($name === 'split') {
+            return $this->explode(...$args);
+        }
+
         $class = Str::class;
 
         if (is_callable([$class, $name])) {
@@ -158,7 +162,6 @@ class StringObject implements Countable, ArrayAccess, IteratorAggregate, Stringa
         $maps = [
             'toUpperCase' => [Utf8String::class, 'strtoupper'],
             'toLowerCase' => [Utf8String::class, 'strtolower'],
-            'split' => [$this, 'explode'],
         ];
 
         if ($maps[$name] ?? null) {

@@ -691,9 +691,16 @@ class ArrayObjectTest extends TestCase
     }
 
     #[Test]
-    public function avgReturnsNullWhenSumIsZero(): void
+    public function avgReturnsNullWhenArrayIsEmpty(): void
     {
         self::assertNull(arr([])->avg());
+    }
+
+    #[Test]
+    public function avgReturnsZeroWhenSumIsZero(): void
+    {
+        self::assertSame(0, arr([1, -1])->avg());
+        self::assertSame(0, arr([0, 0])->avg());
     }
 
     #[Test]
