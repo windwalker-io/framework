@@ -530,7 +530,7 @@ class StringObjectTest extends TestCase
     {
         self::assertEquals(
             ['Foo', 'Bar', 'Yoo'],
-            (new StringObject('Foo/Bar/Yoo'))->split('/')->dump()
+            new StringObject('Foo/Bar/Yoo')->split('/')->dump()
         );
     }
 

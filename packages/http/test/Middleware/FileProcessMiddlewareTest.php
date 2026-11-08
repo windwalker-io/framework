@@ -130,7 +130,7 @@ class FileProcessMiddlewareTest extends TestCase
                 $request = $this->createStub(ServerRequestInterface::class);
                 $request->method('getUri')->willReturn($uri);
 
-                $response = (new FileProcessMiddleware($basePath . '/public'))
+                $response = new FileProcessMiddleware($basePath . '/public')
                     ->process($request, $this->handler());
 
                 self::assertSame(404, $response->getStatusCode());

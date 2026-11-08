@@ -158,10 +158,10 @@ class ReactServer implements ServerInterface
                         return $event->response ?? $this->getHttpFactory()->createResponse();
                     };
 
-                    $response = (new RequestRunner(
+                    $response = new RequestRunner(
                         $middlewares,
                         $this->getMiddlewareResolver(),
-                    ))->handle($req);
+                    )->handle($req);
                 } catch (Throwable $e) {
                     $code = $e->getCode();
                     $code = ResponseHelper::isClientError($code) ? $code : 500;
