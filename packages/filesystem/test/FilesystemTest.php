@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Filesystem\Test;
 
+use BadMethodCallException;
 use PHPUnit\Framework\Attributes\Test;
 use SplFileInfo;
 use Windwalker\Filesystem\Exception\FileNotFoundException;
@@ -57,6 +58,24 @@ class FilesystemTest extends AbstractVfsTestCase
         $str = $fs::read('vfs://root/files/folder2/file2.html');
 
         self::assertEquals('file2.html', (string) $str);
+    }
+
+    #[Test]
+    public function readAndParseReadsAndParsesFile(): void
+    {
+        file_put_contents('vfs://root/files/data.json', '{"foo":"bar"}');
+
+        $data = Filesystem::readAndParse('vfs://root/files/data.json');
+
+        self::assertSame('bar', $data['foo']);
+    }
+
+    #[Test]
+    public function createTempAsyncIsNotSupported(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        Filesystem::createTempAsync();
     }
 
     /**
