@@ -83,9 +83,12 @@ class WorkerTest extends TestCase
     #[Test]
     public function stopIfNecessaryDoesNothingWhenNoConditionMet(): void
     {
-        $this->instance->stopIfNecessary();
+        // Disable the memory check, since the process memory of a full test run can exceed the default limit.
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(memoryLimit: PHP_INT_MAX));
 
-        self::assertFalse($this->instance->isStop());
+        $worker->stopIfNecessary();
+
+        self::assertFalse($worker->isStop());
     }
 
     #[Test]
@@ -94,7 +97,7 @@ class WorkerTest extends TestCase
         $driver = $this->createStub(QueueDriverInterface::class);
         $driver->method('pop')->willReturnCallback(fn() => new QueueMessage(new TestJob())->setId(1));
         $driver->method('delete')->willReturnSelf();
-        $worker = new Worker(new Queue($driver), new RunnerOptions(maxRuns: 2));
+        $worker = new Worker(new Queue($driver), new RunnerOptions(maxRuns: 2, memoryLimit: PHP_INT_MAX));
 
         $worker->next('default');
         $worker->stopIfNecessary();
