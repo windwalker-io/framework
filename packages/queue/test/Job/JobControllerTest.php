@@ -11,6 +11,7 @@ use Windwalker\Queue\Attributes\JobMiddleware;
 use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
 use Windwalker\Queue\Exception\AbandonedException;
 use Windwalker\Queue\Exception\DeferredException;
+use Windwalker\Queue\Exception\RetryAfterException;
 use Windwalker\Queue\Job\JobController;
 use Windwalker\Queue\Middleware\QueueMiddlewareInterface;
 use Windwalker\Queue\QueueMessage;
@@ -169,12 +170,32 @@ class JobControllerTest extends TestCase
         $controller = new QueueMessage(new TestJob())->makeJobController();
 
         self::assertNull($controller->retryAfter);
-        self::assertSame($controller, $controller->retryAfter(30));
+        self::assertInstanceOf(RetryAfterException::class, $controller->retryAfter(30));
         self::assertSame(30, $controller->retryAfter);
         self::assertFalse($controller->failed);
 
         $controller->resume();
         self::assertNull($controller->retryAfter);
+    }
+
+    #[Test]
+    public function retryAfterCanBeThrownToStopJobExecution(): void
+    {
+        $job = new class () {
+            public bool $continued = false;
+
+            public function __invoke(JobController $controller): void
+            {
+                throw $controller->retryAfter(30);
+
+                $this->continued = true;
+            }
+        };
+        $controller = new QueueMessage($job)->makeJobController()->run();
+
+        self::assertFalse($job->continued);
+        self::assertSame(30, $controller->retryAfter);
+        self::assertFalse($controller->failed);
     }
 
     #[Test]
