@@ -199,7 +199,7 @@ class Schema
     ): Constraint {
         $columns = (array) $columns;
 
-        $constraint = $this->addConstraint(Constraint::TYPE_PRIMARY_KEY, 'PRIMARY')
+        $constraint = $this->addConstraint(Constraint::TYPE_FOREIGN_KEY, 'PRIMARY')
             ->columns($columns);
 
         if ($refTable) {
