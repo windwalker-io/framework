@@ -383,11 +383,9 @@ class HTMLElement extends NativeHTMLElement implements \ArrayAccess
         return $this;
     }
 
-    public function hasClass(string $class): static
+    public function hasClass(string $class): bool
     {
-        $this->classList->contains($class);
-
-        return $this;
+        return $this->classList->contains($class);
     }
 
     public static function fromLegacyElement(\DOMElement $ele): HTMLElement

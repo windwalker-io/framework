@@ -331,6 +331,7 @@ class Filesystem
             'files',
             'folders',
             'items',
+            'readAndParse',
             'readAsync',
             'readStreamAsync',
             'writeAsync',

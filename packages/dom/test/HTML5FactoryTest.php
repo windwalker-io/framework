@@ -64,4 +64,23 @@ class HTML5FactoryTest extends TestCase
 
         self::assertSame('<script>if (a < b) { run(); }</script>', HTML5Factory::saveHtml($script));
     }
+
+    #[Test]
+    public function escapesStringsInsideArrayContent(): void
+    {
+        $element = HTML5Factory::element('p', [], ['a & b']);
+
+        self::assertSame('<p>a &amp; b</p>', HTML5Factory::saveHtml($element));
+    }
+
+    #[Test]
+    public function savesDocumentElementWithoutDoctypeWhenOmitDoctypeIsSet(): void
+    {
+        $doc = HTML5Factory::createFromString('<!DOCTYPE html><html><body><p>x</p></body></html>');
+
+        self::assertSame(
+            "<html><body><p>x</p></body></html>\n",
+            HTML5Factory::saveHtml($doc, ['omit_doctype' => true]),
+        );
+    }
 }

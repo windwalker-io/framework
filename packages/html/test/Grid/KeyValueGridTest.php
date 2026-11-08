@@ -111,4 +111,12 @@ class KeyValueGridTest extends TestCase
         self::assertSame($grid, $result);
         self::assertSame(['a' => 1, 'b' => 2], $calls);
     }
+
+    #[Test]
+    public function addItemAcceptsNullValueAsEmptyCell(): void
+    {
+        $grid = new KeyValueGrid()->addItem('k', null);
+
+        self::assertSame('', $grid->getRow()['value']->content);
+    }
 }

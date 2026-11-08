@@ -81,7 +81,7 @@ class KeyValueGrid extends Grid
             ->setRowCell(static::COL_KEY, $key, (array) $this->getValue($attrs, static::COL_KEY));
 
         if ($value !== false) {
-            $this->setRowCell(static::COL_VALUE, $value, (array) $this->getValue($attrs, static::COL_VALUE));
+            $this->setRowCell(static::COL_VALUE, (string) $value, (array) $this->getValue($attrs, static::COL_VALUE));
         }
 
         return $this;

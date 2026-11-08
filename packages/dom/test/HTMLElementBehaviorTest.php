@@ -159,7 +159,8 @@ class HTMLElementBehaviorTest extends TestCase
         self::assertSame($element, $element->removeClass('alpha'));
         self::assertSame($element, $element->toggleClass('active', true));
         self::assertSame($element, $element->toggleClass('beta', false));
-        self::assertSame($element, $element->hasClass('active'));
+        self::assertTrue($element->hasClass('active'));
+        self::assertFalse($element->hasClass('beta'));
         self::assertSame('active', $element->getAttribute('class'));
     }
 
