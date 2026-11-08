@@ -151,6 +151,16 @@ class UriTest extends TestCase
     }
 
     #[Test]
+    public function withPathAppendEncodesSpecialCharactersWithoutDoubleEncoding(): void
+    {
+        $uri = new Uri('http://example.com/foo');
+        $uri = $uri->withPathAppend('/bar^baz');
+
+        self::assertSame('/foo/bar%5Ebaz', $uri->getPath());
+        self::assertSame('/foo/bar%5Ebaz/%5E', $uri->withPathAppend('/%5E')->getPath());
+    }
+
+    #[Test]
     public function withQueryReplacesQuery()
     {
         $uri = new Uri('https://user:pass@local.example.com:3001/foo?bar=baz#quz');
@@ -364,6 +374,18 @@ class UriTest extends TestCase
             $this->instance->toString(
                 Uri::URI | Uri::FRAGMENT
             )
+        );
+    }
+
+    #[Test]
+    public function toStringKeepsUserInfoDelimiterWhenPasswordIsOmitted(): void
+    {
+        $uri = new Uri('https://example.com/foo');
+        $uri = $uri->withUserInfo('admin', 'pw');
+
+        self::assertSame(
+            'https://admin@example.com/foo',
+            $uri->toString(Uri::ALL & ~Uri::PASSWORD)
         );
     }
 

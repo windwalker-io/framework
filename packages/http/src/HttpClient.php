@@ -43,6 +43,7 @@ use function Windwalker\Uri\uri_prepare;
  * @method  PromiseInterface|mixed  getAsync(Stringable|string $url, array $options = [])
  * @method  PromiseInterface|mixed  postAsync(Stringable|string $url, mixed $body, array $options = [])
  * @method  PromiseInterface|mixed  putAsync(Stringable|string $url, mixed $body, array $options = [])
+ * @method  PromiseInterface|mixed  queryAsync(Stringable|string $url, mixed $body = null, array $options = [])
  * @method  PromiseInterface|mixed  deleteAsync(Stringable|string $url, mixed $body, array $options = [])
  * @method  PromiseInterface|mixed  patchAsync(Stringable|string $url, mixed $body, array $options = [])
  * @method  PromiseInterface|mixed  traceAsync(Stringable|string $url, array $options = [])
@@ -52,6 +53,8 @@ use function Windwalker\Uri\uri_prepare;
  * @method HttpClientResponse mustPost(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
  *         HttpClientOptions())
  * @method HttpClientResponse mustPut(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
+ *         HttpClientOptions())
+ * @method HttpClientResponse mustQuery(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
  *         HttpClientOptions())
  * @method HttpClientResponse mustDelete(Stringable|string $url, mixed $body = null, HttpClientOptions $options = new
  *         HttpClientOptions())
@@ -318,6 +321,23 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         array|HttpClientOptions $options = new HttpClientOptions(),
     ): HttpClientResponse {
         return $this->request('PATCH', $url, $body, $options);
+    }
+
+    /**
+     * Method to send the QUERY command to the server.
+     *
+     * @param  Stringable|string        $url      Path to the resource.
+     * @param  mixed                    $body     The query content.
+     * @param  array|HttpClientOptions  $options  The request options.
+     *
+     * @return  HttpClientResponse
+     */
+    public function query(
+        Stringable|string $url,
+        mixed $body = null,
+        array|HttpClientOptions $options = new HttpClientOptions(),
+    ): HttpClientResponse {
+        return $this->request('QUERY', $url, $body, $options);
     }
 
     public function connect(
@@ -657,9 +677,9 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
                 $ref = new ReflectionMethod($this, $method);
 
                 if (count($ref->getParameters()) >= 3) {
-                    $promise = $this->requestAsync($method, ...$args);
+                    $promise = $this->requestAsync(strtoupper($method), ...$args);
                 } else {
-                    $promise = $this->requestAsync($method, $args[0] ?? '', null, $args[1] ?? []);
+                    $promise = $this->requestAsync(strtoupper($method), $args[0] ?? '', null, $args[1] ?? []);
                 }
 
                 return $promise;
