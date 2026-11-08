@@ -153,6 +153,15 @@ abstract class AbstractGrammar
         return true;
     }
 
+    /**
+     * Whether UNION members can be wrapped in parentheses, e.g. `(SELECT ...) UNION (SELECT ...)`.
+     * Grammars that reject it (SQLite) get bare `SELECT ... UNION SELECT ...` instead.
+     */
+    public function supportsParenthesizedUnion(): bool
+    {
+        return true;
+    }
+
     public function compileSelect(Query $query): string
     {
         $sql['select'] = (string) $query->getSelect();
@@ -160,9 +169,13 @@ abstract class AbstractGrammar
         if ($union = $query->getUnion()) {
             // Is full union
             if (!$query->getSelect()) {
-                $union->setName('()');
+                if ($this->supportsParenthesizedUnion()) {
+                    $union->setName('()');
+                } else {
+                    $union->setName('');
+                }
 
-                unset($sql['group']);
+                unset($sql['select'], $sql['group']);
             }
 
             $sql['union'] = (string) $union;

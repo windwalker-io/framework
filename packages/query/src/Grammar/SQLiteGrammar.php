@@ -42,6 +42,11 @@ class SQLiteGrammar extends BaseGrammar implements JsonGrammarInterface
         return 'RANDOM()';
     }
 
+    public function supportsParenthesizedUnion(): bool
+    {
+        return false;
+    }
+
     public function compileUpsert(Query $query): string
     {
         [

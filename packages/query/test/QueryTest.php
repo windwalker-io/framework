@@ -289,10 +289,36 @@ class QueryTest extends TestCase
         );
     }
 
+    #[Test]
+    public function joinLateralDefaultsToOnTrue(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foos', 'foo')
+            ->leftJoinLateral(
+                self::createQuery()->select('*')->from('bars')->where('bars.foo_id', 1),
+                'bar'
+            );
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" AS "foo" LEFT JOIN LATERAL (SELECT * FROM "bars" WHERE "bars"."foo_id" = 1) AS "bar" ON TRUE',
+            $q->render(true)
+        );
+    }
+
     public static function joinProvider(): array
     {
         // phpcs:disable
         return [
+            'Join on true' => [
+                'LEFT JOIN "bars" ON TRUE',
+                [
+                    'LEFT',
+                    'bars',
+                    null,
+                    true,
+                ],
+            ],
             'Simple left join' => [
                 'LEFT JOIN "bars" AS "bar" ON "bar"."id" = "foo"."bar_id"',
                 [
@@ -512,6 +538,17 @@ class QueryTest extends TestCase
             '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50) GROUP BY "id" ORDER BY "id" DESC',
             $q
         );
+    }
+
+    #[Test]
+    public function havingRawBindsNamedArguments(): void
+    {
+        $q = self::createQuery()
+            ->select('foo')
+            ->from('t')
+            ->havingRaw('COUNT(*) > :n', n: 3);
+
+        self::assertArrayHasKey('n', $q->getMergedBounded());
     }
 
     #[Test]

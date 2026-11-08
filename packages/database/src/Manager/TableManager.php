@@ -440,6 +440,7 @@ class TableManager extends AbstractMetaManager
 
         if (!$this->hasColumn($column->getColumnName())) {
             $this->getPlatform()->addColumn($this->getName(), $column, $this->schemaName);
+            $this->reset();
         }
 
         return $this;
@@ -486,6 +487,7 @@ class TableManager extends AbstractMetaManager
         }
 
         $this->getPlatform()->modifyColumn($this->getName(), $column, $this->schemaName);
+        $this->reset();
 
         return $this;
     }
@@ -505,6 +507,7 @@ class TableManager extends AbstractMetaManager
     {
         if ($this->hasColumn($from)) {
             $this->getPlatform()->renameColumn($this->getName(), $from, $to, $this->schemaName);
+            $this->reset();
         }
 
         return $this;
@@ -538,6 +541,7 @@ class TableManager extends AbstractMetaManager
         }
 
         $this->getPlatform()->addIndex($this->getName(), $index, $this->schemaName);
+        $this->reset();
 
         return $this;
     }
@@ -624,6 +628,7 @@ class TableManager extends AbstractMetaManager
         }
 
         $this->getPlatform()->addConstraint($this->getName(), $constraint, $this->schemaName);
+        $this->reset();
 
         return $this;
     }

@@ -353,6 +353,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function joinLateral(string $type, mixed $table, ?string $alias = null, mixed ...$on): static
     {
+        // Lateral joins default to `ON TRUE` when no condition is given.
+        $on = $on === [] ? [true] : $on;
+
         return $this->doJoin(strtoupper($type) . ' JOIN LATERAL', $table, $alias, ...$on);
     }
 
@@ -596,7 +599,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 $prefix .= ' ' . $type;
             }
 
-            $this->union = $this->clause($prefix . ' ()', [], ') ' . $prefix . ' (');
+            $this->union = $this->grammar->supportsParenthesizedUnion()
+                ? $this->clause($prefix . ' ()', [], ') ' . $prefix . ' (')
+                : $this->clause($prefix, [], ' ' . $prefix . ' ');
         }
 
         if ($query instanceof self) {
