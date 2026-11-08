@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Http\Server;
 
+use Closure;
 use Psr\Http\Message\ServerRequestInterface;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
@@ -17,15 +18,24 @@ use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
+use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\Output;
 use Windwalker\Http\Request\ServerRequest;
 
+use function Windwalker\DI\create;
+
 /**
- * The ReactServerAdapter class. It dispatches events directly and does not run middleware.
+ * The ReactServerAdapter class.
  */
 class ReactServer implements ServerInterface
 {
     use EventAwareTrait;
+
+    protected array $middlewares = [];
+
+    protected ?Closure $middlewareResolver = null;
+
+    protected ?HttpFactory $httpFactory = null;
 
     public ?LoopInterface $loop = null;
 
@@ -142,17 +152,27 @@ class ReactServer implements ServerInterface
             $this->getLoop(),
             function (ServerRequestInterface $req) use ($output) {
                 try {
-                    $event = $this->emit(
-                        new RequestEvent(
-                            request: $req,
-                            output: $output,
-                        )->setName('request'),
-                    );
+                    $middlewares = $this->getMiddlewares();
+                    $middlewares[] = function (ServerRequestInterface $request) use ($output) {
+                        $event = $this->emit(
+                            new RequestEvent(
+                                request: $request,
+                                output: $output,
+                            )->setName('request'),
+                        );
+
+                        return $event->response ?? $this->getHttpFactory()->createResponse();
+                    };
+
+                    $response = (new RequestRunner(
+                        $middlewares,
+                        $this->getMiddlewareResolver(),
+                    ))->handle($req);
                 } catch (Throwable $e) {
                     $code = $e->getCode();
                     $code = ResponseHelper::isClientError($code) ? $code : 500;
 
-                    $res = new HttpFactory()->createResponse($code);
+                    $res = $this->getHttpFactory()->createResponse($code);
                     $res->getBody()->write((string) $e);
 
                     return $res;
@@ -162,7 +182,7 @@ class ReactServer implements ServerInterface
                     new RequestEvent(
                         request: $req,
                         output: $output,
-                        response: $event->response,
+                        response: $response,
                     )->setName('response'),
                 );
 
@@ -184,6 +204,53 @@ class ReactServer implements ServerInterface
         );
 
         return $server;
+    }
+
+    public function middleware(mixed $middleware, mixed ...$args): static
+    {
+        if (is_string($middleware)) {
+            $middleware = create($middleware, ...$args);
+        }
+
+        $this->middlewares[] = $middleware;
+
+        return $this;
+    }
+
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+    public function setMiddlewares(array $middlewares): static
+    {
+        $this->middlewares = $middlewares;
+
+        return $this;
+    }
+
+    public function getMiddlewareResolver(): Closure
+    {
+        return $this->middlewareResolver ?? static fn($entry) => $entry;
+    }
+
+    public function setMiddlewareResolver(?Closure $middlewareResolver): static
+    {
+        $this->middlewareResolver = $middlewareResolver;
+
+        return $this;
+    }
+
+    public function getHttpFactory(): HttpFactory
+    {
+        return $this->httpFactory ??= new HttpFactory();
+    }
+
+    public function setHttpFactory(?HttpFactory $httpFactory): static
+    {
+        $this->httpFactory = $httpFactory;
+
+        return $this;
     }
 
     /**
