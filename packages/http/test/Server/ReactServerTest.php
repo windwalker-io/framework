@@ -189,10 +189,10 @@ class ReactServerTest extends TestCase
     #[Test]
     public function handleRunsMiddlewaresBeforeRequestEvent(): void
     {
-        $this->instance->middleware('ran');
-        $this->instance->setMiddlewareResolver(
-            fn(string $name) => fn(ServerRequestInterface $request, RequestHandlerInterface $handler)
-                => $handler->handle($request->withAttribute('middleware', $name)),
+        $this->instance->middleware(
+            function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+                return $handler->handle($request->withAttribute('middleware', 'ran'));
+            },
         );
         $this->instance->on(
             'request',

@@ -17,7 +17,11 @@ trait MiddlewareAwareTrait
     public function middleware(mixed $middleware, mixed ...$args): static
     {
         if (is_string($middleware)) {
-            $middleware = create($middleware, ...$args);
+            if (!function_exists('Windwalker\DI\create')) {
+                $middleware = static fn() => new $middleware(...$args);
+            } else {
+                $middleware = create($middleware, ...$args);
+            }
         }
 
         $this->middlewares[] = $middleware;
