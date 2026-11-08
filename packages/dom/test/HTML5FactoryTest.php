@@ -79,7 +79,7 @@ class HTML5FactoryTest extends TestCase
         $doc = HTML5Factory::createFromString('<!DOCTYPE html><html><body><p>x</p></body></html>');
 
         self::assertSame(
-            "<html><body><p>x</p></body></html>\n",
+            '<html><body><p>x</p></body></html>' . PHP_EOL,
             HTML5Factory::saveHtml($doc, ['omit_doctype' => true]),
         );
     }
