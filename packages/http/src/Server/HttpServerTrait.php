@@ -16,20 +16,19 @@ use Windwalker\Http\HttpFactory;
 use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\OutputInterface;
 
-use function Windwalker\DI\create;
-
 /**
  * Trait HttpServerTrait
  */
 trait HttpServerTrait
 {
-    protected ?Closure $middlewareResolver = null;
+    use MiddlewareAwareTrait;
 
     public function __construct(
-        protected array $middlewares = [],
+        array $middlewares = [],
         protected ?HttpFactory $httpFactory = null,
         protected ?Closure $outputBuilder = null,
     ) {
+        $this->middlewares = $middlewares;
         $this->adaptLegacyEvents();
     }
 
@@ -182,59 +181,6 @@ trait HttpServerTrait
     public function setHttpFactory(?HttpFactory $httpFactory): static
     {
         $this->httpFactory = $httpFactory;
-
-        return $this;
-    }
-
-    public function middleware(mixed $middleware, mixed ...$args): static
-    {
-        if (is_string($middleware)) {
-            $middleware = create($middleware, ...$args);
-        }
-
-        $this->middlewares[] = $middleware;
-
-        return $this;
-    }
-
-    /**
-     * @return  array
-     */
-    public function getMiddlewares(): array
-    {
-        return $this->middlewares;
-    }
-
-    /**
-     * @param  array  $middlewares
-     *
-     * @return  static  Return self to support chaining.
-     *
-     * @codeCoverageIgnore
-     */
-    public function setMiddlewares(array $middlewares): static
-    {
-        $this->middlewares = $middlewares;
-
-        return $this;
-    }
-
-    /**
-     * @return  Closure
-     */
-    public function getMiddlewareResolver(): Closure
-    {
-        return $this->middlewareResolver ?? static fn($entry) => $entry;
-    }
-
-    /**
-     * @param  Closure|null  $middlewareResolver
-     *
-     * @return  static  Return self to support chaining.
-     */
-    public function setMiddlewareResolver(?Closure $middlewareResolver): static
-    {
-        $this->middlewareResolver = $middlewareResolver;
 
         return $this;
     }
