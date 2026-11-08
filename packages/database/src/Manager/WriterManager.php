@@ -238,7 +238,12 @@ class WriterManager
      *     returningIdField?: string|null,
      * } $options
      *
-     * @return  array|object  The inserted or updated data with returning ID.
+     * Returns the input data (as an array or object) with `returningIdField` set to the row ID when requested.
+     * The row is NOT re-read from the database, so other columns reflect the input values, not the stored values
+     * after the conflict update (e.g. a column left out of `$updateFields` keeps its old DB value, and
+     * SQL expressions or database defaults/triggers are not reflected). Read the row again if you need it.
+     *
+     * @return  array|object  The input data with the ID field set when `returningIdField` is given.
      */
     public function upsert(
         string $table,
@@ -357,9 +362,17 @@ class WriterManager
     }
 
     /**
+     * Insert multiple rows in one statement.
+     *
+     * Values are matched to columns by name, so rows may list their keys in any order. Without the `columns`
+     * option, the column list is taken from the first row and every following row must have the same keys
+     * (an InvalidArgumentException is thrown otherwise). With `columns`, that list defines the column order and
+     * any other keys in a row are ignored; every listed column must exist in each row.
+     *
      * @param  array{
      *     incrementField?: bool|string,
      *     filterFields?: bool,
+     *     columns?: string[]|null,
      * }  $options
      */
     public function insertBulk(
@@ -371,34 +384,53 @@ class WriterManager
             [
                 'incrementField' => false,
                 'filterFields' => false,
+                'columns' => null,
             ],
             $options
         );
 
+        $columns = $options['columns'] === null ? null : array_values((array) $options['columns']);
+        $deriveColumns = $columns === null;
         $columnRegistered = false;
         $query = $this->db->createQuery()
             ->insert($table, $options['incrementField']);
 
         foreach ($items as $i => $data) {
-            $fields = [];
-            $values = [];
-
             $item = TypeCast::toArray($data);
 
             if ($options['filterFields']) {
                 $item = $this->filterFields($table, $item);
             }
 
-            // Iterate over the object variables to build the query fields and values.
-            foreach ($item as $k => $v) {
-                // Prepare and sanitize the fields and values for the database query.
-                $fields[] = $k;
-                $values[] = $v;
+            if ($columns === null) {
+                $columns = array_keys($item);
             }
 
-            // Create the base insert statement.
+            if ($deriveColumns && array_diff_key($item, array_flip($columns)) !== []) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'insertBulk() row %s has keys not present in the first row: %s. '
+                        . 'Pass the "columns" option to choose columns explicitly.',
+                        $i,
+                        implode(', ', array_keys(array_diff_key($item, array_flip($columns))))
+                    )
+                );
+            }
+
+            $values = [];
+
+            foreach ($columns as $column) {
+                if (!array_key_exists($column, $item)) {
+                    throw new InvalidArgumentException(
+                        sprintf('insertBulk() row %s is missing column "%s".', $i, $column)
+                    );
+                }
+
+                $values[] = $item[$column];
+            }
+
             if (!$columnRegistered) {
-                $query->columns(...$fields);
+                $query->columns(...$columns);
                 $columnRegistered = true;
             }
 

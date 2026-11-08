@@ -227,6 +227,70 @@ abstract class AbstractWriterManagerTestCase extends AbstractDatabaseTestCase
     }
 
     #[Test]
+    public function insertBulkMatchesValuesByColumnNameWhenKeyOrderDiffers(): void
+    {
+        $this->writer->insertBulk(
+            'writer_items',
+            [
+                ['title' => 'A', 'state' => 1],
+                ['state' => 2, 'title' => 'B'],
+            ]
+        );
+
+        self::assertSame('A', $this->row(1)['title']);
+        self::assertSame('1', (string) $this->row(1)['state']);
+        self::assertSame('B', $this->row(2)['title']);
+        self::assertSame('2', (string) $this->row(2)['state']);
+    }
+
+    #[Test]
+    public function insertBulkRejectsRowsWithDifferentKeys(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        try {
+            $this->writer->insertBulk(
+                'writer_items',
+                [
+                    ['title' => 'A', 'state' => 1],
+                    ['title' => 'B', 'extra' => 2],
+                ]
+            );
+        } finally {
+            self::assertSame(0, $this->countRows());
+        }
+    }
+
+    #[Test]
+    public function insertBulkColumnsOptionDefinesOrderAndIgnoresExtraKeys(): void
+    {
+        $this->writer->insertBulk(
+            'writer_items',
+            [
+                ['state' => 1, 'title' => 'A', 'extra' => 'x'],
+                ['title' => 'B', 'state' => 2, 'extra' => 'y'],
+            ],
+            ['columns' => ['title', 'state']]
+        );
+
+        self::assertSame('A', $this->row(1)['title']);
+        self::assertSame('B', $this->row(2)['title']);
+        self::assertSame('2', (string) $this->row(2)['state']);
+    }
+
+    #[Test]
+    public function insertBulkColumnsOptionRejectsMissingColumn(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->writer->insertBulk(
+            'writer_items',
+            [['title' => 'A']],
+            ['columns' => ['title', 'state']]
+        );
+    }
+
+    #[Test]
     public function updateMultipleUpdatesEachItem(): void
     {
         $this->seed();

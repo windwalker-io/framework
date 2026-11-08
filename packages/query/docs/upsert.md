@@ -135,7 +135,9 @@ To get the same result on every platform:
    as the conflict key, or only use the ID as the key when it is set.
 4. Pass `$updateFields` explicitly instead of relying on the default, and do not include the keys in it.
 5. Do not depend on `returning()` alone to read the ID; use the value returned by `WriterManager::upsert()` or the
-   ORM, which resolves it per platform.
+   ORM, which resolves it per platform. Note that `WriterManager::upsert()` returns the input data with the ID set;
+   it does not re-read the row, so values changed by the conflict update (`$updateFields` expressions, columns not
+   updated, database defaults) are not reflected. Query the row again if you need the stored values.
 
 ```php
 // articles has UNIQUE (slug)
