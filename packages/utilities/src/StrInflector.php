@@ -86,9 +86,15 @@ class StrInflector
      */
     public static function toSingular(string $word): string
     {
-        $words = static::getPossibleSingularize($word);
+        $candidates = static::getPossibleSingularize($word);
 
-        return array_pop($words);
+        foreach ($candidates as $candidate) {
+            if (in_array($word, static::getPossiblePluralize($candidate), true)) {
+                return $candidate;
+            }
+        }
+
+        return $candidates[0] ?? $word;
     }
 
     /**

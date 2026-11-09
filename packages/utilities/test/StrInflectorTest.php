@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\String\Inflector\EnglishInflector;
@@ -26,6 +27,28 @@ class StrInflectorTest extends TestCase
             EnglishInflector::class,
             StrInflector::$inflector
         );
+    }
+
+    #[Test]
+    #[DataProvider('singularProvider')]
+    public function toSingularReturnsCandidateThatPluralizesBackToInput(string $plural, string $singular): void
+    {
+        self::assertSame($singular, StrInflector::toSingular($plural));
+    }
+
+    public static function singularProvider(): array
+    {
+        return [
+            ['wolves', 'wolf'],
+            ['leaves', 'leaf'],
+            ['shelves', 'shelf'],
+            ['knives', 'knife'],
+            ['wives', 'wife'],
+            ['houses', 'house'],
+            ['buses', 'bus'],
+            ['matrices', 'matrix'],
+            ['servers', 'server'],
+        ];
     }
 
     #[Test]
