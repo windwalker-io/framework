@@ -38,7 +38,7 @@ class RunnerLoopTest extends TestCase
     {
         $driver = $this->createStub(QueueDriverInterface::class);
         $driver->method('pop')->willThrowException(new \RuntimeException('pop failed'));
-        $worker = new Worker(new Queue($driver), new RunnerOptions(sleep: 0));
+        $worker = new Worker(new Queue($driver), new RunnerOptions(sleep: 0, memoryLimit: PHP_INT_MAX));
         $events = [];
         $worker->on(LoopStartEvent::class, function () use (&$events) {
             $events[] = 'start';
@@ -63,7 +63,7 @@ class RunnerLoopTest extends TestCase
         $driver = $this->createStub(QueueDriverInterface::class);
         $driver->method('pop')->willReturnCallback(fn() => new QueueMessage(new TestJob())->setId(1));
         $driver->method('delete')->willReturnSelf();
-        $worker = new Worker(new Queue($driver), new RunnerOptions(sleep: 0, maxRuns: 2));
+        $worker = new Worker(new Queue($driver), new RunnerOptions(sleep: 0, maxRuns: 2, memoryLimit: PHP_INT_MAX));
 
         $worker->loop('default');
 
@@ -75,7 +75,10 @@ class RunnerLoopTest extends TestCase
     {
         $file = sys_get_temp_dir() . '/queue-restart-' . uniqid();
         file_put_contents($file, (string) (time() + 100));
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(restartSignal: $file));
+        $worker = new Worker(
+            new Queue(new NullQueueDriver()),
+            new RunnerOptions(restartSignal: $file, memoryLimit: PHP_INT_MAX),
+        );
         $worker->lastRestart = time();
 
         $worker->stopIfNecessary();
@@ -89,7 +92,10 @@ class RunnerLoopTest extends TestCase
     {
         $file = sys_get_temp_dir() . '/queue-restart-' . uniqid();
         file_put_contents($file, (string) (time() - 100));
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(restartSignal: $file));
+        $worker = new Worker(
+            new Queue(new NullQueueDriver()),
+            new RunnerOptions(restartSignal: $file, memoryLimit: PHP_INT_MAX),
+        );
         $worker->lastRestart = time();
 
         $worker->stopIfNecessary();
@@ -101,7 +107,7 @@ class RunnerLoopTest extends TestCase
     #[Test]
     public function stopIfNecessaryStopsWhenLifetimeExceeded(): void
     {
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(lifetime: 10));
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(lifetime: 10, memoryLimit: PHP_INT_MAX));
         $worker->lastRestart = time() - 11;
 
         $worker->stopIfNecessary();
@@ -358,7 +364,7 @@ class RunnerLoopTest extends TestCase
     {
         $driver = $this->createStub(QueueDriverInterface::class);
         $driver->method('pop')->willThrowException(new UnrecoverableException('db is gone'));
-        $worker = new class (new Queue($driver), new RunnerOptions(sleep: 0)) extends Worker {
+        $worker = new class (new Queue($driver), new RunnerOptions(sleep: 0, memoryLimit: PHP_INT_MAX)) extends Worker {
             public array $stops = [];
 
             public function stop(string $reason = 'Unknown reason', int $code = 0, bool $instant = false): void
@@ -395,7 +401,7 @@ class RunnerLoopTest extends TestCase
     #[Test]
     public function shuffleChannelsKeepsAllChannels(): void
     {
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(shuffleChannels: true));
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(shuffleChannels: true, memoryLimit: PHP_INT_MAX));
         $sorted = new \ReflectionMethod($worker, 'getSortedChannels');
 
         $channels = $sorted->invoke($worker, ['a', 'b', 'c', 'd']);
@@ -410,7 +416,7 @@ class RunnerLoopTest extends TestCase
             self::markTestSkipped('pcntl and posix are required.');
         }
 
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(timeout: 30, sleep: 0));
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(timeout: 30, sleep: 0, memoryLimit: PHP_INT_MAX));
         $register = new \ReflectionMethod($worker, 'registerSignals');
         $stops = [];
         $worker->on(\Windwalker\Queue\Event\StopEvent::class, function ($e) use (&$stops) {
@@ -440,7 +446,7 @@ class RunnerLoopTest extends TestCase
             self::markTestSkipped('pcntl and posix are required.');
         }
 
-        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(timeout: 0));
+        $worker = new Worker(new Queue(new NullQueueDriver()), new RunnerOptions(timeout: 0, memoryLimit: PHP_INT_MAX));
         $register = new \ReflectionMethod($worker, 'registerSignals');
 
         try {

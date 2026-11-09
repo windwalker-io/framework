@@ -24,6 +24,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
+          ini-values: memory_limit=512M
           extensions: mbstring, php-memcached, redis
       - name: Get composer cache directory
         id: composercache

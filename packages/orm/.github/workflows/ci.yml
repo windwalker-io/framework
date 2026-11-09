@@ -25,6 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
+          ini-values: memory_limit=512M
           extensions: pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, mysqli, sqlite3
 #          coverage: xdebug
 #          tools: php-cs-fixer, phpunit
