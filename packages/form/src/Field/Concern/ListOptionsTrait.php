@@ -160,7 +160,7 @@ trait ListOptionsTrait
             } elseif ($enum instanceof Enum) {
                 $options[$enum->getValue()] = $enum->getKey();
             } elseif ($enum instanceof \UnitEnum) {
-                $options[$enum->name ?? $enum->value] = $this->getEnumCaseTitle($enum) ?: $enum->name;
+                $options[$enum->value ?? $enum->name] = $this->getEnumCaseTitle($enum) ?: $enum->name;
             }
         }
 
