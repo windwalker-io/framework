@@ -11,6 +11,8 @@ use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Utilities\Assert\TypeAssert;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
+use Windwalker\Utilities\Attributes\Enum\Title;
 use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Enum\EnumMetaInterface;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
@@ -158,11 +160,25 @@ trait ListOptionsTrait
             } elseif ($enum instanceof Enum) {
                 $options[$enum->getValue()] = $enum->getKey();
             } elseif ($enum instanceof \UnitEnum) {
-                $options[$enum->name ?? $enum->value] = $enum->name;
+                $options[$enum->name ?? $enum->value] = $this->getEnumCaseTitle($enum) ?: $enum->name;
             }
         }
 
         return $this->registerOptions($options);
+    }
+
+    /**
+     * Read the plain string from #[Title] (or its subclasses) on an enum case. Translation is not supported here.
+     */
+    protected function getEnumCaseTitle(\UnitEnum $enum): string
+    {
+        $attr = AttributesAccessor::getFirstAttributeInstance(
+            new \ReflectionEnumUnitCase($enum, $enum->name),
+            Title::class,
+            \ReflectionAttribute::IS_INSTANCEOF,
+        );
+
+        return $attr?->toReadableString() ?? '';
     }
 
     /**
