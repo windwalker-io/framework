@@ -94,7 +94,7 @@ class PriorityQueue extends SplPriorityQueue
     /**
      * Serialize to an array
      *
-     * Array will be priority => data pairs
+     * Array will be a list of data, ordered by priority (highest first).
      *
      * @return  array
      */

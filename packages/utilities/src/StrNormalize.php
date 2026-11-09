@@ -52,7 +52,10 @@ class StrNormalize
      */
     public static function toCamelCase(string $input): string
     {
-        return lcfirst(static::toPascalCase($input));
+        $words = self::splitAll($input);
+        $first = strtolower(array_shift($words) ?? '');
+
+        return $first . implode('', array_map('ucfirst', $words));
     }
 
     /**

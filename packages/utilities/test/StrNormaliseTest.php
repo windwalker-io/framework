@@ -128,6 +128,13 @@ class StrNormaliseTest extends TestCase
     }
 
     #[Test]
+    public function toCamelCaseKeepsLeadingAcronymLowercase(): void
+    {
+        $this->assertSame('httpServer', StrNormalize::toCamelCase('HTTPServer'));
+        $this->assertSame('xmlHttpRequest', StrNormalize::toCamelCase('XMLHttpRequest'));
+    }
+
+    #[Test]
     #[DataProvider('kebabCaseProvider')]
     public function toKebabCaseJoinsWordsWithDashes(string $expected, string $input): void
     {
