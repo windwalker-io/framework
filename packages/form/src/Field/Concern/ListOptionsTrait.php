@@ -87,6 +87,13 @@ trait ListOptionsTrait
      */
     public function addOptions(array $options, ?string $group = null): static
     {
+        $options = array_map(
+            fn(mixed $option) => is_scalar($option)
+                ? static::createOption((string) $option, (string) $option)
+                : $option,
+            $options
+        );
+
         if ($group) {
             $this->options[$group] ??= [];
 
@@ -178,7 +185,7 @@ trait ListOptionsTrait
             } elseif ($isEnum = is_subclass_of($options, \BackedEnum::class)) {
                 $opt = [];
                 foreach ($options::cases() as $case) {
-                    $opt[$case->name] = $case->value;
+                    $opt[$case->value] = $case->name;
                 }
                 $options = $opt;
             } else {

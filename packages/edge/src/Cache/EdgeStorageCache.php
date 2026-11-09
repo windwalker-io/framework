@@ -31,7 +31,7 @@ class EdgeStorageCache implements EdgeCacheInterface
      */
     public function isExpired(string $path): bool
     {
-        return $this->cache->has($this->getCacheKey($path));
+        return !$this->cache->has($this->getCacheKey($path));
     }
 
     /**
