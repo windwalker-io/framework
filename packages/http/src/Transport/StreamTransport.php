@@ -23,6 +23,7 @@ use Windwalker\Stream\Stream;
 use Windwalker\Utilities\Arr;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
+use const Windwalker\Stream\READ_WRITE_RESET;
 
 /**
  * The StreamTransport class.
@@ -31,7 +32,7 @@ use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
  */
 class StreamTransport extends AbstractTransport
 {
-    use ResponseSizeLimitTrait;
+    use ResponseStreamingTrait;
 
     /**
      * Send a request to the server and return a Response object with the response.
@@ -53,7 +54,25 @@ class StreamTransport extends AbstractTransport
 
         $dest = $options->writeStream ?? $options->targetFile;
 
-        if ($dest) {
+        if ($options->writeHandler) {
+            $content = '';
+            $destStream = $dest ? Stream::wrap($dest, READ_WRITE_RESET) : null;
+            $handler = $options->writeHandler;
+
+            try {
+                $this->readChunksWithLimit(
+                    $stream,
+                    static function (string $chunk) use ($handler, $destStream) {
+                        $destStream?->write($chunk);
+
+                        return $handler($chunk);
+                    },
+                    $options->maxResponseSize,
+                );
+            } finally {
+                $destStream?->close();
+            }
+        } elseif ($dest) {
             $content = '';
             $this->copyToWithLimit($stream, $dest, $options->maxResponseSize);
         } else {

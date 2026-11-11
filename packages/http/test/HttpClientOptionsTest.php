@@ -123,6 +123,44 @@ class HttpClientOptionsTest extends TestCase
     }
 
     #[Test]
+    public function withMergeHttpClientOptionsMergesWriteStreamAndHandler(): void
+    {
+        $handler = static function (string $chunk): void {};
+        $sink = fopen('php://memory', 'rb+');
+
+        $merged = new TransportOptions()->withMergeHttpClientOptions(
+            new HttpClientOptions(writeStream: $sink, writeHandler: $handler),
+        );
+
+        self::assertSame($sink, $merged->writeStream);
+        self::assertSame($handler, $merged->writeHandler);
+    }
+
+    #[Test]
+    public function withMergeHttpClientOptionsKeepsTransportWriteOptionsWhenClientHasNone(): void
+    {
+        $handler = static function (string $chunk): void {};
+
+        $merged = new TransportOptions(writeStream: 'php://memory', writeHandler: $handler)
+            ->withMergeHttpClientOptions(new HttpClientOptions());
+
+        self::assertSame('php://memory', $merged->writeStream);
+        self::assertSame($handler, $merged->writeHandler);
+    }
+
+    #[Test]
+    public function writeOptionsReachTransportViaRequest(): void
+    {
+        $http = new HttpClient([], $transport = new MockTransport());
+        $handler = static function (string $chunk): void {};
+
+        $http->get('.', ['writeStream' => 'php://memory', 'writeHandler' => $handler]);
+
+        self::assertSame('php://memory', $transport->receivedOptions->writeStream);
+        self::assertSame($handler, $transport->receivedOptions->writeHandler);
+    }
+
+    #[Test]
     public function withMergeHttpClientOptionsMergesFiles(): void
     {
         $clientOptions = new HttpClientOptions(

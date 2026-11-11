@@ -7,19 +7,21 @@ namespace Windwalker\Http\Test\Transport;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
+use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Exception\HttpResponseSizeExceededException;
-use Windwalker\Http\Transport\ResponseSizeLimitTrait;
+use Windwalker\Http\Transport\ResponseStreamingTrait;
 use Windwalker\Stream\Stream;
 
-class ResponseSizeLimitTraitTest extends TestCase
+class ResponseStreamingTraitTest extends TestCase
 {
     private function createSubject(): object
     {
         return new class () {
-            use ResponseSizeLimitTrait {
+            use ResponseStreamingTrait {
                 assertResponseSizeWithinLimit as public;
                 readContentsWithLimit as public;
                 copyToWithLimit as public;
+                readChunksWithLimit as public;
             }
         };
     }
@@ -68,6 +70,55 @@ class ResponseSizeLimitTraitTest extends TestCase
         $this->expectException(HttpResponseSizeExceededException::class);
 
         $this->createSubject()->readContentsWithLimit($this->createSource('hello!'), 5);
+    }
+
+    #[Test]
+    public function readChunksWithLimitFeedsAllChunks(): void
+    {
+        $received = '';
+
+        $this->createSubject()->readChunksWithLimit(
+            $this->createSource(str_repeat('a', 10000)),
+            static function (string $chunk) use (&$received): void {
+                $received .= $chunk;
+            },
+            null,
+        );
+
+        self::assertSame(10000, strlen($received));
+    }
+
+    #[Test]
+    public function readChunksWithLimitThrowsWhenExceeded(): void
+    {
+        $this->expectException(HttpResponseSizeExceededException::class);
+
+        $this->createSubject()->readChunksWithLimit(
+            $this->createSource(str_repeat('a', 10000)),
+            static function (string $chunk): void {},
+            4096,
+        );
+    }
+
+    #[Test]
+    public function readChunksWithLimitAbortsWhenHandlerReturnsFalse(): void
+    {
+        $calls = 0;
+
+        try {
+            $this->createSubject()->readChunksWithLimit(
+                $this->createSource(str_repeat('a', 10000)),
+                static function (string $chunk) use (&$calls) {
+                    $calls++;
+
+                    return false;
+                },
+                null,
+            );
+            self::fail('Expected HttpRequestException.');
+        } catch (HttpRequestException) {
+            self::assertSame(1, $calls);
+        }
     }
 
     #[Test]

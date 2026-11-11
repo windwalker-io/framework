@@ -36,6 +36,12 @@ class HttpClientOptions extends RecordOptions
          * @see  TransportOptions::$maxResponseSize
          */
         public ?int $maxResponseSize = null,
+        /**
+         * @see  TransportOptions::$writeHandler
+         *
+         * @var  Closure(string $chunk): (void|bool)|null
+         */
+        public ?Closure $writeHandler = null,
     ) {
         $this->transport = TransportOptions::tryWrap($transport);
     }

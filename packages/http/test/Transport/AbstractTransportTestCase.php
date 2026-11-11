@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Windwalker\Http\Exception\HttpRequestException;
 use Windwalker\Http\Exception\HttpResponseSizeExceededException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Transport\AbstractTransport;
@@ -138,6 +139,82 @@ abstract class AbstractTransportTestCase extends TestCase
         $this->expectException(HttpResponseSizeExceededException::class);
 
         $this->instance->request($request, ['maxResponseSize' => 4096]);
+    }
+
+    #[Test]
+    public function requestWriteHandlerReceivesAllChunks(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $received = '';
+
+        $response = $this->instance->request(
+            $request,
+            ['writeHandler' => static function (string $chunk) use (&$received): void {
+                $received .= $chunk;
+            }],
+        );
+
+        self::assertSame(65536, strlen($received));
+        self::assertSame('', (string) $response->getBody());
+    }
+
+    #[Test]
+    public function requestWriteHandlerWithWriteStreamAlsoWritesToStream(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $file = tempnam(sys_get_temp_dir(), 'wwtest');
+        $count = 0;
+
+        try {
+            $this->instance->request(
+                $request,
+                [
+                    'writeStream' => $file,
+                    'writeHandler' => static function (string $chunk) use (&$count): void {
+                        $count += strlen($chunk);
+                    },
+                ],
+            );
+
+            self::assertSame(65536, $count);
+            self::assertSame(65536, filesize($file));
+        } finally {
+            @unlink($file);
+        }
+    }
+
+    #[Test]
+    public function requestWriteHandlerReturningFalseAbortsDownload(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $this->expectException(HttpRequestException::class);
+        $this->expectExceptionMessage('writeHandler');
+
+        $this->instance->request($request, ['writeHandler' => static fn(string $chunk) => false]);
+    }
+
+    #[Test]
+    public function requestWriteHandlerRespectsMaxResponseSize(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big-chunked'))
+            ->withMethod('GET');
+
+        $this->expectException(HttpResponseSizeExceededException::class);
+
+        $this->instance->request(
+            $request,
+            ['maxResponseSize' => 4096, 'writeHandler' => static function (string $chunk): void {}],
+        );
     }
 
     #[Test]

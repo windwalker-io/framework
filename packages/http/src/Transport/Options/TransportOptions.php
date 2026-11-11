@@ -33,6 +33,14 @@ class TransportOptions extends RecordOptions
          * unexpectedly huge responses. `null` means no limit.
          */
         public ?int $maxResponseSize = null,
+        /**
+         * Receives each downloaded chunk of the response body. When set, the body is not
+         * buffered into the response unless `$writeStream` is also given. Return `false`
+         * to abort the download.
+         *
+         * @var  Closure(string $chunk): (void|bool)|null
+         */
+        public ?Closure $writeHandler = null,
     ) {}
 
     public static function fromHttpClientOptions(HttpClientOptions $options): static
@@ -53,6 +61,8 @@ class TransportOptions extends RecordOptions
         $new->certpath = $options->certpath;
         $new->verifyPeer = $options->verifyPeer;
         $new->maxResponseSize = $options->maxResponseSize;
+        $new->writeStream = $options->writeStream ?? $new->writeStream;
+        $new->writeHandler = $options->writeHandler ?? $new->writeHandler;
 
         $new->optionMerged = true;
 

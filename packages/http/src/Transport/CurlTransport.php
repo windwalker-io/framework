@@ -31,7 +31,7 @@ use const Windwalker\Stream\READ_WRITE_RESET;
  */
 class CurlTransport extends AbstractTransport implements CurlTransportInterface
 {
-    use ResponseSizeLimitTrait;
+    use ResponseStreamingTrait;
 
     /**
      * @param  array|TransportOptions  $options
@@ -269,7 +269,16 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
             return strlen($header);
         };
 
-        $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use ($content, $maxResponseSize, &$downloadedSize) {
+        $writeHandler = $options->writeHandler;
+        $bufferBody = $writeHandler === null || $options->writeStream !== null;
+
+        $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use (
+            $content,
+            $maxResponseSize,
+            $writeHandler,
+            $bufferBody,
+            &$downloadedSize,
+        ) {
             $len = strlen($str);
 
             if ($maxResponseSize !== null) {
@@ -283,7 +292,13 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
                 }
             }
 
-            $content->write($str);
+            if ($bufferBody) {
+                $content->write($str);
+            }
+
+            if ($writeHandler !== null && $writeHandler($str) === false) {
+                throw new HttpRequestException('Download aborted by writeHandler.');
+            }
 
             return $len;
         };
