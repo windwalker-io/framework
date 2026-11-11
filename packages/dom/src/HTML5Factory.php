@@ -236,14 +236,16 @@ class HTML5Factory
         }
 
         if ($node instanceof HTMLDocument) {
-            if ($options['omit_doctype'] ?? false) {
-                $node = $node->documentElement ?? $node;
+            if (!($options['omit_doctype'] ?? false)) {
+                return $node->saveHtml();
             }
 
-            return $node->saveHtml($node);
+            $node = $node->documentElement ?? $node;
         }
 
-        return static::document()->saveHtml($node);
+        $document = $node instanceof Document ? $node : $node->ownerDocument;
+
+        return $document->saveHtml($node);
     }
 
     #[ArrayShape(['name' => 'mixed|string', 'id' => 'null|string', 'class' => 'null|string'])]
@@ -323,12 +325,6 @@ class HTML5Factory
 
         if ($content instanceof Node) {
             return $node->appendChild($content);
-        }
-
-        if ($node instanceof DocumentFragment) {
-            $node->appendXml($content);
-
-            return $node;
         }
 
         $text = $node->ownerDocument->createTextNode((string) $content);

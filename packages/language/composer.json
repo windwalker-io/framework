@@ -21,6 +21,7 @@
         "windwalker/test": "^4.0"
     },
     "suggest": {
+        "symfony/yaml": "Required to load YAML language files."
     },
     "minimum-stability": "beta",
     "autoload": {

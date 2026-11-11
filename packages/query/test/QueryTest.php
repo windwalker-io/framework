@@ -289,10 +289,157 @@ class QueryTest extends TestCase
         );
     }
 
+    #[Test]
+    public function withCursorBuildsKeysetConditionAndOrder(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foos')
+            ->withCursor('id', 'DESC', 10);
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" WHERE "id" < 10 ORDER BY "id" DESC',
+            $q->render(true)
+        );
+
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foos')
+            ->withCursor(
+                [
+                    ['created', 'DESC', '2026-01-01'],
+                    ['id', 'ASC', raw('another.column')],
+                ]
+            );
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" WHERE (("created" < \'2026-01-01\') OR ("created" = \'2026-01-01\' AND "id" > another.column)) '
+            . 'ORDER BY "created" DESC, "id" ASC',
+            $q->render(true)
+        );
+    }
+
+    #[Test]
+    public function withCursorRejectsInvalidArguments(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        self::createQuery()->select('*')->from('foos')->withCursor('id', 'DESC', null);
+    }
+
+    #[Test]
+    public function withCursorRejectsWrongArgumentCount(): void
+    {
+        $q = self::createQuery()->select('*')->from('foos');
+
+        foreach (
+            [
+                fn() => $q->withCursor('id', 'DESC'),
+                fn() => $q->withCursor('id', 'DESC', 1, 2),
+                fn() => $q->withCursor([['id', 'DESC']]),
+            ] as $case
+        ) {
+            try {
+                $case();
+                self::fail('Expected InvalidArgumentException.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
+    }
+
+    #[Test]
+    public function withCursorRejectsInvalidCursorPaginateArguments(): void
+    {
+        $paginate = Query::cursorPaginate(10, ['id']);
+        $q = self::createQuery()->select('*')->from('foos');
+
+        foreach (
+            [
+                fn() => $q->withCursor($paginate, 5),
+                fn() => $q->withCursor($paginate, ['id' => 1], ['id' => 2]),
+            ] as $case
+        ) {
+            try {
+                $case();
+                self::fail('Expected InvalidArgumentException.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
+    }
+
+    #[Test]
+    public function withCursorAcceptsSortDirectionAndKeepsExistingWhere(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foos')
+            ->where('state', 1)
+            ->withCursor('id', \SortDirection::Ascending, 3);
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" WHERE "state" = 1 AND "id" > 3 ORDER BY "id" ASC',
+            $q->render(true)
+        );
+    }
+
+    #[Test]
+    public function withCursorReturnsNewQueryAndKeepsOriginal(): void
+    {
+        $original = self::createQuery()->select('*')->from('foos')->where('state', 1);
+        $before = $original->render(true);
+
+        $cursored = $original->withCursor('id', 'DESC', 3);
+
+        self::assertNotSame($original, $cursored);
+        self::assertSame($before, $original->render(true));
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" WHERE "state" = 1 AND "id" < 3 ORDER BY "id" DESC',
+            $cursored->render(true)
+        );
+    }
+
+    #[Test]
+    public function withCursorRejectsClosureCursorPaginate(): void
+    {
+        $paginate = Query::cursorPaginate(10, static fn(Query $q, array $item) => $q);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        self::createQuery()->select('*')->from('foos')->withCursor($paginate, ['id' => 1]);
+    }
+
+    #[Test]
+    public function joinLateralDefaultsToOnTrue(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foos', 'foo')
+            ->leftJoinLateral(
+                self::createQuery()->select('*')->from('bars')->where('bars.foo_id', 1),
+                'bar'
+            );
+
+        self::assertSqlEquals(
+            'SELECT * FROM "foos" AS "foo" LEFT JOIN LATERAL (SELECT * FROM "bars" WHERE "bars"."foo_id" = 1) AS "bar" ON TRUE',
+            $q->render(true)
+        );
+    }
+
     public static function joinProvider(): array
     {
         // phpcs:disable
         return [
+            'Join on true' => [
+                'LEFT JOIN "bars" ON TRUE',
+                [
+                    'LEFT',
+                    'bars',
+                    null,
+                    true,
+                ],
+            ],
             'Simple left join' => [
                 'LEFT JOIN "bars" AS "bar" ON "bar"."id" = "foo"."bar_id"',
                 [
@@ -512,6 +659,17 @@ class QueryTest extends TestCase
             '(SELECT * FROM "foo" WHERE "id" > 12) UNION (SELECT * FROM "bar" WHERE "id" < 50) GROUP BY "id" ORDER BY "id" DESC',
             $q
         );
+    }
+
+    #[Test]
+    public function havingRawBindsNamedArguments(): void
+    {
+        $q = self::createQuery()
+            ->select('foo')
+            ->from('t')
+            ->havingRaw('COUNT(*) > :n', n: 3);
+
+        self::assertArrayHasKey('n', $q->getMergedBounded());
     }
 
     #[Test]

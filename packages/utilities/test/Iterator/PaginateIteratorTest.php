@@ -50,7 +50,26 @@ class PaginateIteratorTest extends TestCase
             5
         );
 
-        self::assertSame([1, 2, 3, 4, 5, 6], iterator_to_array($iter, false));
+        self::assertSame([1, 2, 3, 4, 5], iterator_to_array($iter, false));
         self::assertSame(2, $calls);
+    }
+
+    #[Test]
+    public function getIteratorYieldsNothingWhenLimitIsZero(): void
+    {
+        $calls = 0;
+
+        $iter = new PaginateIterator(
+            static function (int $page, int $perPage) use (&$calls) {
+                $calls++;
+
+                return range(1, $perPage);
+            },
+            3,
+            0
+        );
+
+        self::assertSame([], iterator_to_array($iter, false));
+        self::assertSame(0, $calls);
     }
 }

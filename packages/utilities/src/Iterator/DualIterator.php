@@ -14,6 +14,8 @@ use RecursiveIterator;
  *          https://github.com/php/php-src/blob/master/ext/spl/examples/dualiterator.inc
  *
  * @since   2.0
+ *
+ * @deprecated  Use MultiIterator instead.
  */
 class DualIterator implements Iterator
 {

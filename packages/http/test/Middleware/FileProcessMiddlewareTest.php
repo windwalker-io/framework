@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use SplFileInfo;
 use Symfony\Component\Mime\MimeTypes;
@@ -112,6 +113,34 @@ class FileProcessMiddlewareTest extends TestCase
         $res = $this->dispatch(new FileProcessMiddleware('vfs://public'), '/sub');
 
         self::assertSame(404, $res->getStatusCode());
+    }
+
+    #[Test]
+    public function processRejectsParentDirectorySegments(): void
+    {
+        $basePath = sys_get_temp_dir() . '/windwalker-http-' . bin2hex(random_bytes(8));
+        mkdir($basePath . '/public', recursive: true);
+        file_put_contents($basePath . '/secret.txt', 'secret');
+
+        try {
+            foreach (['/../secret.txt', '/%2e%2e/secret.txt', '/..\\secret.txt', '/..%5csecret.txt'] as $path) {
+                $uri = $this->createStub(UriInterface::class);
+                $uri->method('getPath')->willReturn($path);
+
+                $request = $this->createStub(ServerRequestInterface::class);
+                $request->method('getUri')->willReturn($uri);
+
+                $response = new FileProcessMiddleware($basePath . '/public')
+                    ->process($request, $this->handler());
+
+                self::assertSame(404, $response->getStatusCode());
+                self::assertSame('next', (string) $response->getBody());
+            }
+        } finally {
+            unlink($basePath . '/secret.txt');
+            rmdir($basePath . '/public');
+            rmdir($basePath);
+        }
     }
 
     #[Test]

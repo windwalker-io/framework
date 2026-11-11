@@ -96,7 +96,7 @@ class SchemaManager extends AbstractMetaManager
 
     public function getTableDetail(string $table, bool $includeViews = false): ?Table
     {
-        return $this->getTables($includeViews)[$table];
+        return $this->getTables($includeViews)[$table] ?? null;
     }
 
     public function hasTable(string $table): bool

@@ -114,7 +114,7 @@ class HttpServerTest extends TestCase
 
         $server->getAdapter()->handle($this->request());
 
-        self::assertContains('request', $called);
+        self::assertSame(['request', 'response'], $called);
     }
 
     #[Test]
@@ -165,6 +165,24 @@ class HttpServerTest extends TestCase
 
         self::assertSame('body', $ended);
         self::assertSame('body', $seenResponse);
+    }
+
+    #[Test]
+    public function handleEmitsLegacyResponseEvent(): void
+    {
+        $server = $this->createPhpServer();
+        $called = false;
+
+        $server->on('response', function () use (&$called) {
+            $called = true;
+        });
+        $server->onRequest(function (RequestEvent $event) {
+            $event->response = Response::fromString('body');
+        });
+
+        $server->handle($this->request());
+
+        self::assertTrue($called);
     }
 
     #[Test]

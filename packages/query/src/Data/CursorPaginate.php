@@ -44,35 +44,126 @@ class CursorPaginate
         $columns = static::normalizeColumns($this->cursorBy);
 
         return static function (Query $query, object|array $item) use ($columns) {
-            $values = [];
+            $conditions = [];
 
             foreach ($columns as $column => $dir) {
-                $values[$column] = static::extractValue($item, $column);
+                $conditions[] = [$column, $dir, static::extractValue($item, $column)];
             }
 
-            $query->clear('order');
-
-            foreach ($columns as $column => $dir) {
-                $query->order($column, $dir);
-            }
-
-            return $query->orWhere(static function (Query $query) use ($columns, $values) {
-                $equals = [];
-
-                foreach ($columns as $column => $dir) {
-                    $conditions = $equals;
-                    $conditions[] = [$column, $dir === 'DESC' ? '<' : '>', $values[$column]];
-
-                    $query->where(static function (Query $query) use ($conditions) {
-                        foreach ($conditions as $condition) {
-                            $query->where(...$condition);
-                        }
-                    });
-
-                    $equals[] = [$column, '=', $values[$column]];
-                }
-            });
+            return static::applyTo($query, $conditions);
         };
+    }
+
+    /**
+     * Convert an item (object or assoc array) into keyset conditions by the cursor columns.
+     *
+     * @param  array|object  $item  The last seen row, or the cursor values keyed by column name.
+     *
+     * Apply the page size and cursor order, plus the keyset condition after the last seen item when given.
+     *
+     * @param  array|object|null  $item  The last seen row or values, or NULL for the first page.
+     *
+     * @return  Query  The same query instance.
+     */
+    public function applyPage(Query $query, array|object|null $item = null): Query
+    {
+        $query->limit($this->length);
+
+        if ($item !== null) {
+            return static::applyTo($query, $this->conditionsFrom($item));
+        }
+
+        if ($this->cursorBy instanceof \Closure) {
+            return $query;
+        }
+
+        $query->clear('order');
+
+        foreach (static::normalizeColumns($this->cursorBy) as $column => $dir) {
+            $query->order($column, $dir);
+        }
+
+        return $query;
+    }
+
+    /**
+     * @return  list<array{0: string, 1: string, 2: mixed}>  [column, direction, value]
+     */
+    public function conditionsFrom(array|object $item): array
+    {
+        if ($this->cursorBy instanceof \Closure) {
+            throw new \InvalidArgumentException('Closure cursor cannot be converted to conditions.');
+        }
+
+        $conditions = [];
+
+        foreach (static::normalizeColumns($this->cursorBy) as $column => $dir) {
+            $conditions[] = [$column, $dir, static::extractValue($item, $column)];
+        }
+
+        return $conditions;
+    }
+
+    /**
+     * Replace the ORDER BY with the cursor columns and add the keyset condition to the query.
+     *
+     * @param  list<array{0: string, 1: \SortDirection|string, 2: mixed}>  $conditions  [column, direction, value]
+     *
+     * @return  Query  The same query instance with cursor order and where applied.
+     */
+    public static function applyTo(Query $query, array $conditions): Query
+    {
+        $columns = [];
+
+        foreach ($conditions as $condition) {
+            if (count($condition) !== 3) {
+                throw new \InvalidArgumentException('Cursor condition must be [column, direction, value].');
+            }
+
+            [$column, $dir, $value] = $condition;
+
+            if (!is_string($column) || $column === '') {
+                throw new \InvalidArgumentException('Cursor column must be a non-empty string.');
+            }
+
+            if ($value === null) {
+                throw new \InvalidArgumentException("Cursor value of \"$column\" cannot be null.");
+            }
+
+            $columns[] = [$column, static::normalizeDirection($dir), $value];
+        }
+
+        if ($columns === []) {
+            throw new \InvalidArgumentException('Cursor columns cannot be empty.');
+        }
+
+        $query->clear('order');
+
+        foreach ($columns as [$column, $dir]) {
+            $query->order($column, $dir);
+        }
+
+        if (count($columns) === 1) {
+            [$column, $dir, $value] = $columns[0];
+
+            return $query->where($column, $dir === 'DESC' ? '<' : '>', $value);
+        }
+        return $query->orWhere(static function (Query $query) use ($columns) {
+            $equals = [];
+
+            foreach ($columns as [$column, $dir, $value]) {
+                $conditions = $equals;
+                $conditions[] = [$column, $dir === 'DESC' ? '<' : '>', $value];
+
+                $query->where(static function (Query $query) use ($conditions) {
+                    foreach ($conditions as $condition) {
+                        $query->where(...$condition);
+                    }
+                });
+
+                $equals[] = [$column, '=', $value];
+            }
+        });
     }
 
     /**

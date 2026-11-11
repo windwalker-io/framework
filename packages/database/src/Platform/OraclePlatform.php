@@ -11,6 +11,7 @@ use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Query;
+use Windwalker\Utilities\Wrapper\RawWrapper;
 
 use function Windwalker\raw;
 
@@ -82,6 +83,11 @@ class OraclePlatform extends AbstractPlatform
             )
             ->from('ALL_TABLES')
             ->where('NESTED', 'NO')
+            ->whereRaw(
+                'NOT EXISTS (SELECT 1 FROM ALL_OBJECTS O WHERE O.OWNER = ALL_TABLES.OWNER'
+                . " AND O.OBJECT_NAME = ALL_TABLES.TABLE_NAME AND O.OBJECT_TYPE = 'TABLE'"
+                . " AND O.ORACLE_MAINTAINED = 'Y')"
+            )
             ->tap(fn(Query $query) => $this->whereOwner($query, 'OWNER', $schema))
             ->order('TABLE_NAME');
     }
@@ -764,6 +770,11 @@ class OraclePlatform extends AbstractPlatform
         }
 
         $type = $column->getDataType();
+
+        // Raw SQL expressions (e.g. defaultCurrent()) must not get a type literal prefix.
+        if ($default instanceof RawWrapper) {
+            return 'DEFAULT ' . $default();
+        }
 
         if ($default !== null && $type === 'timestamp') {
             return 'DEFAULT TIMESTAMP ' . $this->db->quote($default);

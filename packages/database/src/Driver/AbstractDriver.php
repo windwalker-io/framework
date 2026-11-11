@@ -13,6 +13,7 @@ use Windwalker\Database\Event\ItemFetchedEvent;
 use Windwalker\Database\Event\QueryEndEvent;
 use Windwalker\Database\Event\QueryFailedEvent;
 use Windwalker\Database\Event\QueryStartEvent;
+use Windwalker\Database\Exception\DatabaseConnectException;
 use Windwalker\Database\Exception\DatabaseQueryException;
 use Windwalker\Database\Hydrator\HydratorAwareInterface;
 use Windwalker\Database\Hydrator\HydratorInterface;
@@ -139,9 +140,12 @@ abstract class AbstractDriver implements HydratorAwareInterface
             $conn->connect();
 
             $this->runAfterConnects($conn);
-        } catch (\Throwable $e) {
+        } catch (DatabaseConnectException $e) {
             $this->releaseConnection($conn);
             throw $e;
+        } catch (\Throwable $e) {
+            $this->releaseConnection($conn);
+            throw new DatabaseConnectException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $conn;
@@ -267,7 +271,13 @@ abstract class AbstractDriver implements HydratorAwareInterface
             'lost connection',
             'went away',
             'connection timed out',
-            'operation timed out'
+            'operation timed out',
+            'connection reset by peer',
+            'server closed the connection unexpectedly',
+            'ssl connection has been closed unexpectedly',
+            'no connection to the server',
+            'communication link failure',
+            'error while sending query packet'
         ];
 
         return array_any($keywords, static fn($keyword) => str_contains($message, strtolower($keyword)));
@@ -347,6 +357,10 @@ abstract class AbstractDriver implements HydratorAwareInterface
                 );
 
                 $e = $event->exception;
+
+                if ($e instanceof DatabaseConnectException) {
+                    return;
+                }
 
                 $debugSql = $this->replacePrefix(($query instanceof Query ? $query->render(true) : (string) $query));
 

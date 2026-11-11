@@ -66,14 +66,18 @@ class JoinClause implements ClauseInterface
     /**
      * on
      *
-     * @param  string|array|Closure|ClauseInterface  $column   Column name, array where list or callback
-     *                                                         function as sub query.
-     * @param  mixed                                 ...$args
+     * @param  string|array|Closure|ClauseInterface|bool  $column   Column name, array where list, callback
+     *                                                              function as sub query or TRUE for `ON TRUE`.
+     * @param  mixed                                      ...$args
      *
      * @return  static
      */
     public function on(mixed $column, ...$args): static
     {
+        if ($column === true && $args === []) {
+            return $this->onRaw('TRUE');
+        }
+
         if ($column instanceof Closure) {
             $this->handleNestedOn($column, (string) ($args[0] ?? 'AND'));
 

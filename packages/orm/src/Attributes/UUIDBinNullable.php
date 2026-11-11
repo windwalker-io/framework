@@ -10,8 +10,8 @@ namespace Windwalker\ORM\Attributes;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::IS_REPEATABLE)]
 class UUIDBinNullable extends UUIDBin
 {
-    public function __construct(string|int $version = self::UUID7, mixed $caster = null, int $options = self::NULLABLE)
+    public function __construct(string|int|\Closure $version = self::UUID7, int $options = self::NULLABLE)
     {
-        parent::__construct($version, $caster, $options);
+        parent::__construct($version, $options);
     }
 }

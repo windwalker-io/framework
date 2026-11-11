@@ -12,6 +12,7 @@ use Windwalker\Queue\Attributes\JobMiddleware;
 use Windwalker\Queue\Attributes\JobMiddlewaresProvider;
 use Windwalker\Queue\Exception\AbandonedException;
 use Windwalker\Queue\Exception\DeferredException;
+use Windwalker\Queue\Exception\RetryAfterException;
 use Windwalker\Queue\Middleware\QueueMiddlewareInterface;
 use Windwalker\Queue\QueueMessage;
 use Windwalker\Utilities\Attributes\AttributesAccessor;
@@ -121,11 +122,11 @@ class JobController
         return $this->defer = new DeferredException($delay, $reason);
     }
 
-    public function retryAfter(int $delay): static
+    public function retryAfter(int $delay): RetryAfterException
     {
-        $this->retryAfter = max(0, $delay);
+        $this->retryAfter = $delay = max(0, $delay);
 
-        return $this;
+        return new RetryAfterException($delay);
     }
 
     public function resume(): static
@@ -370,6 +371,8 @@ class JobController
             }
 
             return $result;
+        } catch (RetryAfterException $e) {
+            $this->retryAfter = $e->delay;
         } catch (DeferredException $e) {
             $this->defer = $e;
 

@@ -181,6 +181,20 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
      * @see  TableManager::addIndex
      */
     #[Test]
+    public function addIndexRefreshesIndexCacheWithoutReset(): void
+    {
+        $this->instance->getIndexes();
+        $this->instance->addIndex('created');
+
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_created'));
+
+        $this->instance->dropIndex('idx_enterprise_created');
+    }
+
+    /**
+     * @see  TableManager::addIndex
+     */
+    #[Test]
     public function addIndex(): void
     {
         $logs = $this->logQueries(
@@ -199,6 +213,13 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
             PRAGMA index_info('idx_enterprise_catid_type');
             PRAGMA index_info('sqlite_autoindex_enterprise_1');
             CREATE INDEX `idx_enterprise_created` ON `enterprise` (`created`);
+            PRAGMA table_info('enterprise');
+            PRAGMA table_info('enterprise');
+            PRAGMA index_list('enterprise');
+            PRAGMA index_info('idx_enterprise_created');
+            PRAGMA index_info('idx_enterprise_title');
+            PRAGMA index_info('idx_enterprise_catid_type');
+            PRAGMA index_info('sqlite_autoindex_enterprise_1');
             CREATE INDEX `idx_enterprise_start_date_price` ON `enterprise` (`start_date`,`price`)
             SQL,
             implode(";\n", $logs)

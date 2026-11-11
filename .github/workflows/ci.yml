@@ -98,6 +98,7 @@ jobs:
           extensions: |
             mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, pdo_sqlsrv, sqlsrv, pdo_oci, mysqli,
             php-memcached, redis, sqlite3, swoole
+          ini-values: memory_limit=512M
           coverage: none
       #          tools: php-cs-fixer, phpunit
       - name: Get composer cache directory
@@ -138,7 +139,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, sodium, fileinfo, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, mysqli, sqlite3
+          extensions: mbstring, intl, sodium, fileinfo, sockets, pdo, pdo_mysql, pdo_pgsql, pdo_sqlite, mysqli, sqlite3
+          ini-values: memory_limit=512M
           coverage: none
       - name: Cache Composer dependencies
         uses: actions/cache@v4

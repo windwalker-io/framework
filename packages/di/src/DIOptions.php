@@ -49,6 +49,7 @@ class DIOptions
          * Lazy is skipped, and the normal eager flow is used, when the class:
          * - does not exist, is an interface, abstract class, trait or enum (not instantiable).
          * - is an internal class or extends one (e.g. ArrayObject, SplStack).
+         * - has any class-level attribute other than Lazy, even if attributes are ignored or excluded.
          *
          * For a nullable parameter, lazy is only used if the container has the service registered.
          *
@@ -63,6 +64,8 @@ class DIOptions
          *   resolving failed. The error is deferred until first access, see the previous exception for details.
          * - Constructor side effects run on first access instead of injection time.
          * - Extends registered by `whenCreating()->extend()` run on first access.
+         * - Proxies returned by dependency resolution or extends are unwrapped, even if already initialized,
+         *   so the lazy factory returns the underlying non-lazy instance.
          *
          * @see \Windwalker\DI\Attributes\Lazy
          */

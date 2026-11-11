@@ -6,6 +6,7 @@ namespace Windwalker\Query\Test\Data;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Grammar\BaseGrammar;
 use Windwalker\Query\Query;
 use Windwalker\Query\Test\Mock\MockEscaper;
@@ -34,7 +35,7 @@ class CursorPaginateTest extends TestCase
         $query = $handler($this->query(), ['id' => 5]);
 
         self::assertSame(
-            'SELECT * FROM "a" WHERE (("id" > ?)) ORDER BY "id" ASC',
+            'SELECT * FROM "a" WHERE "id" > ? ORDER BY "id" ASC',
             $this->sql($query)
         );
         self::assertSame([5], $this->values($query));
@@ -47,7 +48,7 @@ class CursorPaginateTest extends TestCase
         $query = $handler($this->query(), ['id' => 5]);
 
         self::assertSame(
-            'SELECT * FROM "a" WHERE (("id" < ?)) ORDER BY "id" DESC',
+            'SELECT * FROM "a" WHERE "id" < ? ORDER BY "id" DESC',
             $this->sql($query)
         );
     }
@@ -99,7 +100,7 @@ class CursorPaginateTest extends TestCase
         $query = $handler($this->query()->where('x', '=', 1)->order('zz'), ['id' => 5]);
 
         self::assertSame(
-            'SELECT * FROM "a" WHERE "x" = ? AND (("id" < ?)) ORDER BY "id" DESC',
+            'SELECT * FROM "a" WHERE "x" = ? AND "id" < ? ORDER BY "id" DESC',
             $this->sql($query)
         );
     }
@@ -139,6 +140,74 @@ class CursorPaginateTest extends TestCase
     }
 
     #[Test]
+    public function withCursorFirstPageAppliesLimitAndOrder(): void
+    {
+        $paginate = Query::cursorPaginate(20, ['created' => 'DESC', 'id' => 'DESC']);
+
+        $query = $this->query()->where('state', 1)->limit(5)->withCursor($paginate);
+
+        self::assertSame(
+            'SELECT * FROM "a" WHERE "state" = ? ORDER BY "created" DESC, "id" DESC LIMIT 20',
+            $this->sql($query)
+        );
+    }
+
+    #[Test]
+    public function withCursorNextPageAppliesLimitAndKeysetCondition(): void
+    {
+        $paginate = Query::cursorPaginate(20, ['created' => 'DESC', 'id' => 'DESC']);
+
+        $query = $this->query()->where('state', 1)
+            ->withCursor($paginate, ['created' => '2026-01-01', 'id' => 5]);
+
+        self::assertSame(
+            'SELECT * FROM "a" WHERE "state" = ? AND (("created" < ?) OR ("created" = ? AND "id" < ?)) '
+            . 'ORDER BY "created" DESC, "id" DESC LIMIT 20',
+            $this->sql($query)
+        );
+        self::assertSame([1, '2026-01-01', '2026-01-01', 5], $this->values($query));
+    }
+
+    #[Test]
+    public function withCursorAcceptsObjectItem(): void
+    {
+        $paginate = Query::cursorPaginate(10, 'id');
+
+        $query = $this->query()->withCursor($paginate, (object) ['id' => 7]);
+
+        self::assertSame('SELECT * FROM "a" WHERE "id" > ? ORDER BY "id" ASC LIMIT 10', $this->sql($query));
+    }
+
+    #[Test]
+    public function withCursorWithNullItemIsFirstPage(): void
+    {
+        $paginate = Query::cursorPaginate(10, 'id');
+
+        self::assertSame(
+            'SELECT * FROM "a" ORDER BY "id" ASC LIMIT 10',
+            $this->sql($this->query()->withCursor($paginate, null))
+        );
+    }
+
+    #[Test]
+    public function withCursorClosureFirstPageAppliesLimitOnly(): void
+    {
+        $paginate = Query::cursorPaginate(10, static fn(Query $q, array $item) => $q);
+
+        self::assertSame('SELECT * FROM "a" LIMIT 10', $this->sql($this->query()->withCursor($paginate)));
+    }
+
+    #[Test]
+    public function withCursorRejectsInvalidPageArguments(): void
+    {
+        $paginate = Query::cursorPaginate(10, 'id');
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->query()->withCursor($paginate, 5);
+    }
+
+    #[Test]
     public function missingItemColumnThrows(): void
     {
         $handler = Query::cursorPaginate(10, ['id'])->cursorHandler;
@@ -146,5 +215,70 @@ class CursorPaginateTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
 
         $handler($this->query(), ['other' => 1]);
+    }
+
+    #[Test]
+    public function conditionsFromReadsArrayAndObjectByColumnName(): void
+    {
+        $paginate = Query::cursorPaginate(10, ['a.created' => 'DESC', 'id' => \SortDirection::Ascending]);
+
+        self::assertSame(
+            [['a.created', 'DESC', '2026-01-01'], ['id', 'ASC', 5]],
+            $paginate->conditionsFrom(['created' => '2026-01-01', 'id' => 5])
+        );
+        self::assertSame(
+            [['a.created', 'DESC', '2026-01-01'], ['id', 'ASC', 5]],
+            $paginate->conditionsFrom((object) ['created' => '2026-01-01', 'id' => 5])
+        );
+    }
+
+    #[Test]
+    public function conditionsFromRejectsClosureCursor(): void
+    {
+        $paginate = Query::cursorPaginate(10, static fn(Query $q, array $item) => $q);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $paginate->conditionsFrom(['id' => 1]);
+    }
+
+    #[Test]
+    public function conditionsFromThrowsOnMissingColumn(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        Query::cursorPaginate(10, ['id'])->conditionsFrom(['other' => 1]);
+    }
+
+    #[Test]
+    public function applyToKeepsExistingWhereAndReplacesOrder(): void
+    {
+        $query = $this->query()->where('x', 1)->order('x', 'ASC');
+
+        CursorPaginate::applyTo($query, [['id', \SortDirection::Descending, 5]]);
+
+        self::assertSame('SELECT * FROM "a" WHERE "x" = ? AND "id" < ? ORDER BY "id" DESC', $this->sql($query));
+    }
+
+    #[Test]
+    public function applyToRejectsInvalidConditions(): void
+    {
+        $query = $this->query();
+
+        foreach (
+            [
+                [],
+                [['id', 'ASC']],
+                [['', 'ASC', 1]],
+                [['id', 'ASC', null]],
+            ] as $conditions
+        ) {
+            try {
+                CursorPaginate::applyTo($query, $conditions);
+                self::fail('Expected InvalidArgumentException.');
+            } catch (\InvalidArgumentException) {
+                self::assertTrue(true);
+            }
+        }
     }
 }

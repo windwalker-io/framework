@@ -378,7 +378,10 @@ abstract class AbstractRunner implements EventAwareInterface
         return new CallbackLogger(
             function ($level, string|\Stringable $message, array $context = []) {
                 $message = (string) $message;
-                $this->logger->log($level, strip_tags($message), $context);
+
+                if ($this->shouldLogControllerMessage($level)) {
+                    $this->logger->log($level, strip_tags($message), $context);
+                }
 
                 return $this->emit(
                     new DebugOutputEvent(
@@ -389,5 +392,10 @@ abstract class AbstractRunner implements EventAwareInterface
                 );
             }
         );
+    }
+
+    protected function shouldLogControllerMessage(string $level): bool
+    {
+        return true;
     }
 }

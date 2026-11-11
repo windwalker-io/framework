@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Query\Bounded\BoundedHelper;
 use Windwalker\Query\Grammar\AbstractGrammar;
 use Windwalker\Query\Grammar\SQLiteGrammar;
+use Windwalker\Query\Query;
 
 use function Windwalker\Query\qn;
 
@@ -183,6 +184,88 @@ class SqliteQueryTest extends QueryTest
         self::assertEquals(
             'UPDATE `t` SET `foo` = JSON_SET(`bar`, \'$.a\', JSON_SET(`baz`, \'$.x\', JSON(\'1\'))), `o` = JSON_REMOVE(`p`, \'$.q\')',
             $query->render(true)
+        );
+    }
+
+    #[Test]
+    public function unionCombinesQueries(): void
+    {
+        $q = self::createQuery();
+
+        $q->union(
+            self::createQuery()
+                ->select('*')
+                ->from('foo')
+                ->where('id', '>', 12)
+        );
+
+        $q->union(
+            self::createQuery()
+                ->select('*')
+                ->from('bar')
+                ->where('id', '<', 50)
+        );
+
+        $q->group('id')->order('id', 'DESC');
+
+        self::assertSqlEquals(
+            'SELECT * FROM `foo` WHERE `id` > 12 UNION SELECT * FROM `bar` WHERE `id` < 50 GROUP BY `id` ORDER BY `id` DESC',
+            $q
+        );
+    }
+
+    #[Test]
+    public function unionAcceptsClosure(): void
+    {
+        $q = self::createQuery();
+
+        $q->union(fn(Query $q) => $q->select('*')->from('foo')->where('id', '>', 12));
+        $q->unionAll(function (Query $q) {
+            $q->select('*')->from('bar')->where('id', '<', 50);
+        });
+
+        self::assertSqlEquals(
+            'SELECT * FROM `foo` WHERE `id` > 12 UNION SELECT * FROM `bar` WHERE `id` < 50',
+            $q
+        );
+    }
+
+    #[Test]
+    public function insertBuildsInsertStatement(): void
+    {
+        $q = self::createQuery()
+            ->insert('foo')
+            ->columns('id', 'title')
+            ->values(
+                self::createQuery()
+                    ->select('id', 'title')
+                    ->from('articles'),
+                self::createQuery()
+                    ->select('id', 'title')
+                    ->from('categories')
+            );
+
+        self::assertSqlEquals(
+            'INSERT INTO `foo` (`id`, `title`) SELECT `id`, `title` FROM `articles` UNION SELECT `id`, `title` FROM `categories`',
+            $q
+        );
+    }
+
+    #[Test]
+    public function recursiveCteWithUnionAll(): void
+    {
+        $q = self::createQuery()
+            ->withRecursive(
+                'cte',
+                fn(Query $s) => $s->select('1 AS n')
+                    ->unionAll(fn(Query $u) => $u->select('n + 1')->from('cte')->where('n', '<', 3))
+            )
+            ->select('n')
+            ->from('cte');
+
+        self::assertSqlEquals(
+            'WITH RECURSIVE `cte` AS (SELECT `1` AS `n` UNION ALL SELECT `n + 1` FROM `cte` WHERE `n` < 3) SELECT `n` FROM `cte`',
+            $q
         );
     }
 }

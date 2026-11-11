@@ -8,15 +8,17 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
 use React\EventLoop\StreamSelectLoop;
 use React\Http\HttpServer;
+use React\Socket\SocketServer;
+use RuntimeException;
 use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\HttpFactory;
-use React\Socket\SocketServer;
-use RuntimeException;
 use Windwalker\Http\Server\ReactServer;
 
 /**
@@ -182,6 +184,30 @@ class ReactServerTest extends TestCase
         self::assertStringStartsWith('HTTP/1.1 201', $raw);
         self::assertStringContainsString('X-Path: /foo', $raw);
         self::assertSame(['request', 'response'], $names);
+    }
+
+    #[Test]
+    public function handleRunsMiddlewaresBeforeRequestEvent(): void
+    {
+        $this->instance->middleware(
+            function (ServerRequestInterface $request, RequestHandlerInterface $handler) {
+                return $handler->handle($request->withAttribute('middleware', 'ran'));
+            },
+        );
+        $this->instance->on(
+            'request',
+            function (RequestEvent $event) {
+                $event->response = $this->instance
+                    ->getHttpFactory()
+                    ->createResponse()
+                    ->withHeader('X-Middleware', $event->request->getAttribute('middleware'));
+            },
+        );
+
+        $raw = $this->requestRaw("GET / HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n");
+
+        self::assertStringStartsWith('HTTP/1.1 200', $raw);
+        self::assertStringContainsString('X-Middleware: ran', $raw);
     }
 
     #[Test]

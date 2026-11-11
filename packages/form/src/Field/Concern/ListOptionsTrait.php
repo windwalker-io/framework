@@ -11,6 +11,8 @@ use Windwalker\DOM\DOMElement;
 use Windwalker\DOM\HTML5Factory;
 use Windwalker\DOM\HTMLElement;
 use Windwalker\Utilities\Assert\TypeAssert;
+use Windwalker\Utilities\Attributes\AttributesAccessor;
+use Windwalker\Utilities\Attributes\Enum\Title;
 use Windwalker\Utilities\Contract\LanguageInterface;
 use Windwalker\Utilities\Enum\EnumMetaInterface;
 use Windwalker\Utilities\Enum\EnumTranslatableInterface;
@@ -87,6 +89,13 @@ trait ListOptionsTrait
      */
     public function addOptions(array $options, ?string $group = null): static
     {
+        $options = array_map(
+            fn(mixed $option) => is_scalar($option)
+                ? static::createOption((string) $option, (string) $option)
+                : $option,
+            $options
+        );
+
         if ($group) {
             $this->options[$group] ??= [];
 
@@ -151,11 +160,25 @@ trait ListOptionsTrait
             } elseif ($enum instanceof Enum) {
                 $options[$enum->getValue()] = $enum->getKey();
             } elseif ($enum instanceof \UnitEnum) {
-                $options[$enum->name ?? $enum->value] = $enum->name;
+                $options[$enum->value ?? $enum->name] = $this->getEnumCaseTitle($enum) ?: $enum->name;
             }
         }
 
         return $this->registerOptions($options);
+    }
+
+    /**
+     * Read the plain string from #[Title] (or its subclasses) on an enum case. Translation is not supported here.
+     */
+    protected function getEnumCaseTitle(\UnitEnum $enum): string
+    {
+        $attr = AttributesAccessor::getFirstAttributeInstance(
+            new \ReflectionEnumUnitCase($enum, $enum->name),
+            Title::class,
+            \ReflectionAttribute::IS_INSTANCEOF,
+        );
+
+        return $attr?->toReadableString() ?? '';
     }
 
     /**
@@ -178,7 +201,7 @@ trait ListOptionsTrait
             } elseif ($isEnum = is_subclass_of($options, \BackedEnum::class)) {
                 $opt = [];
                 foreach ($options::cases() as $case) {
-                    $opt[$case->name] = $case->value;
+                    $opt[$case->value] = $case->name;
                 }
                 $options = $opt;
             } else {

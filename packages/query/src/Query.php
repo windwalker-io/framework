@@ -93,6 +93,7 @@ use function Windwalker\value;
  * @method  $this         outerJoin($table, ?string $alias = null, ...$on)
  * @method  $this         innerJoin($table, ?string $alias = null, ...$on)
  * @method  $this         leftJoinLateral($table, ?string $alias = null, ...$on)
+ * @method  $this         rightJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         innerJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         whereIn($column, iterable $values)
  * @method  $this         whereNotIn($column, iterable $values)
@@ -352,6 +353,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      */
     public function joinLateral(string $type, mixed $table, ?string $alias = null, mixed ...$on): static
     {
+        // Lateral joins default to `ON TRUE` when no condition is given.
+        $on = $on === [] ? [true] : $on;
+
         return $this->doJoin(strtoupper($type) . ' JOIN LATERAL', $table, $alias, ...$on);
     }
 
@@ -595,7 +599,9 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
                 $prefix .= ' ' . $type;
             }
 
-            $this->union = $this->clause($prefix . ' ()', [], ') ' . $prefix . ' (');
+            $this->union = $this->grammar->supportsParenthesizedUnion()
+                ? $this->clause($prefix . ' ()', [], ') ' . $prefix . ' (')
+                : $this->clause($prefix, [], ' ' . $prefix . ' ');
         }
 
         if ($query instanceof self) {
@@ -635,13 +641,13 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @param  mixed  $query  The Query object or string to union.
      *
-     * @return  mixed  The Query object on success or boolean false on failure.
+     * @return  static
      *
      * @see     union
      *
      * @since   2.0
      */
-    public function unionAll(mixed $query): mixed
+    public function unionAll(mixed $query): static
     {
         // Apply the distinct flag to the union.
         return $this->union($query, 'ALL');
@@ -2157,7 +2163,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
 
         $aliases = [
             'leftJoinLateral' => 'LEFT',
-            'innerJoinLateral' => 'RIGHT',
+            'rightJoinLateral' => 'RIGHT',
+            'innerJoinLateral' => 'INNER',
         ];
 
         if (isset($aliases[$name])) {
@@ -2245,5 +2252,43 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
     public static function cursorPaginate(int $length, \Closure|string|array $cursorBy): CursorPaginate
     {
         return new CursorPaginate($length, $cursorBy);
+    }
+
+    /**
+     * Return a cloned query sorted by cursor columns, with the keyset condition after the last seen values.
+     *
+     * Usage:
+     * $query->withCursor('id', 'DESC', 10)
+     * $query->withCursor([
+     *     ['created', 'DESC', $created],
+     *     ['id', 'DESC', $id],
+     * ])
+     * $query->withCursor($paginate)                          // first page, uses the paginate length as LIMIT
+     * $query->withCursor($paginate, ['created' => $created, 'id' => $id])  // next page
+     *
+     * @param  string|array|CursorPaginate  $column   Column name, list of [column, direction, value],
+     *                                                or CursorPaginate with the last seen item or values.
+     * @param  mixed                        ...$args  Direction and value when $column is a string,
+     *                                                or the optional item / values when $column is a CursorPaginate.
+     *
+     * @return  static  A new query instance, the original query is not changed.
+     */
+    public function withCursor(string|array|CursorPaginate $column, mixed ...$args): static
+    {
+        $query = clone $this;
+
+        if ($column instanceof CursorPaginate) {
+            if (count($args) > 1 || (isset($args[0]) && !(is_array($args[0]) || is_object($args[0])))) {
+                throw new \InvalidArgumentException('CursorPaginate accepts at most one item or values array.');
+            }
+
+            return $column->applyPage($query, $args[0] ?? null);
+        }
+
+        $conditions = is_string($column) ? [[$column, ...$args]] : $column;
+
+        CursorPaginate::applyTo($query, $conditions);
+
+        return $query;
     }
 }

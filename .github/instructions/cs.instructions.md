@@ -40,6 +40,28 @@ is legacy from the old codebase, and should be removed. Keep necessary tags, and
     public function withRemoveDeep()
 ```
 
+## Prefer Fully Expanded Line Breaks
+
+When a function call or array has multiple arguments, prefer placing each one on its own line to avoid overly long lines. Although PER-CS allows partial line breaks, we prefer fully expanded line breaks for better readability.
+
+```php
+// Good
+$this->call('foo', 'bar', [
+    'baz' => 'qux',
+    'quux' => 'corge',
+]);
+
+// Better
+$this->call(
+    'foo',
+    'bar',
+    [
+        'baz' => 'qux',
+        'quux' => 'corge',
+    ]
+);
+```
+
 ## Use New without parentheses
 
 Bad

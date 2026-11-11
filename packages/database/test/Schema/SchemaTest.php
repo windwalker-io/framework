@@ -7,6 +7,7 @@ namespace Windwalker\Database\Test\Schema;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use Windwalker\Database\Schema\Ddl\Column;
+use Windwalker\Database\Schema\Ddl\Constraint;
 use Windwalker\Database\Schema\Schema;
 use Windwalker\Database\Test\AbstractDatabaseTestCase;
 
@@ -204,7 +205,11 @@ class SchemaTest extends AbstractDatabaseTestCase
     {
         $fk = $this->instance->addForeignKey('category_id', 'ww_categories', 'id');
 
+        self::assertTrue($fk->isForeignKey());
+        self::assertFalse($fk->isPrimary());
         self::assertSame(['category_id'], $fk->getColumnNames());
+        self::assertSame(Constraint::TYPE_FOREIGN_KEY, $fk->constraintType);
+        self::assertSame('fk_ww_flower_category_id', $fk->constraintName);
         self::assertSame('ww_categories', $fk->referencedTableName);
         self::assertSame(['id'], array_keys($fk->getReferencedColumns()));
     }

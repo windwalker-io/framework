@@ -335,11 +335,23 @@ class Language implements LanguageInterface
      */
     public function addStrings(array $strings, ?string $locale = null): static
     {
-        foreach ($strings as $key => $string) {
-            $this->addString($key, $string, $locale);
-        }
+        $this->addStringsRecursive($strings, $locale);
 
         return $this;
+    }
+
+    private function addStringsRecursive(array $strings, ?string $locale, string $prefix = ''): void
+    {
+        foreach ($strings as $key => $string) {
+            $key = $prefix === '' ? (string) $key : $prefix . '.' . $key;
+
+            if (is_array($string)) {
+                $this->addStringsRecursive($string, $locale, $key);
+                continue;
+            }
+
+            $this->addString($key, $string, $locale);
+        }
     }
 
     /**

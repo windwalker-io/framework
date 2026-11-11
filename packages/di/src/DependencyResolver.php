@@ -37,6 +37,7 @@ use Windwalker\Utilities\Wrapper\RawWrapper;
 use Windwalker\Utilities\Wrapper\ValueReference;
 
 use function Windwalker\collect;
+use function Windwalker\unwrap_lazy_object;
 
 /**
  * The ObjectFactory class.
@@ -444,6 +445,11 @@ class DependencyResolver
                     function () use ($create, $ref) {
                         $value = $this->resolveParameterValue($create());
 
+                        // Initialized proxies must also be unwrapped before returning from a lazy factory.
+                        if (is_object($value)) {
+                            $value = unwrap_lazy_object($value);
+                        }
+
                         static::assertProxyCompatible($ref, $value);
 
                         return $value;
@@ -706,11 +712,22 @@ class DependencyResolver
 
     /**
      * Whether a lazy proxy can be created for the class. Interfaces, abstract classes and internal classes
-     * can not be proxied, they will be resolved eagerly.
+     * can not be proxied. Classes with attributes other than Lazy are resolved eagerly because attributes
+     * may replace the instance with an incompatible type.
      */
     public static function isProxyable(ReflectionClass $ref): bool
     {
-        return $ref->isInstantiable() && !static::isInternal($ref);
+        if (!$ref->isInstantiable() || static::isInternal($ref)) {
+            return false;
+        }
+
+        foreach ($ref->getAttributes() as $attribute) {
+            if ($attribute->getName() !== Lazy::class) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function isInternal(string|Reflector $class): bool

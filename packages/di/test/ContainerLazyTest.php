@@ -7,9 +7,12 @@ namespace Windwalker\DI\Test;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Windwalker\DI\Attributes\Inject;
 use Windwalker\DI\Attributes\Lazy;
 use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
+use Windwalker\DI\Test\Injection\InnerStub;
+use Windwalker\DI\Test\Injection\Wrapped;
 use Windwalker\DI\Test\Mock\Bar;
 use Windwalker\DI\Test\Mock\Foo;
 use Windwalker\DI\Test\Mock\StubStack;
@@ -65,6 +68,76 @@ class ContainerLazyTest extends TestCase
         self::assertIsNotUninitializedLazyProxy($foo);
         self::assertIsUninitializedLazyProxy($foo->lazy);
         self::assertIsNotUninitializedLazyProxy($foo->bar);
+    }
+
+    #[Test]
+    public function preservesClassLevelLazyWithoutOtherAttributes(): void
+    {
+        $container = new Container();
+
+        self::assertIsUninitializedLazyProxy($container->newInstance(StubLazy::class));
+    }
+
+    #[Test]
+    public function skipsLazyForClassAttributesEvenWhenIgnoredOrExcluded(): void
+    {
+        $container = new Container(options: new DIOptions(lazy: true));
+
+        foreach ([
+            new DIOptions(),
+            new DIOptions(ignoreAttributes: true),
+            new DIOptions(excludeAttributes: [\AllowDynamicProperties::class]),
+        ] as $options) {
+            $instance = $container->newInstance(AttributedLazyService::class, options: $options);
+
+            self::assertIsNotLazyProxy($instance);
+            self::assertSame('ready', $instance->value);
+        }
+    }
+
+    #[Test]
+    public function appliesClassDecoratorBeforeReturningUnderGlobalLazy(): void
+    {
+        $container = new Container(options: new DIOptions(lazy: true));
+        $container->registerDefaultAttributes();
+
+        $instance = $container->newInstance(InnerStub::class);
+
+        self::assertInstanceOf(Wrapped::class, $instance);
+        self::assertInstanceOf(InnerStub::class, $instance->instance);
+        self::assertIsNotLazyProxy($instance->instance);
+    }
+
+    #[Test]
+    public function parameterLazyDoesNotOverrideClassAttributeFallback(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true));
+        $container->registerDefaultAttributes();
+
+        $instance = $container->call(
+            fn(#[Lazy] AttributedLazyService $service) => $service
+        );
+
+        self::assertIsNotLazyProxy($instance);
+        self::assertSame('ready', $instance->value);
+    }
+
+    #[Test]
+    public function propertyLazyDoesNotOverrideClassAttributeFallback(): void
+    {
+        $container = new Container(options: new DIOptions(autowire: true));
+        $container->registerDefaultAttributes();
+
+        $consumer = $container->newInstance(
+            static fn() => new class () {
+                #[Inject]
+                #[Lazy]
+                public AttributedLazyService $service;
+            }
+        );
+
+        self::assertIsNotLazyProxy($consumer->service);
+        self::assertSame('ready', $consumer->service->value);
     }
 
     #[Test]
@@ -193,6 +266,52 @@ class ContainerLazyTest extends TestCase
         $obj = $container->newInstance(StubLazyCounter::class);
 
         self::assertSame('extended', $obj->name);
+    }
+
+    #[Test]
+    public function unwrapsSharedLazyDependenciesRegardlessOfInitializationState(): void
+    {
+        foreach ([false, true] as $initializeFirst) {
+            StubLazyCounter::$created = 0;
+            $container = new Container(options: new DIOptions(autowire: true, lazy: true));
+            $container->prepareSharedObject(StubLazyCounter::class);
+            $shared = $container->get(StubLazyCounter::class);
+
+            if ($initializeFirst) {
+                self::assertSame('hello origin', $shared->hello());
+            }
+
+            $consumer = $container->newInstance(StubLazyCounterConsumer::class);
+
+            self::assertIsUninitializedLazyProxy($consumer->counter);
+            self::assertSame('hello origin', $consumer->counter->hello());
+            self::assertSame(unwrap_lazy_object($shared), unwrap_lazy_object($consumer->counter));
+            self::assertIsNotLazyProxy(unwrap_lazy_object($consumer->counter));
+            self::assertSame(1, StubLazyCounter::$created);
+        }
+    }
+
+    #[Test]
+    public function unwrapsLazyObjectsReturnedByExtendsRegardlessOfInitializationState(): void
+    {
+        foreach ([false, true] as $initializeFirst) {
+            $container = new Container(options: new DIOptions(lazy: true));
+            $replacement = $container->newInstance(StubLazyCounter::class);
+
+            if ($initializeFirst) {
+                self::assertSame('hello origin', $replacement->hello());
+            }
+
+            $container->whenCreating(StubLazyCounter::class)
+                ->extend(fn(StubLazyCounter $instance) => $replacement);
+
+            $instance = $container->newInstance(StubLazyCounter::class);
+
+            self::assertIsUninitializedLazyProxy($instance);
+            self::assertSame('hello origin', $instance->hello());
+            self::assertSame(unwrap_lazy_object($replacement), unwrap_lazy_object($instance));
+            self::assertIsNotLazyProxy(unwrap_lazy_object($instance));
+        }
     }
 
     #[Test]
@@ -326,4 +445,15 @@ class ContainerLazyTest extends TestCase
             $message ?: $obj::class . ' should be lazy proxy.'
         );
     }
+}
+
+/**
+ * Verifies that a second class attribute disables Lazy for creation and injection.
+ * Remove when the class-attribute lazy fallback is no longer supported or tested.
+ */
+#[Lazy]
+#[\AllowDynamicProperties]
+class AttributedLazyService
+{
+    public string $value = 'ready';
 }

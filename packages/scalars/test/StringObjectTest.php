@@ -526,6 +526,15 @@ class StringObjectTest extends TestCase
     }
 
     #[Test]
+    public function splitSplitsStringByDelimiter(): void
+    {
+        self::assertEquals(
+            ['Foo', 'Bar', 'Yoo'],
+            new StringObject('Foo/Bar/Yoo')->split('/')->dump()
+        );
+    }
+
+    #[Test]
     public function applyReturnsNewInstanceFromCallbackResult()
     {
         $s = new StringObject('FooBar');

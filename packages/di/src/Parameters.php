@@ -36,6 +36,9 @@ class Parameters extends Collection
 
     public function addPath(string $path): void
     {
+        // Keep proxy prefixes delimiter-neutral so dotted prefixes also work with getDeep(..., '/').
+        $path = str_replace('.', '{SEPARATE}', $path);
+
         if (!$this->path) {
             $this->path = $path;
 
@@ -50,13 +53,19 @@ class Parameters extends Collection
      */
     public function extract(?string $path = null, bool $reference = false): static
     {
-        $new = parent::extract($path, $reference);
-
         if ($reference) {
+            // Reference only local storage: copying inherited values here would freeze parent updates.
+            $new = parent::extract($path, true);
             $new->parent = $this;
+        } else {
+            // Extract the effective branch, not the partial local branch. Collection preserves
+            // extract's type validation while the new Parameters remains a detached snapshot.
+            $snapshot = new Collection($this->getEffectiveStorage())->extract($path);
+            $new = new static($snapshot->dump());
         }
 
-        $new->addPath($path);
+        // A null path extracts the whole scope and must not introduce a proxy prefix.
+        $new->addPath((string) $path);
 
         return $new;
     }
@@ -75,14 +84,22 @@ class Parameters extends Collection
     {
         $value = parent::getDeep($path, $delimiter);
 
-        if ($value === null && $this->parent) {
+        // A deep local write creates partial arrays; null-only fallback would hide inherited siblings.
+        if (($value === null || is_array($value)) && $this->parent) {
             $depth++;
-            $value = $this->parent->getDeep($this->getParentPath($path, $delimiter), $delimiter, $depth);
+            $inherited = $this->parent->getDeep($this->getParentPath($path, $delimiter), $delimiter, $depth);
 
-            if ($value === null) {
-                $value = $this->parent->getDeep($path, $delimiter, $depth);
+            if ($inherited === null && $value === null) {
+                // Retain unscoped fallback for missing proxy values, but do not merge an unrelated
+                // root branch into a local array when the scoped parent branch is absent.
+                $inherited = $this->parent->getDeep($path, $delimiter, $depth);
             }
 
+            // A proxy's scoped parent already includes its referenced local storage.
+            // Merging it again would concatenate local list entries twice.
+            $value = $this->isProxy && is_array($inherited)
+                ? $inherited
+                : $this->mergeInheritedValue($inherited, $value);
             $depth--;
         }
 
@@ -105,17 +122,90 @@ class Parameters extends Collection
      */
     public function &get(mixed $key): mixed
     {
-        $value = parent::get($key);
-
-        if ($value === null && $this->parent) {
-            $value = $this->parent->get($key);
-        }
+        // Resolve references only after inheritance lookup so parent aliases see child overrides.
+        $value = $this->getRawValue($key);
 
         while ($value instanceof ValueReference) {
             $value = $value($this);
         }
 
         return $value;
+    }
+
+    /**
+     * Read a literal key without resolving aliases in an ancestor's scope.
+     *
+     * This gives get() the same overlay behavior as getDeep(), while keeping keys
+     * containing dots literal and resolving proxy keys relative to their selected branch.
+     */
+    protected function getRawValue(mixed $key): mixed
+    {
+        $value = parent::get($key);
+
+        if (($value === null || is_array($value)) && $this->parent) {
+            $inherited = null;
+
+            if ($this->path !== '') {
+                $branch = $this->parent->getDeep(str_replace('{SEPARATE}', '.', $this->path), depth: 1);
+                $inherited = is_array($branch) ? ($branch[$key] ?? null) : null;
+            }
+
+            if ($inherited === null && ($value === null || $this->path === '')) {
+                $inherited = $this->parent->getRawValue($key);
+            }
+            // Scoped proxy reads already include local arrays; avoid duplicating list entries.
+            $value = $this->isProxy && is_array($inherited)
+                ? $inherited
+                : $this->mergeInheritedValue($inherited, $value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Preserve inherited siblings using the existing dump() array merge policy.
+     *
+     * Lists concatenate and empty arrays do not clear inherited arrays. Scalars
+     * still override directly; null retains the existing leaf fallback contract.
+     */
+    protected function mergeInheritedValue(mixed $inherited, mixed $local): mixed
+    {
+        if (is_array($inherited) && is_array($local)) {
+            return Arr::mergeRecursive($inherited, $local);
+        }
+
+        return $local ?? $inherited;
+    }
+
+    /**
+     * Build an uncached overlay for snapshots, dumps and inherited iteration.
+     *
+     * Keeping merged arrays out of local storage preserves scope isolation and
+     * visibility of later parent updates. Returned arrays are not writable proxies.
+     */
+    protected function getEffectiveStorage(): array
+    {
+        if (!$this->parent) {
+            return $this->storage;
+        }
+
+        $inherited = $this->parent->getEffectiveStorage();
+
+        if ($this->path !== '') {
+            // A proxy represents only its selected branch, not the parent's entire namespace.
+            $inherited = Arr::get($inherited, str_replace('{SEPARATE}', '.', $this->path));
+        }
+
+        if (!is_array($inherited)) {
+            return $this->storage;
+        }
+
+        if ($this->isProxy) {
+            // Local proxy storage is already part of the parent's effective branch.
+            return $inherited;
+        }
+
+        return Arr::mergeRecursive($inherited, $this->storage);
     }
 
     public function hasDeep(string $path, ?string $delimiter = '.'): bool
@@ -154,16 +244,21 @@ class Parameters extends Collection
      */
     public function &getIterator(bool $includeParent = true): Generator
     {
-        foreach ($this->storage as $key => &$value) {
-            yield $key => $value;
-        }
+        if ($includeParent && $this->parent) {
+            // Yield merged keys once: yielding parent keys afterwards used to overwrite
+            // child overrides when consumers collected the iterator into an array.
+            $data = $this->getEffectiveStorage();
 
-        unset($value);
-
-        if ($this->parent && $includeParent) {
-            foreach ($this->parent as $key => &$value) {
+            foreach ($data as $key => &$value) {
                 yield $key => $value;
             }
+
+            return;
+        }
+
+        // Local-only iteration retains the raw storage/reference behavior without inheritance.
+        foreach ($this->storage as $key => &$value) {
+            yield $key => $value;
         }
     }
 
@@ -178,13 +273,16 @@ class Parameters extends Collection
      */
     public function dump(bool $recursive = false, bool $onlyDumpable = false): array
     {
-        $data = $this->storage;
+        // Merge before resolving aliases so inherited references use child overrides,
+        // and proxy dumps do not leak unrelated parent branches.
+        $data = $this->getEffectiveStorage();
 
         $data = Arr::mapRecursive(
             $data,
-            function ($v) use ($data) {
+            function ($v) {
                 if ($v instanceof ValueReference) {
-                    return Arr::get($data, $v->getPath(), $v->getDelimiter());
+                    // Resolve through Parameters to retain scoped and ancestor fallback.
+                    return $v($this);
                 }
 
                 return $v;
@@ -193,13 +291,6 @@ class Parameters extends Collection
 
         if ($recursive) {
             $data = TypeCast::toArray($data, true, $onlyDumpable);
-        }
-
-        if ($this->parent) {
-            $data = Arr::mergeRecursive(
-                $this->parent->dump($recursive, $onlyDumpable),
-                $data,
-            );
         }
 
         return $data;

@@ -18,27 +18,22 @@ class PaginateIterator implements \IteratorAggregate
     public function getIterator(): \Generator
     {
         $page = 1;
-        $remain = $this->limit;
+        $yielded = 0;
 
-        while (true) {
-            if ($remain !== null) {
-                $remain -= $this->perPage;
-            }
-
+        while ($this->limit === null || $yielded < $this->limit) {
             $count = 0;
 
-            $items = ($this->callback)($page, $this->perPage);
-
-            foreach ($items as $item) {
+            foreach (($this->callback)($page, $this->perPage) as $item) {
                 yield $item;
+                $yielded++;
                 $count++;
+
+                if ($yielded === $this->limit) {
+                    return;
+                }
             }
 
             if ($count === 0) {
-                break;
-            }
-
-            if ($remain !== null && $remain <= 0) {
                 break;
             }
 

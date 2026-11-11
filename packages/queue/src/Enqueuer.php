@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Queue;
 
+use Psr\Log\LogLevel;
 use Windwalker\Queue\Enqueuer\EnqueuerController;
 use Windwalker\Queue\Event\AfterEnqueueEvent;
 use Windwalker\Queue\Event\BeforeEnqueueEvent;
@@ -125,6 +126,11 @@ class Enqueuer extends AbstractRunner
     protected function getDefaultInvoker(): \Closure
     {
         return fn(EnqueuerController $controller, callable $invokable) => $invokable($controller);
+    }
+
+    protected function shouldLogControllerMessage(string $level): bool
+    {
+        return $level !== LogLevel::NOTICE;
     }
 
     public function createEnqueuerController(string $channel): EnqueuerController

@@ -17,6 +17,7 @@ use Windwalker\Http\Event\ErrorEvent;
 use Windwalker\Http\Event\RequestEvent;
 use Windwalker\Http\Helper\ResponseHelper;
 use Windwalker\Http\HttpFactory;
+use Windwalker\Http\Middleware\RequestRunner;
 use Windwalker\Http\Output\Output;
 use Windwalker\Http\Request\ServerRequest;
 
@@ -26,6 +27,9 @@ use Windwalker\Http\Request\ServerRequest;
 class ReactServer implements ServerInterface
 {
     use EventAwareTrait;
+    use MiddlewareAwareTrait;
+
+    protected ?HttpFactory $httpFactory = null;
 
     public ?LoopInterface $loop = null;
 
@@ -142,17 +146,27 @@ class ReactServer implements ServerInterface
             $this->getLoop(),
             function (ServerRequestInterface $req) use ($output) {
                 try {
-                    $event = $this->emit(
-                        new RequestEvent(
-                            request: $req,
-                            output: $output,
-                        )->setName('request'),
-                    );
+                    $middlewares = $this->getMiddlewares();
+                    $middlewares[] = function (ServerRequestInterface $request) use ($output) {
+                        $event = $this->emit(
+                            new RequestEvent(
+                                request: $request,
+                                output: $output,
+                            )->setName('request'),
+                        );
+
+                        return $event->response ?? $this->getHttpFactory()->createResponse();
+                    };
+
+                    $response = new RequestRunner(
+                        $middlewares,
+                        $this->getMiddlewareResolver(),
+                    )->handle($req);
                 } catch (Throwable $e) {
                     $code = $e->getCode();
                     $code = ResponseHelper::isClientError($code) ? $code : 500;
 
-                    $res = new HttpFactory()->createResponse($code);
+                    $res = $this->getHttpFactory()->createResponse($code);
                     $res->getBody()->write((string) $e);
 
                     return $res;
@@ -162,7 +176,7 @@ class ReactServer implements ServerInterface
                     new RequestEvent(
                         request: $req,
                         output: $output,
-                        response: $event->response,
+                        response: $response,
                     )->setName('response'),
                 );
 
@@ -184,6 +198,18 @@ class ReactServer implements ServerInterface
         );
 
         return $server;
+    }
+
+    public function getHttpFactory(): HttpFactory
+    {
+        return $this->httpFactory ??= new HttpFactory();
+    }
+
+    public function setHttpFactory(?HttpFactory $httpFactory): static
+    {
+        $this->httpFactory = $httpFactory;
+
+        return $this;
     }
 
     /**

@@ -138,6 +138,18 @@ class Edge
     }
 
     /**
+     * Check whether a layout exists, either as a file path or via the loader.
+     *
+     * @param  string  $name
+     *
+     * @return  bool
+     */
+    public function exists(string $name): bool
+    {
+        return is_file($name) || $this->loader->has($name);
+    }
+
+    /**
      * render
      *
      * @param  string|callable  $__layout

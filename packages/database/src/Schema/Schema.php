@@ -199,7 +199,9 @@ class Schema
     ): Constraint {
         $columns = (array) $columns;
 
-        $constraint = $this->addConstraint(Constraint::TYPE_PRIMARY_KEY, 'PRIMARY')
+        $name = static::createKeyName($this->table->getName(), $columns, 'fk');
+
+        $constraint = $this->addConstraint(Constraint::TYPE_FOREIGN_KEY, $name)
             ->columns($columns);
 
         if ($refTable) {

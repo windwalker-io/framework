@@ -655,15 +655,18 @@ abstract class AbstractField
 
         if ($surround instanceof \DOMElement || $surround instanceof Element) {
             $surround = function ($input) use ($surround) {
-                if ($input instanceof \DOMElement || $input instanceof Element) {
-                    $surround->appendChild($input);
+                // Clone the template per call, so repeated rendering does not append into the same node.
+                $el = $surround->cloneNode(true);
 
-                    return $surround;
+                if ($input instanceof \DOMElement || $input instanceof Element) {
+                    $el->appendChild($input);
+
+                    return $el;
                 }
 
-                $surround->innerHTML = $input;
+                $el->innerHTML = $input;
 
-                return $surround;
+                return $el;
             };
         }
 
