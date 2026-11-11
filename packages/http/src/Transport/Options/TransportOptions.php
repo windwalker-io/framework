@@ -27,6 +27,12 @@ class TransportOptions extends RecordOptions
          * @var  Closure(ProgressEvent $event): void|null
          */
         public ?Closure $progress = null,
+        /**
+         * Max allowed response body size in bytes. The transport aborts the download
+         * once the received body exceeds this size, to avoid memory exhaustion from
+         * unexpectedly huge responses. `null` means no limit.
+         */
+        public ?int $maxResponseSize = null,
     ) {}
 
     public static function fromHttpClientOptions(HttpClientOptions $options): static
@@ -46,6 +52,7 @@ class TransportOptions extends RecordOptions
         $new->followLocation = $options->followLocation;
         $new->certpath = $options->certpath;
         $new->verifyPeer = $options->verifyPeer;
+        $new->maxResponseSize = $options->maxResponseSize;
 
         $new->optionMerged = true;
 

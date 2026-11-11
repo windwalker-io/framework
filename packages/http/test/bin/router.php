@@ -83,6 +83,21 @@ if ($requestPath === '/' || $requestPath === '') {
 }
 
 // Fallback – 404
+if ($requestPath === '/big' || $requestPath === '/big-chunked') {
+    header('Content-Type: text/plain');
+
+    if ($requestPath === '/big') {
+        echo str_repeat('a', 65536);
+    } else {
+        for ($i = 0; $i < 64; $i++) {
+            echo str_repeat('a', 1024);
+            flush();
+        }
+    }
+
+    return true;
+}
+
 http_response_code(404);
 header('Content-Type: text/plain');
 echo 'Not Found';

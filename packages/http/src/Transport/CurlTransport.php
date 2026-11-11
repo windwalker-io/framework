@@ -31,6 +31,8 @@ use const Windwalker\Stream\READ_WRITE_RESET;
  */
 class CurlTransport extends AbstractTransport implements CurlTransportInterface
 {
+    use ResponseSizeLimitTrait;
+
     /**
      * @param  array|TransportOptions  $options
      *
@@ -57,15 +59,21 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         /** @var CurlOptions $options */
         $options = $this->prepareRequestOptions($options);
 
-        $ch = $this->createHandle($request, $options, $headers, $content);
+        $downloadedSize = 0;
+        $ch = $this->createHandle($request, $options, $headers, $content, $downloadedSize);
 
         // Execute the request and close the connection.
         curl_exec($ch);
 
         $error = curl_error($ch);
+        $errno = curl_errno($ch);
+
+        if ($errno === CURLE_WRITE_ERROR && $options->maxResponseSize !== null) {
+            $this->assertResponseSizeWithinLimit($downloadedSize, $options->maxResponseSize);
+        }
 
         if ($error !== '' && !$options->ignoreCurlError) {
-            throw new HttpRequestException($error, curl_errno($ch));
+            throw new HttpRequestException($error, $errno);
         }
 
         // Get the request information.
@@ -200,6 +208,8 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
      * @param  array                 $options
      * @param  array|null            $headers
      * @param  StreamInterface|null  $content
+     * @param  int|null              $downloadedSize  Out-param: the actual number of bytes
+     *                                                received before the transfer stopped.
      *
      * @return  CurlHandle|false
      *
@@ -210,6 +220,7 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         array|CurlOptions $options,
         ?array &$headers = null,
         ?StreamInterface &$content = null,
+        ?int &$downloadedSize = null,
     ): CurlHandle|false {
         $options = CurlOptions::wrap($options);
 
@@ -220,6 +231,8 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
 
         $content = Stream::wrap($options->writeStream, READ_WRITE_RESET);
         $headerItems = [];
+        $maxResponseSize = $options->maxResponseSize;
+        $downloadedSize = 0;
 
         $opt[CURLOPT_HEADERFUNCTION] ??= static function (
             CurlHandle $ch,
@@ -227,21 +240,52 @@ class CurlTransport extends AbstractTransport implements CurlTransportInterface
         ) use (
             &$headers,
             &$headerItems,
+            &$downloadedSize,
+            $maxResponseSize,
         ) {
             if ($header === "\r\n") {
                 $headers = $headerItems;
                 $headerItems = [];
             } else {
                 $headerItems[] = $header;
+
+                // Fail fast if the server already announces a too large body.
+                if ($maxResponseSize !== null && stripos($header, 'content-length:') === 0) {
+                    $length = (int) trim(substr($header, strlen('content-length:')));
+
+                    if ($length > $maxResponseSize) {
+                        // Record the advertised size so the caller can still detect
+                        // and report the size violation even though no body byte
+                        // was actually downloaded.
+                        $downloadedSize = $length;
+
+                        // Returning a size different from strlen($header) tells curl
+                        // to abort the transfer with a CURLE_WRITE_ERROR.
+                        return 0;
+                    }
+                }
             }
 
             return strlen($header);
         };
 
-        $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use ($content) {
+        $opt[CURLOPT_WRITEFUNCTION] ??= static function ($ch, $str) use ($content, $maxResponseSize, &$downloadedSize) {
+            $len = strlen($str);
+
+            if ($maxResponseSize !== null) {
+                $downloadedSize += $len;
+
+                if ($downloadedSize > $maxResponseSize) {
+                    // Returning a size different from $len tells curl to abort the
+                    // transfer with a CURLE_WRITE_ERROR, so the body never fully
+                    // buffers into memory.
+                    return 0;
+                }
+            }
+
             $content->write($str);
 
-            return strlen($str);
+            return $len;
         };
 
         curl_setopt_array($ch, $opt);

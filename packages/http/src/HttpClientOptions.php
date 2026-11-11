@@ -30,6 +30,12 @@ class HttpClientOptions extends RecordOptions
          * @var  Closure(ProgressEvent $event): void|null
          */
         public ?Closure $progress = null,
+        /**
+         * Max allowed response body size in bytes. `null` means no limit.
+         *
+         * @see  TransportOptions::$maxResponseSize
+         */
+        public ?int $maxResponseSize = null,
     ) {
         $this->transport = TransportOptions::tryWrap($transport);
     }

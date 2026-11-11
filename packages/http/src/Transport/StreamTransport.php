@@ -20,7 +20,6 @@ use Windwalker\Http\Stream\RequestBodyStream;
 use Windwalker\Http\Transport\Options\StreamOptions;
 use Windwalker\Http\Transport\Options\TransportOptions;
 use Windwalker\Stream\Stream;
-use Windwalker\Stream\StreamHelper;
 use Windwalker\Utilities\Arr;
 
 use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
@@ -32,6 +31,8 @@ use const Windwalker\Stream\READ_ONLY_FROM_BEGIN;
  */
 class StreamTransport extends AbstractTransport
 {
+    use ResponseSizeLimitTrait;
+
     /**
      * Send a request to the server and return a Response object with the response.
      *
@@ -54,9 +55,9 @@ class StreamTransport extends AbstractTransport
 
         if ($dest) {
             $content = '';
-            StreamHelper::copyTo($stream, $dest);
+            $this->copyToWithLimit($stream, $dest, $options->maxResponseSize);
         } else {
-            $content = $stream->getContents();
+            $content = $this->readContentsWithLimit($stream, $options->maxResponseSize);
         }
 
         $metadata = $stream->getMetadata();

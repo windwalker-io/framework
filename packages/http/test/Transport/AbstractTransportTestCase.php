@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+use Windwalker\Http\Exception\HttpResponseSizeExceededException;
 use Windwalker\Http\Request\Request;
 use Windwalker\Http\Transport\AbstractTransport;
 use Windwalker\Stream\Stream;
@@ -84,6 +85,59 @@ abstract class AbstractTransportTestCase extends TestCase
 
         $data = json_decode($response->getBody()->getContents(), true);
         self::assertEquals(['foo' => 'bar', 'baz' => [3 => 'yoo']], $data);
+    }
+
+    #[Test]
+    public function requestBodyWithinMaxResponseSizeReturnsFullBody(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $response = $this->instance->request($request, ['maxResponseSize' => 65536]);
+
+        self::assertSame(65536, strlen((string) $response->getBody()));
+    }
+
+    #[Test]
+    public function requestBodyExceedingMaxResponseSizeThrowsException(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $this->expectException(HttpResponseSizeExceededException::class);
+
+        $this->instance->request($request, ['maxResponseSize' => 1024]);
+    }
+
+    #[Test]
+    public function requestBodyExceedingMaxResponseSizeIsNotWrittenToWriteStream(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big'))
+            ->withMethod('GET');
+
+        $sink = new Stream('php://temp', 'rb+');
+
+        try {
+            $this->instance->request($request, ['maxResponseSize' => 1024, 'writeStream' => $sink]);
+            self::fail('Expected HttpResponseSizeExceededException.');
+        } catch (HttpResponseSizeExceededException) {
+            self::assertLessThanOrEqual(1024, (int) $sink->getSize());
+        }
+    }
+
+    #[Test]
+    public function requestChunkedBodyExceedingMaxResponseSizeThrowsException(): void
+    {
+        $request = $this->createRequest()
+            ->withUri(new Uri(static::getTestUrlFromConstant() . '/big-chunked'))
+            ->withMethod('GET');
+
+        $this->expectException(HttpResponseSizeExceededException::class);
+
+        $this->instance->request($request, ['maxResponseSize' => 4096]);
     }
 
     #[Test]
