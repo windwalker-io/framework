@@ -29,6 +29,7 @@
     "suggest": {
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
         "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
+        "ext-redis": "If you want to use Redis as queue service.",
         "laravel/serializable-closure": "Install ^2.0 to support Closure jobs."
     },
     "minimum-stability": "beta",
