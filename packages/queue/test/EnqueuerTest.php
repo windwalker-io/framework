@@ -81,6 +81,45 @@ class EnqueuerTest extends TestCase
     }
 
     #[Test]
+    public function returnedClosureAndListAreEnqueuedToChannel(): void
+    {
+        $pushed = [];
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->method('push')->willReturnCallback(function ($message) use (&$pushed) {
+            $pushed[] = $message->getChannel();
+
+            return '1';
+        });
+        $enqueuer = new Enqueuer(new Queue($driver));
+        $enqueuer->channel('foo', fn() => [fn() => 1, 'text', fn() => 2]);
+        $enqueuer->channel('bar', fn() => fn() => 3);
+
+        $enqueuer->enqueue('foo');
+        $enqueuer->enqueue('bar');
+
+        self::assertSame(['foo', 'foo', 'bar'], $pushed);
+    }
+
+    #[Test]
+    public function returnedQueueMessageKeepsItsOwnChannel(): void
+    {
+        $pushed = [];
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->method('push')->willReturnCallback(function ($message) use (&$pushed) {
+            $pushed[] = $message->getChannel();
+
+            return '1';
+        });
+        $queue = new Queue($driver);
+        $enqueuer = new Enqueuer($queue);
+        $enqueuer->channel('foo', fn() => $queue->getMessageByJob(fn() => 1)->setChannel('other'));
+
+        $enqueuer->enqueue('foo');
+
+        self::assertSame(['other'], $pushed);
+    }
+
+    #[Test]
     public function nextStopsWhenNothingEnqueuedAndStopWhenEmptyEnabled(): void
     {
         $enqueuer = new Enqueuer(new Queue(new NullQueueDriver()), new RunnerOptions(stopWhenEmpty: true));

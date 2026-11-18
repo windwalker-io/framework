@@ -89,6 +89,8 @@ class Enqueuer extends AbstractRunner
                 )
             );
 
+            $this->pushReturnedJobs($event->result, $channel);
+
             return $event->result;
         } catch (\Throwable $e) {
             $this->emit(
@@ -101,6 +103,37 @@ class Enqueuer extends AbstractRunner
             );
 
             return null;
+        }
+    }
+
+    /**
+     * Push the closures, invokable jobs and messages returned by a handler (or a list of them) to the channel.
+     * Other return values are left alone.
+     */
+    protected function pushReturnedJobs(mixed $result, string $channel): void
+    {
+        if (is_array($result)) {
+            foreach ($result as $item) {
+                $this->pushReturnedJobs($item, $channel);
+            }
+
+            return;
+        }
+
+        if ($result instanceof QueueMessage) {
+            $this->queue->push($result, $result->getDelay(), $result->getChannel() ?: $channel, $result->getOptions());
+
+            return;
+        }
+
+        if ($result instanceof \Closure) {
+            $this->queue->push($result, 0, $channel);
+
+            return;
+        }
+
+        if (is_object($result) && method_exists($result, '__invoke')) {
+            $this->queue->push($result, 0, $channel);
         }
     }
 
