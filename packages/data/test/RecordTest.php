@@ -47,6 +47,35 @@ class RecordTest extends TestCase
             json_encode($record, JSON_THROW_ON_ERROR)
         );
     }
+
+    #[Test]
+    public function itSetsUndeclaredPropertiesByDefaultAndTriggersDeprecation(): void
+    {
+        $triggered = [];
+        set_error_handler(static function (int $errno, string $message) use (&$triggered): bool {
+            $triggered[] = $message;
+
+            return true;
+        }, E_DEPRECATED);
+
+        try {
+            $record = RecordFixture::wrap(['name' => 'Sakura', 'visits' => 3, 'unknown' => 'foo']);
+        } finally {
+            restore_error_handler();
+        }
+
+        self::assertSame('foo', $record->unknown);
+        self::assertNotEmpty($triggered);
+    }
+
+    #[Test]
+    public function itDropsUndeclaredPropertiesWhenAttributeIsPresent(): void
+    {
+        $record = DropUndeclaredRecordFixture::wrap(['name' => 'Sakura', 'unknown' => 'foo']);
+
+        self::assertSame('Sakura', $record->name);
+        self::assertFalse(property_exists($record, 'unknown'));
+    }
 }
 
 class RecordFixture extends Record
@@ -54,6 +83,17 @@ class RecordFixture extends Record
     public string $name = '';
 
     public int $visits = 0;
+
+    public function __construct(string $name = '')
+    {
+        $this->name = $name;
+    }
+}
+
+#[\Windwalker\Data\Attributes\DropsUndeclaredProperties]
+class DropUndeclaredRecordFixture extends Record
+{
+    public string $name = '';
 
     public function __construct(string $name = '')
     {

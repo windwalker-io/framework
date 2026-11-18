@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Windwalker\Data;
 
+use Windwalker\Data\Attributes\DropsUndeclaredProperties;
 use Windwalker\ORM\Attributes\JsonNoSerialize;
 use Windwalker\ORM\Attributes\JsonSerializerInterface;
 use Windwalker\Utilities\Arr;
@@ -102,6 +103,12 @@ trait RecordTrait
                 continue;
             }
 
+            // Only drop values that have no matching property when the class is
+            // explicitly marked to do so; otherwise let PHP raise its own warning.
+            if (!$propRef && static::dropsUndeclaredProperties()) {
+                continue;
+            }
+
             if (
                 $recursive
                 && is_object($this->$key ?? null)
@@ -124,6 +131,14 @@ trait RecordTrait
     public function withMerge(mixed $values, bool $recursive = false, bool $ignoreNulls = false): static
     {
         return (clone $this)->merge($values, $recursive, $ignoreNulls);
+    }
+
+    protected static function dropsUndeclaredProperties(): bool
+    {
+        static $cache = [];
+
+        return $cache[static::class] ??= new \ReflectionClass(static::class)
+            ->getAttributes(DropsUndeclaredProperties::class) !== [];
     }
 
     public function defaults(mixed $values, bool $recursive = false): static
