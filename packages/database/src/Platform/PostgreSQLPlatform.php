@@ -104,7 +104,15 @@ class PostgreSQLPlatform extends AbstractPlatform
                     'numeric_precision',
                     'numeric_scale',
                     'column_name',
+                    'generation_expression',
                 ]
+            )
+            ->selectRaw(
+                '(SELECT a.attgenerated FROM pg_catalog.pg_attribute a'
+                . ' JOIN pg_catalog.pg_class pc ON pc.oid = a.attrelid'
+                . ' JOIN pg_catalog.pg_namespace pn ON pn.oid = pc.relnamespace'
+                . ' WHERE pn.nspname = table_schema AND pc.relname = table_name'
+                . ' AND a.attname = column_name AND NOT a.attisdropped) AS attgenerated'
             )
             ->from('information_schema.columns')
             ->where('table_name', $this->db->replacePrefix($table));
@@ -262,6 +270,10 @@ class PostgreSQLPlatform extends AbstractPlatform
                 'numeric_unsigned' => false,
                 'comment' => '',
                 'auto_increment' => false,
+                ...(($row['generation_expression'] ?? null) !== null ? [
+                    'generation_expression' => $row['generation_expression'],
+                    'generated_stored' => ($row['attgenerated'] ?? 's') !== 'v',
+                ] : []),
                 'erratas' => [],
             ];
         }

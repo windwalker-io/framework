@@ -12,6 +12,8 @@ abstract class AbstractTableDiffTestCase extends AbstractDatabaseTestCase
 {
     protected static function setupDatabase(): void {}
 
+    protected static bool $virtualGeneratedOnly = false;
+
     private static function define(Schema $schema, bool $extra = false): void
     {
         $schema->primary('id');
@@ -47,6 +49,37 @@ abstract class AbstractTableDiffTestCase extends AbstractDatabaseTestCase
         self::assertTrue($table->hasColumn('subtitle'));
         self::assertTrue($table->hasIndex('idx_diff_subtitle'));
         self::assertTrue($table->diff(static fn(Schema $schema) => self::define($schema, true))->isEmpty());
+
+        $table->drop();
+    }
+
+    #[Test]
+    public function generatedColumnsAreInSync(): void
+    {
+        $define = static function (Schema $schema, string $expression = 'price * 2') {
+            $schema->primary('id');
+            $schema->integer('price');
+            $column = $schema->integer('double_price');
+
+            if (static::$virtualGeneratedOnly) {
+                $column->virtual($expression);
+            } else {
+                $column->stored($expression);
+            }
+        };
+
+        $table = self::$db->getTableManager('diff_generated');
+        $table->drop();
+        $table->create(static fn(Schema $schema) => $define($schema));
+
+        $same = $table->diff(static fn(Schema $schema) => $define($schema));
+
+        self::assertTrue($same->isEmpty(), json_encode($same->getColumnChanges()));
+
+        $changed = $table->diff(static fn(Schema $schema) => $define($schema, 'price * 3'));
+
+        self::assertSame(['double_price'], array_keys($changed->modifiedColumns));
+        self::assertArrayHasKey('generation', $changed->getColumnChanges()['double_price']);
 
         $table->drop();
     }

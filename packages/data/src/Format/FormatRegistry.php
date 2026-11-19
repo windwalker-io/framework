@@ -150,7 +150,7 @@ class FormatRegistry
         }
 
         if (!is_callable($dumper)) {
-            throw new InvalidArgumentException('Dumper should be callable callable');
+            throw new InvalidArgumentException('Dumper should be callable');
         }
 
         $this->handlers[$format] = new CallbackFormatHandler($handlerOrParser, $dumper);

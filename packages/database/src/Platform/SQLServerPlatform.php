@@ -109,6 +109,8 @@ class SQLServerPlatform extends AbstractPlatform
                     'c.NUMERIC_SCALE',
                     'c.COLUMN_NAME',
                     'sc.is_identity',
+                    'cc.definition AS generation_expression',
+                    'cc.is_persisted AS generated_stored',
                 ]
             )
             ->from('INFORMATION_SCHEMA.COLUMNS', 'c')
@@ -118,6 +120,14 @@ class SQLServerPlatform extends AbstractPlatform
                 [
                     ['sc.object_id', '=', raw('object_id(c.TABLE_NAME)')],
                     ['sc.name', '=', 'c.COLUMN_NAME'],
+                ]
+            )
+            ->leftJoin(
+                'sys.computed_columns',
+                'cc',
+                [
+                    ['cc.object_id', '=', raw('object_id(c.TABLE_NAME)')],
+                    ['cc.name', '=', 'c.COLUMN_NAME'],
                 ]
             )
             ->where('TABLE_NAME', $this->db->replacePrefix($table))
@@ -317,6 +327,10 @@ class SQLServerPlatform extends AbstractPlatform
                 'numeric_unsigned' => false,
                 'comment' => '',
                 'auto_increment' => (bool) $row['is_identity'],
+                ...(($row['generation_expression'] ?? null) !== null ? [
+                    'generation_expression' => $row['generation_expression'],
+                    'generated_stored' => (bool) $row['generated_stored'],
+                ] : []),
                 'erratas' => [],
             ];
         }
