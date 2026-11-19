@@ -21,6 +21,18 @@ class ReactorPackage extends AbstractPackage
         $installer->installConfig(static::path('etc/*.php'), 'config');
 
         $installer->installFiles(
+            static::path('resources/app/websocket.config.php'),
+            'etc/app',
+            'swoole_websocket'
+        );
+
+        $installer->installFiles(
+            static::path('resources/routes/websocket.route.php'),
+            'routes',
+            'swoole_websocket'
+        );
+
+        $installer->installFiles(
             static::path('resources/servers/swoole_website.php'),
             'servers',
             'swoole_website',
@@ -49,7 +61,7 @@ class ReactorPackage extends AbstractPackage
                 $this->addMainFileToServers(
                     'swoole',
                     'websocket',
-                    'swoole_website.php',
+                    'swoole_websocket.php',
                     $io
                 );
 

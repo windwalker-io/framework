@@ -94,7 +94,7 @@ $serverState->setWorkerNumber($workers);
 $app = new WsApplication($container->createChild());
 
 // Load the root config
-$app->loadConfig(WINDWALKER_ETC . '/app/websocket.php');
+$app->loadConfig(WINDWALKER_ETC . '/app/websocket.config.php');
 
 /*
  * --------------------------------------------------------------------------
