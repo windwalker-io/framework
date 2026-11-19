@@ -115,7 +115,7 @@ class AbstractRequestTest extends TestCase
 
         self::assertExpectedException(
             function () use ($request) {
-                $request->withMethod('FLY');
+                $_ = $request->withMethod('FLY');
             },
             new InvalidArgumentException(),
         );
@@ -161,7 +161,7 @@ class AbstractRequestTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('whitespace');
 
-        $this->instance->withRequestTarget('/foo bar');
+        $_ = $this->instance->withRequestTarget('/foo bar');
     }
 
     #[Test]

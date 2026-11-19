@@ -176,6 +176,7 @@ class RelationCollection implements IteratorAggregate, JsonSerializable, ArrayAc
         return clone $this->query;
     }
 
+    #[\NoDiscard]
     public function withModifyQuery(\Closure $handler): static
     {
         $new = clone $this;

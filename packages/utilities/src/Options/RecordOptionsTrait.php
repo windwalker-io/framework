@@ -86,6 +86,7 @@ trait RecordOptionsTrait
         return $this;
     }
 
+    #[\NoDiscard]
     public function withMerge(mixed $values, bool $recursive = false, bool $ignoreNulls = false): static
     {
         return (clone $this)->merge($values, $recursive, $ignoreNulls);
@@ -98,6 +99,7 @@ trait RecordOptionsTrait
         return $this->merge($values, $recursive)->merge($new, $recursive, true);
     }
 
+    #[\NoDiscard]
     public function withDefaults(mixed $values, bool $recursive = false): static
     {
         $new = clone $this;

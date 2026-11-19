@@ -93,7 +93,7 @@ trait ArrayAccessTrait
     {
         $result = [];
 
-        $this->walkRecursive(
+        $_ = $this->walkRecursive(
             static function ($v, $k) use ($keepKey, &$result) {
                 if ($keepKey) {
                     $result[$k] = $v;
@@ -106,6 +106,7 @@ trait ArrayAccessTrait
         return $this->newInstance($result);
     }
 
+    #[\NoDiscard]
     public function page(int $page, int $limit): static|ArrayAccessTrait
     {
         $new = clone $this;

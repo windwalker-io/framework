@@ -600,6 +600,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $this->sendAsyncRequest($request);
     }
 
+    #[\NoDiscard]
     public function withBaseUri(string|Stringable $uri): static
     {
         $new = clone $this;
@@ -613,6 +614,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return (string) $this->options->baseUri;
     }
 
+    #[\NoDiscard]
     public function withOptions(array|HttpClientOptions $options = new HttpClientOptions(), bool $merge = false): static
     {
         $options = HttpClientOptions::wrap($options);
@@ -628,6 +630,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withDefaultHeader(string $name, string|array $value): static
     {
         $new = clone $this;
@@ -637,6 +640,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withDefaultHeaders(array $headers, bool $merge = false): static
     {
         $new = clone $this;
@@ -653,6 +657,7 @@ class HttpClient implements HttpClientInterface, AsyncHttpClientInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withOption(string $key, mixed $value): static
     {
         $new = clone $this;

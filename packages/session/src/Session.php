@@ -171,6 +171,7 @@ class Session implements SessionInterface, ArrayAccessibleInterface
         return $this->bridge->writeClose($unset);
     }
 
+    #[\NoDiscard]
     public function fork(?string $newId = null): Session
     {
         if (!$this->isStarted()) {

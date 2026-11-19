@@ -26,6 +26,7 @@ class Parameters extends Collection
 
     protected string $path = '';
 
+    #[\NoDiscard]
     public function createChild(): static
     {
         $new = clone $this;

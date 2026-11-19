@@ -94,6 +94,7 @@ trait StructureTrait
      *
      * @since  __DEPLOY_VERSION__
      */
+    #[\NoDiscard]
     public function withLoad(mixed $data, ?string $format = null, array $options = []): StructureTrait|static
     {
         $new = clone $this;

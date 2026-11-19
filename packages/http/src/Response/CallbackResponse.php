@@ -27,6 +27,7 @@ class CallbackResponse extends Response
         }
     }
 
+    #[\NoDiscard]
     public function withCallback(callable $callback): static
     {
         $new = clone $this;

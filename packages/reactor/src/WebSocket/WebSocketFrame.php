@@ -21,6 +21,7 @@ class WebSocketFrame implements WebSocketFrameInterface
      *
      * @return  static  Return self to support chaining.
      */
+    #[\NoDiscard]
     public function withFd(int $fd): static
     {
         $new = clone $this;
@@ -39,6 +40,7 @@ class WebSocketFrame implements WebSocketFrameInterface
      *
      * @return  static  Return self to support chaining.
      */
+    #[\NoDiscard]
     public function withData(string $data): static
     {
         $new = clone $this;

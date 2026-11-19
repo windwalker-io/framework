@@ -19,6 +19,7 @@ class WebSocketFrameWrapper implements WebSocketFrameInterface
         return $this->frame;
     }
 
+    #[\NoDiscard]
     public function withFrame(Frame $frame): static
     {
         $new = clone $this;

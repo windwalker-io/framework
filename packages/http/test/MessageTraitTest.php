@@ -147,7 +147,7 @@ class MessageTraitTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageIsOrContains('Invalid version number');
 
-        $this->message->withProtocolVersion('abc');
+        $_ = $this->message->withProtocolVersion('abc');
     }
 
     #[Test]
@@ -172,7 +172,7 @@ class MessageTraitTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->message->withAddedHeader($name, $value);
+        $_ = $this->message->withAddedHeader($name, $value);
     }
 
     public static function invalidHeaderProvider(): array

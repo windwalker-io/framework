@@ -313,7 +313,7 @@ class UriTest extends TestCase
         self::assertExpectedException(
             function () use ($method, $value) {
                 $uri = new Uri('https://example.com/');
-                $uri->$method($value);
+                $_ = $uri->$method($value);
             },
             InvalidArgumentException::class
         );
@@ -659,7 +659,7 @@ class UriTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new Uri('http://example.com')->withPort($port);
+        $_ = new Uri('http://example.com')->withPort($port);
     }
 
     public static function invalidPortProvider(): array
@@ -679,7 +679,7 @@ class UriTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        new Uri('http://example.com')->withPath($path);
+        $_ = new Uri('http://example.com')->withPath($path);
     }
 
     public static function invalidPathProvider(): array

@@ -518,6 +518,42 @@ trait WhereConcernTrait
         );
     }
 
+    /**
+     * Build a LIKE condition with `%` and `_` in the search string escaped.
+     *
+     * Leading and trailing `%` are kept as wildcards, the middle part is escaped.
+     *
+     * @param  string  $escape  The escape character of the LIKE pattern, must be a single character.
+     */
+    public function whereLike(mixed $column, string $search, string $escape = '\\'): static
+    {
+        ArgumentsAssert::assert(
+            strlen($escape) === 1 && !in_array($escape, ['%', '_'], true),
+            'LIKE escape character should be a single character and not `%` or `_`, %s given.',
+            $escape
+        );
+
+        $prefix = str_starts_with($search, '%') ? '%' : '';
+        $suffix = strlen($search) > strlen($prefix) && str_ends_with($search, '%') ? '%' : '';
+        $body = substr($search, strlen($prefix), strlen($search) - strlen($prefix) - strlen($suffix));
+
+        $pattern = $prefix
+            . str_replace([$escape, '%', '_'], [$escape . $escape, $escape . '%', $escape . '_'], $body)
+            . $suffix;
+
+        if (is_string($column)) {
+            $column = $this->prependPrimaryAlias($column);
+        }
+
+        $column = $this->as($column, false);
+        $value = $this->val($pattern);
+        $this->bind(null, $value);
+
+        return $this->whereRaw(
+            $this->clause('', [$column, 'LIKE', $value, 'ESCAPE ' . $this->quote($escape)])
+        );
+    }
+
     private function whereVariant(string $type, string $operator, array $args)
     {
         $maps = [

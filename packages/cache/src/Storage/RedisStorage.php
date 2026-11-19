@@ -203,6 +203,7 @@ class RedisStorage implements
         return $this;
     }
 
+    #[\NoDiscard]
     public function withGroup(string $group): static
     {
         $new = clone $this;

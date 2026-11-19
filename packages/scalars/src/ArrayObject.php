@@ -77,6 +77,7 @@ class ArrayObject implements AccessibleInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     protected function newInstance(mixed $data = []): static
     {
         $new = clone $this;
@@ -89,6 +90,7 @@ class ArrayObject implements AccessibleInterface
     /**
      * Set value and immutable.
      */
+    #[\NoDiscard]
     public function with(mixed $key, mixed $value): static
     {
         $new = clone $this;
@@ -98,6 +100,7 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withDef(mixed $key, mixed $default): static
     {
         $new = clone $this;
@@ -107,6 +110,7 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withRemove(mixed $key): static
     {
         $new = clone $this;
@@ -116,6 +120,7 @@ class ArrayObject implements AccessibleInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withReset(array $storage = []): static
     {
         $new = clone $this;

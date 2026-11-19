@@ -261,6 +261,7 @@ class SwooleServer implements ServerInterface, WebSocketServerInterface
         return SwooleBaseServer::class;
     }
 
+    #[\NoDiscard]
     public function createSubServer(int $protocol = 0): static
     {
         $subServer = clone $this;

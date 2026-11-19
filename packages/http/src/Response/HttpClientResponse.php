@@ -36,6 +36,7 @@ class HttpClientResponse extends Response
         return $res;
     }
 
+    #[\NoDiscard]
     public function withInfo(mixed $info): static
     {
         $new = clone $this;

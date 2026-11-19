@@ -204,7 +204,7 @@ class CursorPaginateTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $this->query()->withCursor($paginate, 5);
+        $_ = $this->query()->withCursor($paginate, 5);
     }
 
     #[Test]

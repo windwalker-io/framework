@@ -508,6 +508,7 @@ class Language implements LanguageInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function extract(string $namespace): static
     {
         $lang = clone $this;

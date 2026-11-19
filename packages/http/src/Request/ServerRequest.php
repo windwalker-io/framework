@@ -172,6 +172,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withCookieParams(array $cookies): static
     {
         $new = clone $this;
@@ -221,6 +222,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withQueryParams(array $query): static|ServerRequest
     {
         $new = clone $this;
@@ -259,6 +261,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @return  static
      * @throws  InvalidArgumentException  if an invalid structure is provided.
      */
+    #[\NoDiscard]
     public function withUploadedFiles(array $uploadedFiles): static|ServerRequest
     {
         if (!ServerHelper::validateUploadedFiles($uploadedFiles)) {
@@ -325,6 +328,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @throws  InvalidArgumentException  if an unsupported argument type is
      *                                    provided.
      */
+    #[\NoDiscard]
     public function withParsedBody($data): static|ServerRequest
     {
         $new = clone $this;
@@ -393,6 +397,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @see getAttributes()
      *
      */
+    #[\NoDiscard]
     public function withAttribute($name, $value): static|ServerRequest
     {
         $new = clone $this;
@@ -418,6 +423,7 @@ class ServerRequest extends AbstractRequest implements ServerRequestInterface
      * @see getAttributes()
      *
      */
+    #[\NoDiscard]
     public function withoutAttribute($name): static|ServerRequest
     {
         if (!isset($this->attributes[$name])) {

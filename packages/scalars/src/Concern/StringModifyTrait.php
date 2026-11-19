@@ -225,6 +225,7 @@ trait StringModifyTrait
         );
     }
 
+    #[\NoDiscard]
     public function append(StringObject|string $string): StringObject
     {
         return tap(
@@ -235,6 +236,7 @@ trait StringModifyTrait
         );
     }
 
+    #[\NoDiscard]
     public function prepend(StringObject|string $string): StringObject
     {
         return tap(

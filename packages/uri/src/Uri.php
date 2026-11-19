@@ -269,6 +269,7 @@ class Uri implements ExtendedUriInterface
      *
      * @throws  InvalidArgumentException  for invalid or unsupported schemes.
      */
+    #[\NoDiscard]
     public function withScheme($scheme): Uri|static
     {
         if (!is_string($scheme)) {
@@ -298,6 +299,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static  A new instance with the specified user information.
      */
+    #[\NoDiscard]
     public function withUserInfo($user, $password = null): static
     {
         ArgumentsAssert::assert(
@@ -323,6 +325,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withUser(?string $user): static
     {
         $new = clone $this;
@@ -336,6 +339,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withPassword(?string $password): static
     {
         $new = clone $this;
@@ -358,6 +362,7 @@ class Uri implements ExtendedUriInterface
      *
      * @throws  InvalidArgumentException  for invalid hostnames.
      */
+    #[\NoDiscard]
     public function withHost($host): Uri|static
     {
         if (!is_string($host)) {
@@ -388,6 +393,7 @@ class Uri implements ExtendedUriInterface
      * @return  static                    A new instance with the specified port.
      * @throws  InvalidArgumentException  for invalid ports.
      */
+    #[\NoDiscard]
     public function withPort($port): Uri|static
     {
         if (is_array($port) || is_object($port)) {
@@ -431,6 +437,7 @@ class Uri implements ExtendedUriInterface
      * @return  static                    A new instance with the specified path.
      * @throws  InvalidArgumentException  for invalid paths.
      */
+    #[\NoDiscard]
     public function withPath($path): Uri|static
     {
         if (!is_string($path)) {
@@ -484,6 +491,7 @@ class Uri implements ExtendedUriInterface
      * @return  static                    A new instance with the specified query string.
      * @throws  InvalidArgumentException  for invalid query strings.
      */
+    #[\NoDiscard]
     public function withQuery($query): Uri|static
     {
         if (!is_string($query)) {
@@ -507,6 +515,7 @@ class Uri implements ExtendedUriInterface
      *
      * @since  3.5.2
      */
+    #[\NoDiscard]
     public function withVar(string $name, mixed $value): static
     {
         $new = clone $this;
@@ -529,6 +538,7 @@ class Uri implements ExtendedUriInterface
      *
      * @since  3.5.2
      */
+    #[\NoDiscard]
     public function withoutVar(string $name): static
     {
         $new = clone $this;
@@ -555,6 +565,7 @@ class Uri implements ExtendedUriInterface
      *
      * @return  static  A new instance with the specified fragment.
      */
+    #[\NoDiscard]
     public function withFragment($fragment): Uri|static
     {
         if (!is_string($fragment)) {
@@ -581,6 +592,7 @@ class Uri implements ExtendedUriInterface
         return $this->withPathAppend($suffix);
     }
 
+    #[\NoDiscard]
     public function withPathAppend(string $suffix): static
     {
         $new = clone $this;

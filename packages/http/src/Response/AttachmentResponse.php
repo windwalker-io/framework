@@ -144,6 +144,7 @@ class AttachmentResponse extends Response
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withInlineFilename(string $filename, ?string $contentType = null): static
     {
         $new = clone $this;

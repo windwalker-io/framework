@@ -50,6 +50,7 @@ class TransportOptions extends RecordOptions
         return $transportOptions->withMergeHttpClientOptions($options);
     }
 
+    #[\NoDiscard]
     public function withMergeHttpClientOptions(HttpClientOptions $options): static
     {
         $new = clone $this;

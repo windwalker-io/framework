@@ -134,7 +134,7 @@ class ServerRequestTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->instance->withUploadedFiles(['file' => new stdClass()]);
+        $_ = $this->instance->withUploadedFiles(['file' => new stdClass()]);
     }
 
     #[Test]

@@ -154,6 +154,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
+    #[\NoDiscard]
     public function removeLast(int $num = 1): static
     {
         return (clone $this)->splice(0, -$num);
@@ -168,6 +169,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5.13
      */
+    #[\NoDiscard]
     public function removeFirst(int $num = 1): static
     {
         return (clone $this)->splice($num);
@@ -261,6 +263,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
+    #[\NoDiscard]
     public function insertAfter(int $key, ...$args): static
     {
         $new = clone $this;
@@ -280,6 +283,7 @@ trait ArrayModifyTrait
      *
      * @since  3.5
      */
+    #[\NoDiscard]
     public function insertBefore(int $key, mixed $value): static|ArrayModifyTrait
     {
         $new = clone $this;
@@ -396,6 +400,7 @@ trait ArrayModifyTrait
     /**
      * @param  array[]  ...$args
      */
+    #[\NoDiscard]
     public function union(...$args): static
     {
         $new = clone $this;
