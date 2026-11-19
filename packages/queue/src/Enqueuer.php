@@ -52,7 +52,7 @@ class Enqueuer extends AbstractRunner
         }
     }
 
-    public function enqueue(string $channel): mixed
+    public function fetch(string $channel): mixed
     {
         $handler = $this->channelHandlers[$channel] ?? $this->defaultHandler ?? null;
 
@@ -89,8 +89,6 @@ class Enqueuer extends AbstractRunner
                 )
             );
 
-            $this->pushReturnedJobs($event->result, $channel);
-
             return $event->result;
         } catch (\Throwable $e) {
             $this->emit(
@@ -104,6 +102,17 @@ class Enqueuer extends AbstractRunner
 
             return null;
         }
+    }
+
+    public function enqueue(string $channel): mixed
+    {
+        $result = $this->fetch($channel);
+
+        if ($result !== null) {
+            $this->pushReturnedJobs($result, $channel);
+        }
+
+        return $result;
     }
 
     /**

@@ -70,7 +70,7 @@ class Worker extends AbstractRunner
         $channel = (array) $channel;
 
         foreach ($channel as $channelName) {
-            $result = $this->enqueuer->enqueue($channelName);
+            $result = $this->enqueuer->fetch($channelName);
 
             if ($result && !$result instanceof QueueMessage) {
                 $result = $this->queue->getMessageByJob($result);
