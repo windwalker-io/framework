@@ -116,7 +116,7 @@ class CursorPaginate
         $columns = [];
 
         foreach ($conditions as $condition) {
-            if (count($condition) !== 3) {
+            if (!is_array($condition) || count($condition) !== 3) {
                 throw new \InvalidArgumentException('Cursor condition must be [column, direction, value].');
             }
 

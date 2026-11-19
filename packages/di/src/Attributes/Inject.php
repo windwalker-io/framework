@@ -8,6 +8,7 @@ use Attribute;
 use Closure;
 use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerExceptionInterface;
+use ReflectionClass;
 use ReflectionException;
 use ReflectionParameter;
 use ReflectionProperty;
@@ -137,7 +138,7 @@ class Inject implements ContainerAttributeInterface
                 return $container->get($id, $this->forceNew, tag: $tag);
             }
 
-            if (class_exists($id) || interface_exists($id)) {
+            if (class_exists($id) && new ReflectionClass($id)->isInstantiable()) {
                 return $this->createObject($container, $id);
             }
         } catch (ContainerExceptionInterface $e) {

@@ -328,6 +328,18 @@ class QueryTest extends TestCase
     }
 
     #[Test]
+    public function crossJoinWithoutConditionAndJoinOnTrueWithExtraArgs(): void
+    {
+        $q = self::createQuery()->select('*')->from('foos')->crossJoin('bars');
+
+        self::assertStringContainsString('CROSS JOIN', (string) $q);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        self::createQuery()->select('*')->from('foos')->leftJoin('bars', 'b', true, 'x');
+    }
+
+    #[Test]
     public function withCursorRejectsWrongArgumentCount(): void
     {
         $q = self::createQuery()->select('*')->from('foos');
@@ -337,6 +349,7 @@ class QueryTest extends TestCase
                 fn() => $q->withCursor('id', 'DESC'),
                 fn() => $q->withCursor('id', 'DESC', 1, 2),
                 fn() => $q->withCursor([['id', 'DESC']]),
+                fn() => $q->withCursor(['id', 'DESC', 5]),
             ] as $case
         ) {
             try {

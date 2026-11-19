@@ -385,6 +385,8 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
             // );
 
             $on[0]($join);
+        } elseif ($on === []) {
+            // CROSS join or join without conditions
         } elseif (count($on) <= 3) {
             $join->on(...$on);
         } else {
@@ -960,7 +962,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
         }
 
         if ($value instanceof Closure) {
-            $value($value = $this->createSubQuery());
+            $value = $value($q = $this->createSubQuery()) ?? $q;
         }
 
         $this->upsert['update'][$column] = $this->castWriteValue($value);

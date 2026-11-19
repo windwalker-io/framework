@@ -758,7 +758,7 @@ abstract class Arr
         foreach ($items as $key => $item) {
             $value = match (true) {
                 $by === null => $key,
-                is_callable($by) => $by($item, $key),
+                $by instanceof \Closure, !is_string($by) && is_callable($by) => $by($item, $key),
                 default => static::getSyncField($item, $by),
             };
 

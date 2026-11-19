@@ -115,7 +115,7 @@ class DependencyResolver
             if (!is_object($instance)) {
                 throw new UnexpectedValueException(
                     sprintf(
-                        'Thr callback for creating instance must return an object, got %s.',
+                        'The callback for creating instance must return an object, got %s.',
                         get_debug_type($instance),
                     ),
                 );
