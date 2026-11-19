@@ -106,7 +106,7 @@ class SQLitePlatform extends AbstractPlatform
 
     public function listColumnsQuery(string $table, ?string $schema): Query
     {
-        return $this->pragma('table_info', $this->db->replacePrefix($table), $schema);
+        return $this->pragma('table_xinfo', $this->db->replacePrefix($table), $schema);
     }
 
     public function listConstraintsQuery(string $table, ?string $schema): Query
@@ -138,7 +138,16 @@ class SQLitePlatform extends AbstractPlatform
     {
         $columns = [];
 
+        $generated = null;
+
         foreach ($this->loadColumnsStatement($table, $schema) as $row) {
+            // table_xinfo `hidden`: 1 = virtual table hidden column, 2 = VIRTUAL generated, 3 = STORED generated
+            $hidden = (int) ($row['hidden'] ?? 0);
+
+            if ($hidden === 1) {
+                continue;
+            }
+
             [$type, $precision, $scale] = DataType::extract($row['type']);
 
             $isString = in_array(
@@ -166,6 +175,11 @@ class SQLitePlatform extends AbstractPlatform
                 'numeric_unsigned' => false,
                 'comment' => null,
                 'auto_increment' => (bool) $row['pk'],
+                ...($hidden >= 2 ? [
+                    'generation_expression' => ($generated ??= $this->listGeneratedExpressions($table, $schema))[$row['name']]
+                        ?? null,
+                    'generated_stored' => $hidden === 3,
+                ] : []),
                 'erratas' => [
                     'pk' => (bool) $row['pk'],
                 ],
@@ -282,6 +296,49 @@ class SQLitePlatform extends AbstractPlatform
         }
 
         return $indexes;
+    }
+
+    /**
+     * `PRAGMA table_xinfo` does not report generation expressions, parse them from the stored `CREATE TABLE`.
+     *
+     * @return  array<string, string>  Expression text keyed by column name.
+     */
+    protected function listGeneratedExpressions(string $table, ?string $schema): array
+    {
+        $schema ??= static::getDefaultSchema();
+
+        $sql = (string) $this->db->prepare(
+            $this->createQuery()
+                ->select('sql')
+                ->from(trim($schema . '.sqlite_master', '.'))
+                ->where('type', 'table')
+                ->where('name', $this->db->replacePrefix($table))
+        )->result();
+
+        $expressions = [];
+
+        preg_match_all(
+            '/(?:^|[\s,(])["`\[]?(\w+)["`\]]?\s[^(),]*?\bAS\s*\(/i',
+            $sql,
+            $matches,
+            PREG_OFFSET_CAPTURE
+        );
+
+        foreach ($matches[1] as $i => [$name]) {
+            $start = $matches[0][$i][1] + strlen($matches[0][$i][0]) - 1;
+            $depth = 0;
+
+            for ($j = $start, $len = strlen($sql); $j < $len; $j++) {
+                if ($sql[$j] === '(') {
+                    $depth++;
+                } elseif ($sql[$j] === ')' && --$depth === 0) {
+                    $expressions[$name] = trim(substr($sql, $start + 1, $j - $start - 1));
+                    break;
+                }
+            }
+        }
+
+        return $expressions;
     }
 
     /**

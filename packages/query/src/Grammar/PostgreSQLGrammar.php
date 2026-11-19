@@ -46,6 +46,11 @@ class PostgreSQLGrammar extends AbstractGrammar implements JsonGrammarInterface
             'update' => $update,
             'returning' => $returning,
         ] = $this->resolveUpsert($query);
+
+        if ($keys === []) {
+            throw new \InvalidArgumentException('Upsert requires conflict keys, please use onConflict().');
+        }
+
         [$columns, $values] = $this->compileUpsertColumnsAndValues($query, $data);
 
         $conflictKeys = $query->clause('()', $keys, ',');

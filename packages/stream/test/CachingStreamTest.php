@@ -63,7 +63,7 @@ class CachingStreamTest extends TestCase
     {
         $stream = $this->createCachingStream();
 
-        $stream->seek(1, SEEK_END);
+        $stream->seek(-2, SEEK_END);
 
         $this->assertEquals(5, $stream->tell());
         $this->assertEquals('AR', $stream->getContents());
@@ -83,7 +83,7 @@ class CachingStreamTest extends TestCase
 
         $stream = new CachingStream($remote);
 
-        $stream->seek(1, SEEK_END);
+        $stream->seek(-2, SEEK_END);
 
         $this->assertEquals(5, $stream->tell());
         $this->assertEquals('AR', $stream->getContents());
@@ -96,7 +96,7 @@ class CachingStreamTest extends TestCase
 
         $stream->seek(0, SEEK_END);
 
-        $this->assertEquals(6, $stream->tell());
+        $this->assertEquals(7, $stream->tell());
     }
 
     #[Test]

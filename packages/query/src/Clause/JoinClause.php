@@ -74,7 +74,11 @@ class JoinClause implements ClauseInterface
      */
     public function on(mixed $column, ...$args): static
     {
-        if ($column === true && $args === []) {
+        if ($column === true) {
+            if ($args !== []) {
+                throw new \InvalidArgumentException('JOIN ON TRUE does not accept extra arguments.');
+            }
+
             return $this->onRaw('TRUE');
         }
 

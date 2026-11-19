@@ -206,15 +206,15 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
 
         self::assertSqlFormatEquals(
             <<<SQL
-            PRAGMA table_info('enterprise');
-            PRAGMA table_info('enterprise');
+            PRAGMA table_xinfo('enterprise');
+            PRAGMA table_xinfo('enterprise');
             PRAGMA index_list('enterprise');
             PRAGMA index_info('idx_enterprise_title');
             PRAGMA index_info('idx_enterprise_catid_type');
             PRAGMA index_info('sqlite_autoindex_enterprise_1');
             CREATE INDEX `idx_enterprise_created` ON `enterprise` (`created`);
-            PRAGMA table_info('enterprise');
-            PRAGMA table_info('enterprise');
+            PRAGMA table_xinfo('enterprise');
+            PRAGMA table_xinfo('enterprise');
             PRAGMA index_list('enterprise');
             PRAGMA index_info('idx_enterprise_created');
             PRAGMA index_info('idx_enterprise_title');
@@ -573,7 +573,7 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
 
         self::assertSqlFormatEquals(
             <<<SQL
-            PRAGMA `main`.table_info('enterprise')
+            PRAGMA `main`.table_xinfo('enterprise')
             SQL,
             $logs[0]
         );

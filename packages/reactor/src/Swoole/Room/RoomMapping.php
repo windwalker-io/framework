@@ -53,7 +53,10 @@ class RoomMapping
      */
     public function clearRoom(string $room): array
     {
-        return $this->mapping->removeA($room);
+        return array_map(
+            'intval',
+            $this->mapping->removeA($room)
+        );
     }
 
     /**

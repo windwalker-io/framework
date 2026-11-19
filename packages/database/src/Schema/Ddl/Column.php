@@ -667,11 +667,11 @@ class Column
         $desired = [
             'dataType' => static::normalizeType($this->getDataType()),
             'length' => $this->getLengthExpression(),
-            'nullable' => $this->getIsNullable(),
+            'nullable' => $this->isGenerated() ? null : $this->getIsNullable(),
             'default' => static::normalizeDefault($this->canHasDefaultValue() ? $this->getColumnDefault() : null),
             'unsigned' => $this->getNumericUnsigned(),
             'autoIncrement' => $this->isAutoIncrement(),
-            'generation' => $this->getGenerationExpression(),
+            'generation' => static::normalizeExpression($this->getGenerationExpression()),
             'generatedStored' => $this->isGeneratedStored(),
             'comment' => $this->getComment(),
             'charset' => $this->getCharacterSetName(),
@@ -681,11 +681,11 @@ class Column
         $current = [
             'dataType' => static::normalizeType($actual->getDataType()),
             'length' => $actual->getLengthExpression(),
-            'nullable' => $actual->getIsNullable(),
+            'nullable' => $actual->isGenerated() ? null : $actual->getIsNullable(),
             'default' => static::normalizeDefault($actual->canHasDefaultValue() ? $actual->getColumnDefault() : null),
             'unsigned' => $actual->getNumericUnsigned(),
             'autoIncrement' => $actual->isAutoIncrement(),
-            'generation' => $actual->getGenerationExpression(),
+            'generation' => static::normalizeExpression($actual->getGenerationExpression()),
             'generatedStored' => $actual->isGeneratedStored(),
             'comment' => $actual->getComment(),
             'charset' => $actual->getCharacterSetName(),
@@ -711,6 +711,36 @@ class Column
         }
 
         return $changes;
+    }
+
+    /**
+     * Databases rewrite generation expressions (quotes, outer parentheses, spacing, case),
+     * so compare a loosely normalized form.
+     */
+    private static function normalizeExpression(?string $expression): ?string
+    {
+        if ($expression === null || trim($expression) === '') {
+            return null;
+        }
+
+        $expression = trim(preg_replace('/[`"\[\]]|_[a-z0-9]+(?=\\\\?\')|\\\\(?=\')/i', '', $expression));
+        $expression = preg_replace('/\s+/', '', $expression);
+
+        while (str_starts_with($expression, '(') && str_ends_with($expression, ')')) {
+            $depth = 0;
+
+            foreach (str_split($expression) as $i => $char) {
+                $depth += $char === '(' ? 1 : ($char === ')' ? -1 : 0);
+
+                if ($depth === 0 && $i < strlen($expression) - 1) {
+                    break 2;
+                }
+            }
+
+            $expression = substr($expression, 1, -1);
+        }
+
+        return strtolower(preg_replace('/\((\d+(?:\.\d+)?)\)/', '$1', $expression));
     }
 
     private static function normalizeDefault(mixed $value): ?string

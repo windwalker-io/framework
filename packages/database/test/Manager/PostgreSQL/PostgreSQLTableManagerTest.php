@@ -609,7 +609,21 @@ class PostgreSQLTableManagerTest extends AbstractDatabaseTestCase
               "character_octet_length",
               "numeric_precision",
               "numeric_scale",
-              "column_name"
+              "column_name",
+              "generation_expression",
+              (
+                SELECT
+                  a.attgenerated
+                FROM
+                  pg_catalog.pg_attribute a
+                  JOIN pg_catalog.pg_class pc ON pc.oid = a.attrelid
+                  JOIN pg_catalog.pg_namespace pn ON pn.oid = pc.relnamespace
+                WHERE
+                  pn.nspname = table_schema
+                  AND pc.relname = table_name
+                  AND a.attname = column_name
+                  AND NOT a.attisdropped
+              ) AS attgenerated
             FROM
               "information_schema"."columns"
             WHERE

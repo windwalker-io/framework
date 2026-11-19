@@ -8,7 +8,9 @@ use BackedEnum;
 use Closure;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionFunction;
 use UnitEnum;
+use Windwalker\DI\Attributes\Factory;
 use Windwalker\DI\Attributes\Isolation;
 use Windwalker\DI\Container;
 use Windwalker\DI\DIOptions;
@@ -94,6 +96,13 @@ class StoreDefinition implements StoreDefinitionInterface
             }
 
             $value = $container->call($this->value, $args);
+
+            if (
+                $value instanceof Closure
+                && new ReflectionFunction($value)->getAttributes(Factory::class) !== []
+            ) {
+                $value = $container->resolve($value, $args);
+            }
         }
 
         // Cache

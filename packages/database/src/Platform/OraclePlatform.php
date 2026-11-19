@@ -197,7 +197,7 @@ class OraclePlatform extends AbstractPlatform
 
             $default = $row['data_default'];
 
-            if ($default !== null && !$isIdentity) {
+            if ($default !== null && !$isIdentity && $row['virtual_column'] !== 'YES') {
                 $default = trim((string) $default);
                 $default = preg_replace('/^\'(.*)\'$/s', '$1', $default);
                 $default = preg_replace('/^(?:TIMESTAMP|DATE)\s*\'(.*)\'$/is', '$1', $default);
@@ -220,6 +220,10 @@ class OraclePlatform extends AbstractPlatform
                 'numeric_unsigned' => false,
                 'comment' => (string) $row['comments'],
                 'auto_increment' => $isIdentity,
+                ...($row['virtual_column'] === 'YES' ? [
+                    'generation_expression' => trim((string) $row['data_default']),
+                    'generated_stored' => false,
+                ] : []),
                 'erratas' => [],
             ];
         }

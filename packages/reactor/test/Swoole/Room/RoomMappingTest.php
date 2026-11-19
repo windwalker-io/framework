@@ -54,7 +54,7 @@ class RoomMappingTest extends TestCase
         $this->instance->joinRoom('lobby', 1);
         $this->instance->joinRoom('game', 1);
 
-        self::assertSame(['1'], array_values($this->instance->clearRoom('lobby')));
+        self::assertSame([1], array_values($this->instance->clearRoom('lobby')));
         self::assertSame([], $this->instance->getRoomFds('lobby'));
         self::assertSame(['game'], array_values($this->instance->getFdRooms(1)));
     }

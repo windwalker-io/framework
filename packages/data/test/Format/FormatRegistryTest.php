@@ -55,7 +55,7 @@ class FormatRegistryTest extends TestCase
     public function itRequiresAParserAndDumperPair(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageIs('Dumper should be callable callable');
+        $this->expectExceptionMessageIs('Dumper should be callable');
 
         new FormatRegistry()->registerFormat('custom', static fn(): array => []);
     }
