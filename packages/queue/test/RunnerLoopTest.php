@@ -224,6 +224,7 @@ class RunnerLoopTest extends TestCase
     {
         $driver = $this->createMock(QueueDriverInterface::class);
         $driver->expects($this->never())->method('pop');
+        $driver->expects($this->never())->method('push');
         $driver->expects($this->once())->method('delete')->willReturnSelf();
         $queue = new Queue($driver);
         $enqueuer = new Enqueuer($queue);

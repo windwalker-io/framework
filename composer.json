@@ -195,11 +195,6 @@
             "Windwalker\\Utilities\\Test\\": "packages/utilities/test"
         }
     },
-    "config": {
-        "platform": {
-            "php": "8.4.27"
-        }
-    },
     "scripts": {
         "cs-check": "php-cs-fixer check --diff",
         "cs-fix": "php-cs-fixer fix",
