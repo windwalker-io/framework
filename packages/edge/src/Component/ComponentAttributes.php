@@ -263,6 +263,7 @@ class ComponentAttributes implements ArrayAccess, IteratorAggregate
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withMerge(array $attributeDefaults = [], bool $escape = true): static
     {
         return (clone $this)->merge($attributeDefaults, $escape);

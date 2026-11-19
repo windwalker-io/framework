@@ -48,6 +48,7 @@ class PathCollection
      *
      * @since  2.0
      */
+    #[\NoDiscard]
     public function addPaths(array $paths): static|PathCollection
     {
         $new = clone $this;
@@ -70,6 +71,7 @@ class PathCollection
      * @throws  InvalidArgumentException
      * @since  2.0
      */
+    #[\NoDiscard]
     public function add(SplFileInfo|string $path): static|PathCollection
     {
         $new = clone $this;
@@ -114,6 +116,7 @@ class PathCollection
      *
      * @since  __DEPLOY_VERSION__
      */
+    #[\NoDiscard]
     public function withPaths(array $paths): static|PathCollection
     {
         $new = clone $this;
@@ -236,6 +239,7 @@ class PathCollection
      *
      * @return  static  Return new object.
      */
+    #[\NoDiscard]
     public function map(callable $callback): static|PathCollection
     {
         $new = clone $this;

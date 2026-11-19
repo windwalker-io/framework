@@ -99,7 +99,6 @@ use function Windwalker\value;
  * @method  $this         whereNotIn($column, iterable $values)
  * @method  $this         whereBetween($column, $start, $end)
  * @method  $this         whereNotBetween($column, $start, $end)
- * @method  $this         whereLike($column, string $search)
  * @method  $this         whereNotLike($column, string $search)
  * @method  $this         havingIn($column, iterable $values)
  * @method  $this         havingNotIn($column, iterable $values)
@@ -2275,6 +2274,7 @@ class Query implements QueryInterface, BindableInterface, IteratorAggregate
      *
      * @return  static  A new query instance, the original query is not changed.
      */
+    #[\NoDiscard]
     public function withCursor(string|array|CursorPaginate $column, mixed ...$args): static
     {
         $query = clone $this;

@@ -173,6 +173,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
+    #[\NoDiscard]
     public function withDeep(string $path, mixed $value, string $delimiter = '.'): Collection|static
     {
         $new = clone $this;
@@ -224,6 +225,7 @@ class Collection extends ArrayObject
      *
      * @since  __DEPLOY_VERSION__
      */
+    #[\NoDiscard]
     public function withRemoveDeep(string $path, ?string $delimiter = '.'): Collection|static
     {
         $new = clone $this;

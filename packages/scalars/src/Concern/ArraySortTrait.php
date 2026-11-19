@@ -18,6 +18,7 @@ trait ArraySortTrait
      *
      * @since   3.5.2
      */
+    #[\NoDiscard]
     public function sortKeys(int|callable $flags = SORT_REGULAR): static
     {
         $new = clone $this;
@@ -50,6 +51,7 @@ trait ArraySortTrait
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function natureSortCaseInsensitive(): static
     {
         $new = clone $this;
@@ -64,6 +66,7 @@ trait ArraySortTrait
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function natureSort(): static
     {
         $new = clone $this;
@@ -85,6 +88,7 @@ trait ArraySortTrait
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function sort(int|callable $flags = SORT_REGULAR): static
     {
         $new = clone $this;
@@ -105,6 +109,7 @@ trait ArraySortTrait
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function sortDesc(int $flags = SORT_REGULAR): static
     {
         $new = clone $this;

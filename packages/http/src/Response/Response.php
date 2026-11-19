@@ -155,6 +155,7 @@ class Response implements ResponseInterface
      * @return  static
      * @throws  InvalidArgumentException  For invalid status code arguments.
      */
+    #[\NoDiscard]
     public function withStatus($code, $reasonPhrase = ''): Response|static
     {
         if (!ResponseHelper::validateStatus($code)) {

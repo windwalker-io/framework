@@ -1078,7 +1078,7 @@ class CachePoolTest extends TestCase
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('does not implement');
-        $pool->withGroup('flower');
+        $_ = $pool->withGroup('flower');
     }
 
     // -----------------------------------------------------------------------

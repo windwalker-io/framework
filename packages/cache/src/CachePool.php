@@ -71,6 +71,7 @@ class CachePool implements CachePoolInterface
         $this->logger = $logger;
     }
 
+    #[\NoDiscard]
     public function withLogger(LoggerInterface $logger): static
     {
         $new = clone $this;
@@ -797,6 +798,7 @@ class CachePool implements CachePoolInterface
         return $this;
     }
 
+    #[\NoDiscard]
     public function withStorage(StorageInterface $storage): static
     {
         $new = clone $this;
@@ -812,6 +814,7 @@ class CachePool implements CachePoolInterface
      *
      * @throws  \LogicException
      */
+    #[\NoDiscard]
     public function withGroup(string $group): static
     {
         if (!$this->isGroupSupported()) {
@@ -857,6 +860,7 @@ class CachePool implements CachePoolInterface
         return $this;
     }
 
+    #[\NoDiscard]
     public function withSerializer(SerializerInterface $serializer): static
     {
         $new = clone $this;
@@ -893,6 +897,7 @@ class CachePool implements CachePoolInterface
         return $this;
     }
 
+    #[\NoDiscard]
     public function withAutoCommit(bool $autoCommit): static
     {
         $new = clone $this;
@@ -932,6 +937,7 @@ class CachePool implements CachePoolInterface
         return $this;
     }
 
+    #[\NoDiscard]
     public function withDefaultTtl(DateInterval|string|int|null $defaultTtl): static
     {
         $new = clone $this;

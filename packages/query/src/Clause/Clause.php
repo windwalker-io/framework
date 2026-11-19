@@ -129,6 +129,7 @@ class Clause implements Countable, ClauseInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function mapElements(callable $callable): static
     {
         $new = clone $this;
@@ -144,6 +145,7 @@ class Clause implements Countable, ClauseInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function filterElements(callable $callable): static
     {
         $new = clone $this;

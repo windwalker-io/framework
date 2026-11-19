@@ -45,6 +45,7 @@ trait ArrayLoopTrait
      *
      * @since  3.5
      */
+    #[\NoDiscard]
     public function walk(callable $callable, $userdata = null): ArrayLoopTrait|static
     {
         $new = clone $this;
@@ -62,6 +63,7 @@ trait ArrayLoopTrait
      *
      * @since  3.5
      */
+    #[\NoDiscard]
     public function walkRecursive(callable $callable, mixed $userdata = null): static
     {
         $new = clone $this;

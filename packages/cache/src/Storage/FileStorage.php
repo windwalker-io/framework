@@ -527,6 +527,7 @@ class FileStorage implements StorageInterface, PrunableStorageInterface, Grouped
         return $this;
     }
 
+    #[\NoDiscard]
     public function withGroup(string $group): static
     {
         $new = clone $this;

@@ -37,6 +37,7 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
         return $this->frame;
     }
 
+    #[\NoDiscard]
     public function withFrame(WebSocketFrameInterface $frame): static
     {
         $new = clone $this;
@@ -51,6 +52,7 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
         return $this->getQueryParams()[$name] ?? null;
     }
 
+    #[\NoDiscard]
     public function withAttributes(array $attributes): static
     {
         $new = clone $this;
@@ -70,6 +72,7 @@ class WebSocketRequest extends ServerRequest implements WebSocketRequestInterfac
         return $this->parsedData;
     }
 
+    #[\NoDiscard]
     public function withParsedData(mixed $data): static
     {
         $new = clone $this;

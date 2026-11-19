@@ -50,6 +50,7 @@ class ObjectBuilderDefinition implements DefinitionInterface
 
     public UnitEnum|string|null $tag = null;
 
+    #[\NoDiscard]
     public function fork(?array $args = null): static
     {
         $new = clone $this;

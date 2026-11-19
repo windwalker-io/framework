@@ -49,6 +49,7 @@ class NullStorage implements StorageInterface, GroupedStorageInterface
         return true;
     }
 
+    #[\NoDiscard]
     public function withGroup(string $group): static
     {
         return clone $this;

@@ -150,6 +150,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $this->tagPool;
     }
 
+    #[\NoDiscard]
     public function withTagPool(StorageInterface|CacheItemPoolInterface|null $tagPool): static
     {
         $new = clone $this;
@@ -163,6 +164,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $this->knownTagVersionsTtl;
     }
 
+    #[\NoDiscard]
     public function withKnownTagVersionsTtl(float $knownTagVersionsTtl): static
     {
         $new = clone $this;
@@ -171,6 +173,7 @@ class TaggedCachePool extends CachePool implements TaggedCachePoolInterface
         return $new;
     }
 
+    #[\NoDiscard]
     public function withoutKnownTagVersionsCache(): static
     {
         $new = clone $this;

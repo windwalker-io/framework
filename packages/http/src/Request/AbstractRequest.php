@@ -164,6 +164,7 @@ abstract class AbstractRequest implements RequestInterface
      * @return  static
      * @throws  InvalidArgumentException  if the request target is invalid.
      */
+    #[\NoDiscard]
     public function withRequestTarget(mixed $requestTarget): AbstractRequest|static
     {
         if (preg_match('/\s/', $requestTarget)) {
@@ -203,6 +204,7 @@ abstract class AbstractRequest implements RequestInterface
      * @return  static
      * @throws  InvalidArgumentException  for invalid HTTP methods.
      */
+    #[\NoDiscard]
     public function withMethod($method): AbstractRequest|static
     {
         $method = $this->validateMethod($method);
@@ -261,6 +263,7 @@ abstract class AbstractRequest implements RequestInterface
      *
      * @return  static
      */
+    #[\NoDiscard]
     public function withUri(UriInterface $uri, $preserveHost = false): static
     {
         $new = clone $this;

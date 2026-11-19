@@ -62,7 +62,7 @@ class RequestBaseUri extends Uri implements JsonSerializable
             $path = rtrim($path, '/\\');
         }
 
-        $uri->withPath($path);
+        $uri = $uri->withPath($path);
         $uri = $uri->withScriptName(pathinfo($script, PATHINFO_BASENAME));
 
         return $uri;
@@ -371,6 +371,7 @@ class RequestBaseUri extends Uri implements JsonSerializable
      *
      * @return  static  Return self to support chaining.
      */
+    #[\NoDiscard]
     public function withOriginal(string $origin): static
     {
         $new = clone $this;

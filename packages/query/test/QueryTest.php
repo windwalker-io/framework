@@ -324,7 +324,7 @@ class QueryTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        self::createQuery()->select('*')->from('foos')->withCursor('id', 'DESC', null);
+        $_ = self::createQuery()->select('*')->from('foos')->withCursor('id', 'DESC', null);
     }
 
     #[Test]
@@ -420,7 +420,7 @@ class QueryTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        self::createQuery()->select('*')->from('foos')->withCursor($paginate, ['id' => 1]);
+        $_ = self::createQuery()->select('*')->from('foos')->withCursor($paginate, ['id' => 1]);
     }
 
     #[Test]
@@ -1318,6 +1318,43 @@ SQL
             SQL,
             $q->render(true)
         );
+    }
+
+    #[Test]
+    public function whereLikeEscapesWildcardsAndKeepsOuterPercents(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->whereLike('name', 'a_b%', '!')
+            ->whereLike('code', '%!x%', '!');
+
+        self::assertSqlFormatEquals(
+            <<<SQL
+            SELECT * FROM "foo" WHERE "name" LIKE 'a!_b%' ESCAPE '!'
+                AND "code" LIKE '%!!x%' ESCAPE '!'
+            SQL,
+            $q->render(true)
+        );
+    }
+
+    #[Test]
+    public function whereLikeUsesBackslashAsDefaultEscape(): void
+    {
+        $q = self::createQuery()
+            ->select('*')
+            ->from('foo')
+            ->whereLike('title', '%50%_off\\x%');
+
+        $values = array_map(
+            static fn(array $b) => $b['value'] instanceof \Windwalker\Query\Clause\ValueClause
+                ? $b['value']->getValue()
+                : $b['value'],
+            $q->getBounded()
+        );
+
+        self::assertEquals(['%50\%\_off\\\\x%'], array_values($values));
+        self::assertStringContainsString('ESCAPE', $q->render());
     }
 
     #[Test]
