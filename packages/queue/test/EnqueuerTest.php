@@ -81,6 +81,27 @@ class EnqueuerTest extends TestCase
     }
 
     #[Test]
+    public function fetchReturnsHandlerResultWithoutPushingReturnedJobs(): void
+    {
+        $driver = $this->createMock(QueueDriverInterface::class);
+        $driver->expects($this->never())->method('push');
+        $enqueuer = new Enqueuer(new Queue($driver));
+        $enqueuer->channel('foo', fn() => fn() => 1);
+
+        $result = $enqueuer->fetch('foo');
+
+        self::assertIsCallable($result);
+    }
+
+    #[Test]
+    public function fetchReturnsNullWhenNoHandlerRegistered(): void
+    {
+        $enqueuer = new Enqueuer(new Queue(new NullQueueDriver()));
+
+        self::assertNull($enqueuer->fetch('default'));
+    }
+
+    #[Test]
     public function returnedClosureAndListAreEnqueuedToChannel(): void
     {
         $pushed = [];
