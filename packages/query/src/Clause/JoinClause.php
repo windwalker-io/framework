@@ -250,16 +250,16 @@ class JoinClause implements ClauseInterface
     }
 
     /**
-     * orWhere
+     * Add a grouped ON condition with OR glue, wrapped in parentheses.
      *
      * @param  array|Closure  $wheres
      *
      * @return  static
      */
-    public function orOn(array|Closure $wheres): static
+    public function orOnGroup(array|Closure $wheres): static
     {
         if (is_array($wheres)) {
-            return $this->orOn(
+            return $this->orOnGroup(
                 static function (JoinClause $join) use ($wheres) {
                     foreach ($wheres as $where) {
                         $join->on(...$where);
@@ -275,6 +275,18 @@ class JoinClause implements ClauseInterface
         );
 
         return $this->on($wheres, 'OR');
+    }
+
+    /**
+     * @param  array|Closure  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use orOnGroup() instead.
+     */
+    public function orOn(array|Closure $wheres): static
+    {
+        return $this->orOnGroup($wheres);
     }
 
     /**

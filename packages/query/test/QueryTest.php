@@ -565,7 +565,7 @@ class QueryTest extends TestCase
                     'bar',
                     static function (JoinClause $join) {
                         $join->on('bar.id', 'foo.bar_id');
-                        $join->orOn(
+                        $join->orOnGroup(
                             static function (JoinClause $join) {
                                 $join->on('a', 'b');
                                 $join->on('c', 'd');

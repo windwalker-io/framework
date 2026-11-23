@@ -78,7 +78,7 @@ class JoinClauseTest extends TestCase
     #[Test]
     public function orOnWrapsArrayConditionsInOrGroup(): void
     {
-        $query = self::join(fn(JoinClause $j) => $j->on('a.id', 'b.aid')->orOn([['a.x', 'b.x'], ['a.y', 'b.y']]));
+        $query = self::join(fn(JoinClause $j) => $j->on('a.id', 'b.aid')->orOnGroup([['a.x', 'b.x'], ['a.y', 'b.y']]));
 
         self::assertSqlEquals(
             'SELECT * FROM "a" LEFT JOIN "b" AS "b" ON "a"."id" = "b"."aid" '
