@@ -1164,7 +1164,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->orWhere(
+            ->orWhereGroup(
                 [
                     ['yoo', 'goo'],
                     ['flower', '!=', 'Sakura'],
@@ -1182,7 +1182,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) {
                     $query->where('yoo', 'goo');
                     $query->where('flower', '!=', 'Sakura');
@@ -1200,7 +1200,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) {
                     $query->where('yoo', 'goo');
                     $query->where('flower', '!=', 'Sakura');
@@ -1235,7 +1235,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->andWhere(
+            ->andWhereGroup(
                 [
                     ['yoo', 'goo'],
                     ['flower', '!=', 'Sakura'],
@@ -1253,7 +1253,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->andWhere(
+            ->andWhereGroup(
                 function (Query $query) {
                     $query->where('yoo', 'goo');
                     $query->where('flower', '!=', 'Sakura');
@@ -1271,11 +1271,11 @@ SQL
             ->select('*')
             ->from('foo')
             ->where('foo', 'bar')
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) {
                     $query->where('yoo', 'goo');
                     $query->where('flower', '!=', 'Sakura');
-                    $query->andWhere(
+                    $query->andWhereGroup(
                         function (Query $query) {
                             $query->where('hello', [1, 2, 3]);
                             $query->where('id', '<', 999);
@@ -1628,7 +1628,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->having('foo', 'bar')
-            ->orHaving(
+            ->orHavingGroup(
                 [
                     ['yoo', 'goo'],
                     ['flower', '!=', 'Sakura'],
@@ -1646,7 +1646,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->having('foo', 'bar')
-            ->orHaving(
+            ->orHavingGroup(
                 function (Query $query) {
                     $query->having('yoo', 'goo');
                     $query->having('flower', '!=', 'Sakura');
@@ -1664,7 +1664,7 @@ SQL
             ->select('*')
             ->from('foo')
             ->having('foo', 'bar')
-            ->orHaving(
+            ->orHavingGroup(
                 function (Query $query) {
                     $query->having('yoo', 'goo');
                     $query->having('flower', '!=', 'Sakura');

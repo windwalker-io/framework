@@ -94,7 +94,7 @@ class WhereConcernTraitTest extends TestCase
     #[Test]
     public function andWhereGroupsConditionsWithAnd(): void
     {
-        $query = self::createQuery()->andWhere([['x', 1], ['y', 2]]);
+        $query = self::createQuery()->andWhereGroup([['x', 1], ['y', 2]]);
 
         self::assertSqlEquals('SELECT * FROM "a" WHERE ("x" = 1 AND "y" = 2)', $query);
     }
@@ -102,7 +102,7 @@ class WhereConcernTraitTest extends TestCase
     #[Test]
     public function orWhereGroupsConditionsWithOr(): void
     {
-        $query = self::createQuery()->orWhere([['x', 1], ['y', 2]]);
+        $query = self::createQuery()->orWhereGroup([['x', 1], ['y', 2]]);
 
         self::assertSqlEquals('SELECT * FROM "a" WHERE ("x" = 1 OR "y" = 2)', $query);
     }
@@ -118,7 +118,7 @@ class WhereConcernTraitTest extends TestCase
     #[Test]
     public function orHavingGroupsConditionsWithOr(): void
     {
-        $query = self::createQuery()->group('x')->orHaving([['x', 1], ['x', 2]]);
+        $query = self::createQuery()->group('x')->orHavingGroup([['x', 1], ['x', 2]]);
 
         self::assertSqlEquals('SELECT * FROM "a" GROUP BY "x" HAVING ("x" = 1 OR "x" = 2)', $query);
     }

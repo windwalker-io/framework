@@ -757,9 +757,9 @@ trait QueryProxyTrait
      *
      * @return  static
      */
-    public function orWhere(\Closure|array $wheres): static
+    public function orWhereGroup(\Closure|array $wheres): static
     {
-        $this->getQueryBuilder()->orWhere($wheres);
+        $this->getQueryBuilder()->orWhereGroup($wheres);
 
         return $this;
     }
@@ -768,12 +768,36 @@ trait QueryProxyTrait
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
+     *
+     * @deprecated  Use orWhereGroup() instead.
+     */
+    public function orWhere(\Closure|array $wheres): static
+    {
+        return $this->orWhereGroup($wheres);
+    }
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     */
+    public function andWhereGroup(\Closure|array $wheres): static
+    {
+        $this->getQueryBuilder()->andWhereGroup($wheres);
+
+        return $this;
+    }
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use andWhereGroup() instead.
      */
     public function andWhere(\Closure|array $wheres): static
     {
-        $this->getQueryBuilder()->andWhere($wheres);
-
-        return $this;
+        return $this->andWhereGroup($wheres);
     }
 
     /**
@@ -808,11 +832,23 @@ trait QueryProxyTrait
      *
      * @return  static
      */
-    public function orHaving(\Closure|array $wheres): static
+    public function orHavingGroup(\Closure|array $wheres): static
     {
-        $this->getQueryBuilder()->orHaving($wheres);
+        $this->getQueryBuilder()->orHavingGroup($wheres);
 
         return $this;
+    }
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use orHavingGroup() instead.
+     */
+    public function orHaving(\Closure|array $wheres): static
+    {
+        return $this->orHavingGroup($wheres);
     }
 
     /**

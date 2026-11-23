@@ -272,7 +272,7 @@ class SQLServerPlatform extends AbstractPlatform
                 ]
             )
             ->where('tbl.name', $this->db->replacePrefix($table))
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) {
                     $query->where('idx.name', '!=', null);
                     $query->where('col.is_identity', 1);

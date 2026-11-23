@@ -253,14 +253,16 @@ trait WhereConcernTrait
     }
 
     /**
+     * Add a grouped condition with OR glue, wrapped in parentheses.
+     *
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
      */
-    public function orWhere(array|Closure $wheres): static
+    public function orWhereGroup(array|Closure $wheres): static
     {
         if (is_array($wheres)) {
-            return $this->orWhere(
+            return $this->orWhereGroup(
                 static function (Query $query) use ($wheres) {
                     foreach ($wheres as $where) {
                         $query->where(...$where);
@@ -282,11 +284,25 @@ trait WhereConcernTrait
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
+     *
+     * @deprecated  Use orWhereGroup() instead.
      */
-    public function andWhere(array|Closure $wheres): static
+    public function orWhere(array|Closure $wheres): static
+    {
+        return $this->orWhereGroup($wheres);
+    }
+
+    /**
+     * Add a grouped condition with AND glue, wrapped in parentheses.
+     *
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     */
+    public function andWhereGroup(array|Closure $wheres): static
     {
         if (is_array($wheres)) {
-            return $this->andWhere(
+            return $this->andWhereGroup(
                 static function (Query $query) use ($wheres) {
                     foreach ($wheres as $where) {
                         $query->where(...$where);
@@ -302,6 +318,18 @@ trait WhereConcernTrait
         );
 
         return $this->where($wheres, 'AND');
+    }
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use andWhereGroup() instead.
+     */
+    public function andWhere(array|Closure $wheres): static
+    {
+        return $this->andWhereGroup($wheres);
     }
 
     /**
@@ -385,14 +413,16 @@ trait WhereConcernTrait
     }
 
     /**
+     * Add a grouped having condition with OR glue, wrapped in parentheses.
+     *
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
      */
-    public function orHaving(array|Closure $wheres): static
+    public function orHavingGroup(array|Closure $wheres): static
     {
         if (is_array($wheres)) {
-            return $this->orHaving(
+            return $this->orHavingGroup(
                 static function (Query $query) use ($wheres) {
                     foreach ($wheres as $where) {
                         $query->having(...$where);
@@ -408,6 +438,18 @@ trait WhereConcernTrait
         );
 
         return $this->having($wheres, 'OR');
+    }
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use orHavingGroup() instead.
+     */
+    public function orHaving(array|Closure $wheres): static
+    {
+        return $this->orHavingGroup($wheres);
     }
 
     /**

@@ -96,7 +96,7 @@ class DatabaseQueueDriver implements QueueDriverInterface, ChannelAwareDriverInt
             ->from($this->table)
             ->where('channel', $channel)
             ->where('visibility', '<=', $now)
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) use ($now) {
                     $query->where('reserved', null)
                         // After a timeout if a job was not released or hanging.

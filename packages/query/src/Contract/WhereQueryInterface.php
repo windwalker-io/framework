@@ -40,12 +40,30 @@ interface WhereQueryInterface
      *
      * @return  static
      */
+    public function orWhereGroup(\Closure|array $wheres): static;
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use orWhereGroup() instead.
+     */
     public function orWhere(\Closure|array $wheres): static;
 
     /**
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
+     */
+    public function andWhereGroup(\Closure|array $wheres): static;
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use andWhereGroup() instead.
      */
     public function andWhere(\Closure|array $wheres): static;
 
@@ -70,6 +88,15 @@ interface WhereQueryInterface
      * @param  array|QueryCallback  $wheres
      *
      * @return  static
+     */
+    public function orHavingGroup(\Closure|array $wheres): static;
+
+    /**
+     * @param  array|QueryCallback  $wheres
+     *
+     * @return  static
+     *
+     * @deprecated  Use orHavingGroup() instead.
      */
     public function orHaving(\Closure|array $wheres): static;
 

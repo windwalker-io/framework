@@ -84,7 +84,7 @@ class DatabaseStorage implements
             ->where($this->keyField, $key)
             ->where($this->groupField, $this->group)
             // AND (A OR B)
-            ->orWhere(
+            ->orWhereGroup(
                 function (Query $query) {
                     $query->where($this->expiredAtField, null);
                     $query->where(

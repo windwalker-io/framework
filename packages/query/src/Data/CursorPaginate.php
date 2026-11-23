@@ -148,7 +148,7 @@ class CursorPaginate
 
             return $query->where($column, $dir === 'DESC' ? '<' : '>', $value);
         }
-        return $query->orWhere(static function (Query $query) use ($columns) {
+        return $query->orWhereGroup(static function (Query $query) use ($columns) {
             $equals = [];
 
             foreach ($columns as [$column, $dir, $value]) {
