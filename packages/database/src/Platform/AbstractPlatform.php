@@ -329,6 +329,55 @@ abstract class AbstractPlatform
         }
     }
 
+    /**
+     * Apply the desired Schema to an existing table. Platforms that can not alter tables in place
+     * (e.g. SQLite) can override this method.
+     */
+    public function updateTable(TableManager $table, Schema $schema): void
+    {
+        $table->reset();
+
+        foreach ($schema->getColumns() as $column) {
+            $column = $this->prepareColumn(clone $column);
+
+            if ($table->hasColumn($column->getColumnName())) {
+                $table->modifyColumn($column);
+            } else {
+                $table->addColumn($column);
+            }
+        }
+
+        $table->reset();
+
+        $table->dropColumn($schema->dropColumns);
+        $table->dropIndex($schema->dropIndexes);
+        $table->dropConstraint($schema->dropConstraints);
+
+        foreach ($schema->getIndexes() as $index) {
+            if ($table->hasIndex($index->indexName)) {
+                $table->dropIndex($index->indexName);
+            }
+
+            if ($table->hasConstraint($index->indexName)) {
+                $table->dropConstraint($index->indexName);
+            }
+
+            $table->addIndex($index);
+        }
+
+        foreach ($schema->getConstraints() as $constraint) {
+            if ($table->hasConstraint($constraint->constraintName)) {
+                $table->dropConstraint($constraint->constraintName);
+            }
+
+            if ($table->hasIndex($constraint->constraintName)) {
+                $table->dropIndex($constraint->constraintName);
+            }
+
+            $table->addConstraint($constraint);
+        }
+    }
+
     public function setColumnComment(
         string $table,
         string $column,

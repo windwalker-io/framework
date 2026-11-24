@@ -98,10 +98,6 @@ abstract class AbstractTableManagerExtraTestCase extends AbstractDatabaseTestCas
             $schema->addUniqueKey('alias');
         };
 
-        if (!static::$supportsColumnAlter) {
-            $this->expectException(\LogicException::class);
-        }
-
         $this->table->save($callback);
         $this->table->reset();
 

@@ -61,55 +61,10 @@ class TableManager extends AbstractMetaManager
      * @param  callable|Schema  $schema
      *
      * @return  static
-     *
-     * @todo Move update() logic to Platform class.
      */
     public function update(Schema|callable $schema): static
     {
-        $schema = $this->callSchema($schema);
-
-        $this->reset();
-        $platform = $this->getPlatform();
-
-        foreach ($schema->getColumns() as $column) {
-            $column = $platform->prepareColumn(clone $column);
-
-            if ($this->hasColumn($column->getColumnName())) {
-                $this->modifyColumn($column);
-            } else {
-                $this->addColumn($column);
-            }
-        }
-
-        $this->reset();
-
-        $this->dropColumn($schema->dropColumns);
-        $this->dropIndex($schema->dropIndexes);
-        $this->dropConstraint($schema->dropConstraints);
-
-        foreach ($schema->getIndexes() as $index) {
-            if ($this->hasIndex($index->indexName)) {
-                $this->dropIndex($index->indexName);
-            }
-
-            if ($this->hasConstraint($index->indexName)) {
-                $this->dropConstraint($index->indexName);
-            }
-
-            $this->addIndex($index);
-        }
-
-        foreach ($schema->getConstraints() as $constraint) {
-            if ($this->hasConstraint($constraint->constraintName)) {
-                $this->dropConstraint($constraint->constraintName);
-            }
-
-            if ($this->hasIndex($constraint->constraintName)) {
-                $this->dropIndex($constraint->constraintName);
-            }
-
-            $this->addConstraint($constraint);
-        }
+        $this->getPlatform()->updateTable($this, $this->callSchema($schema));
 
         return $this->reset();
     }

@@ -168,13 +168,103 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
     #[Test]
     public function update(): void
     {
-        $this->expectException(\LogicException::class);
-
         (clone $this->instance)->update(
             static function (Schema $schema) {
-                $schema->varchar('title')->length(100);
+                $schema->varchar('title')->length(100)->defaultValue('H');
             }
         );
+
+        $this->instance->reset();
+
+        self::assertEquals(100, $this->instance->getColumn('title')->getLengthExpression());
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_catid_type'));
+        self::assertTrue($this->instance->hasIndex('idx_enterprise_title'));
+        self::assertTrue($this->instance->getColumn('id', true)->isAutoIncrement());
+    }
+
+    #[Test]
+    public function updateRebuildsTableAndKeepsData(): void
+    {
+        $table = self::$db->getTableManager('ww_sl_update', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_update');
+        self::$baseConn->exec(
+            'CREATE TABLE ww_sl_update (id INTEGER PRIMARY KEY AUTOINCREMENT, '
+            . "title VARCHAR(50) NOT NULL DEFAULT '', remove_me TEXT, ref_id INTEGER, "
+            . 'CONSTRAINT ck_ref CHECK (ref_id >= 0), CONSTRAINT uq_title UNIQUE (title))'
+        );
+        self::$baseConn->exec('CREATE INDEX idx_ww_sl_update_ref ON ww_sl_update (ref_id)');
+        self::$baseConn->exec('CREATE INDEX idx_ww_sl_update_removed ON ww_sl_update (remove_me)');
+        self::$baseConn->exec("INSERT INTO ww_sl_update (title, remove_me, ref_id) VALUES ('a', 'x', 1), ('b', 'y', 2)");
+        self::$baseConn->exec('DELETE FROM ww_sl_update WHERE id = 2');
+
+        try {
+            $table->update(
+                static function (Schema $schema) {
+                    $schema->varchar('title')->length(200);
+                    $schema->integer('flag')->nullable(true);
+                    $schema->dropColumns('remove_me');
+                }
+            );
+
+            self::assertEquals(
+                ['id', 'title', 'ref_id', 'flag'],
+                array_keys($table->getColumns(true))
+            );
+            self::assertEquals(200, $table->getColumn('title')->getLengthExpression());
+            self::assertTrue($table->hasIndex('idx_ww_sl_update_ref'));
+            self::assertFalse($table->hasIndex('idx_ww_sl_update_removed'));
+            self::assertTrue($table->hasConstraint('sqlite_autoindex_ww_sl_update_1'));
+            self::assertEquals(
+                [['id' => 1, 'title' => 'a', 'ref_id' => 1, 'flag' => null]],
+                self::$baseConn->query('SELECT * FROM ww_sl_update')->fetchAll(\PDO::FETCH_ASSOC)
+            );
+
+            // CHECK constraint and AUTOINCREMENT counter must survive the rebuild
+            self::assertStringContainsString(
+                'ck_ref',
+                (string) self::$baseConn->query(
+                    "SELECT sql FROM sqlite_master WHERE name = 'ww_sl_update'"
+                )->fetchColumn()
+            );
+
+            self::$baseConn->exec("INSERT INTO ww_sl_update (title, ref_id) VALUES ('c', 3)");
+
+            self::assertEquals(
+                3,
+                (int) self::$baseConn->query('SELECT MAX(id) FROM ww_sl_update')->fetchColumn()
+            );
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_update');
+        }
+    }
+
+    #[Test]
+    public function updateReplacesIndexesAndConstraints(): void
+    {
+        $table = self::$db->getTableManager('ww_sl_update_keys', true);
+
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_update_keys');
+        self::$baseConn->exec('CREATE TABLE ww_sl_update_keys (id INTEGER PRIMARY KEY, a TEXT, b TEXT)');
+        self::$baseConn->exec('CREATE INDEX idx_old_a ON ww_sl_update_keys (a)');
+
+        try {
+            $table->update(
+                static function (Schema $schema) {
+                    $schema->dropIndexes('idx_old_a');
+                    $schema->addIndex('b', 'idx_new_b');
+                    $schema->addUniqueKey('a', 'uq_a');
+                }
+            );
+
+            $table->reset();
+
+            self::assertFalse($table->hasIndex('idx_old_a'));
+            self::assertTrue($table->hasIndex('idx_new_b'));
+            self::assertTrue($table->hasConstraint('sqlite_autoindex_ww_sl_update_keys_1'));
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_update_keys');
+        }
     }
 
     /**
@@ -383,6 +473,45 @@ class SQLiteTableManagerTest extends AbstractDatabaseTestCase
         $logs = $this->logQueries(fn() => $this->instance->truncate());
 
         self::assertEquals('DELETE FROM `enterprise`', $logs[0]);
+    }
+
+    #[Test]
+    public function truncateResetsAutoIncrement(): void
+    {
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_truncate_ai');
+        self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_truncate_other');
+        self::$baseConn->exec(
+            'CREATE TABLE ww_sl_truncate_ai (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)'
+        );
+        self::$baseConn->exec(
+            'CREATE TABLE ww_sl_truncate_other (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)'
+        );
+
+        try {
+            foreach (['ww_sl_truncate_ai', 'ww_sl_truncate_other'] as $name) {
+                self::$baseConn->exec("INSERT INTO $name (title) VALUES ('a'), ('b'), ('c')");
+            }
+
+            self::$db->getTable('ww_sl_truncate_ai')->truncate();
+
+            $sequences = self::$baseConn->query(
+                'SELECT name, seq FROM sqlite_sequence'
+                . " WHERE name IN ('ww_sl_truncate_ai', 'ww_sl_truncate_other')"
+            )->fetchAll(\PDO::FETCH_KEY_PAIR);
+
+            self::assertArrayNotHasKey('ww_sl_truncate_ai', $sequences);
+            self::assertEquals(3, $sequences['ww_sl_truncate_other']);
+
+            self::$baseConn->exec("INSERT INTO ww_sl_truncate_ai (title) VALUES ('x')");
+
+            self::assertEquals(
+                1,
+                (int) self::$baseConn->query('SELECT id FROM ww_sl_truncate_ai')->fetchColumn()
+            );
+        } finally {
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_truncate_ai');
+            self::$baseConn->exec('DROP TABLE IF EXISTS ww_sl_truncate_other');
+        }
     }
 
     /**
