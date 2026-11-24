@@ -739,12 +739,25 @@ class SQLitePlatform extends AbstractPlatform
      */
     public function truncateTable(string $table, ?string $schema = null): StatementInterface
     {
-        return $this->db->execute(
+        $statement = $this->db->execute(
             $this->getGrammar()::build(
                 'DELETE FROM',
                 $this->db->quoteName($schema . '.' . $table)
             )
         );
+
+        // DELETE keeps AUTOINCREMENT counters; reset them so ids restart like MySQL TRUNCATE.
+        $hasSequence = $this->db->prepare(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sqlite_sequence'"
+        )->get();
+
+        if ($hasSequence) {
+            $statement = $this->db->execute(
+                'DELETE FROM sqlite_sequence WHERE name = ' . $this->db->quote($table)
+            );
+        }
+
+        return $statement;
     }
 
     public function dropIndex(string $table, string $name, ?string $schema = null): StatementInterface
