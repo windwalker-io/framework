@@ -13,6 +13,7 @@ use Windwalker\Query\Clause\ClausePosition;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
+use Windwalker\Utilities\Symbol\Undefined;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
@@ -809,6 +810,38 @@ trait QueryProxyTrait
     public function having(mixed $column, mixed ...$args): static
     {
         $this->getQueryBuilder()->having($column, ...$args);
+
+        return $this;
+    }
+
+    /**
+     * whereIn
+     *
+     * @param  mixed          $column
+     * @param  iterable       $values
+     * @param  mixed          $default
+     *
+     * @return  static
+     */
+    public function whereIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->whereIn($column, $values, $default);
+
+        return $this;
+    }
+
+    /**
+     * havingIn
+     *
+     * @param  mixed          $column
+     * @param  iterable       $values
+     * @param  mixed          $default
+     *
+     * @return  static
+     */
+    public function havingIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->havingIn($column, $values, $default);
 
         return $this;
     }
