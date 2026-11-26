@@ -613,10 +613,32 @@ trait WhereConcernTrait
         $values = iterator_to_array($values);
 
         if (!$default instanceof Undefined && count($values) === 0) {
-            return $this->where($column, $default);
+            return $this->having($column, $default);
         }
 
         return $this->having($column, 'in', $values);
+    }
+
+    public function whereNotIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $values = iterator_to_array($values);
+
+        if (!$default instanceof Undefined && count($values) === 0) {
+            return $this->where($column, '!=', $default);
+        }
+
+        return $this->where($column, 'not in', $values);
+    }
+
+    public function havingNotIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $values = iterator_to_array($values);
+
+        if (!$default instanceof Undefined && count($values) === 0) {
+            return $this->having($column, '!=', $default);
+        }
+
+        return $this->having($column, 'not in', $values);
     }
 
     private function whereVariant(string $type, string $operator, array $args)

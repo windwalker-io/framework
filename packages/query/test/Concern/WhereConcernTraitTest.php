@@ -153,4 +153,144 @@ class WhereConcernTraitTest extends TestCase
         self::assertStringContainsString('HAVING EXISTS(SELECT', self::renderQuery($query));
         self::assertStringContainsString('AND NOT EXISTS(SELECT', self::renderQuery($query));
     }
+
+    #[Test]
+    public function whereInWithoutDefaultKeepsInOperator(): void
+    {
+        $query = self::createQuery()->whereIn('id', [1, 2, 3]);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" IN (1, 2, 3)', $query);
+    }
+
+    #[Test]
+    public function whereInWithoutDefaultAndEmptyValuesKeepsInOperator(): void
+    {
+        $query = self::createQuery()->whereIn('id', []);
+
+        self::assertStringContainsString('"id" IN', self::renderQuery($query));
+        self::assertStringNotContainsString('= 0', self::renderQuery($query));
+    }
+
+    #[Test]
+    public function whereInWithoutDefaultAcceptsIterable(): void
+    {
+        $gen = (static function () {
+            yield 1;
+            yield 2;
+        })();
+
+        $query = self::createQuery()->whereIn('id', $gen);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function whereInWithDefaultUsesDefaultWhenEmpty(): void
+    {
+        $query = self::createQuery()->whereIn('id', [], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" = 0', $query);
+    }
+
+    #[Test]
+    public function whereInWithDefaultUsesInWhenNotEmpty(): void
+    {
+        $query = self::createQuery()->whereIn('id', [1, 2], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function havingInWithoutDefaultKeepsInOperator(): void
+    {
+        $query = self::createQuery()->group('id')->havingIn('id', [1, 2]);
+
+        self::assertSqlEquals('SELECT * FROM "a" GROUP BY "id" HAVING "id" IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function havingInWithDefaultUsesDefaultWhenEmpty(): void
+    {
+        $query = self::createQuery()->group('id')->havingIn('id', [], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" GROUP BY "id" HAVING "id" = 0', $query);
+    }
+
+    #[Test]
+    public function whereNotInWithoutDefaultUsesNotInOperator(): void
+    {
+        $query = self::createQuery()->whereNotIn('id', [1, 2, 3]);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" NOT IN (1, 2, 3)', $query);
+    }
+
+    #[Test]
+    public function whereNotInWithoutDefaultAndEmptyValuesKeepsNotInOperator(): void
+    {
+        $query = self::createQuery()->whereNotIn('id', []);
+
+        self::assertStringContainsString('"id" NOT IN', self::renderQuery($query));
+        self::assertStringNotContainsString('= 0', self::renderQuery($query));
+    }
+
+    #[Test]
+    public function whereNotInWithoutDefaultAcceptsIterable(): void
+    {
+        $gen = (static function () {
+            yield 1;
+            yield 2;
+        })();
+
+        $query = self::createQuery()->whereNotIn('id', $gen);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" NOT IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function whereNotInWithDefaultUsesDefaultWhenEmpty(): void
+    {
+        $query = self::createQuery()->whereNotIn('id', [], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" != 0', $query);
+    }
+
+    #[Test]
+    public function whereNotInWithDefaultUsesNotInWhenNotEmpty(): void
+    {
+        $query = self::createQuery()->whereNotIn('id', [1, 2], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" NOT IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function havingNotInWithoutDefaultUsesNotInOperator(): void
+    {
+        $query = self::createQuery()->group('id')->havingNotIn('id', [1, 2]);
+
+        self::assertSqlEquals('SELECT * FROM "a" GROUP BY "id" HAVING "id" NOT IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function havingNotInWithDefaultUsesDefaultWhenEmpty(): void
+    {
+        $query = self::createQuery()->group('id')->havingNotIn('id', [], 0);
+
+        self::assertSqlEquals('SELECT * FROM "a" GROUP BY "id" HAVING "id" != 0', $query);
+    }
+
+    #[Test]
+    public function whereNotEqualWithArrayRendersNotIn(): void
+    {
+        $query = self::createQuery()->where('id', '!=', [1, 2]);
+
+        self::assertSqlEquals('SELECT * FROM "a" WHERE "id" NOT IN (1, 2)', $query);
+    }
+
+    #[Test]
+    public function havingNotEqualWithArrayRendersNotIn(): void
+    {
+        $query = self::createQuery()->group('id')->having('id', '!=', [1, 2]);
+
+        self::assertSqlEquals('SELECT * FROM "a" GROUP BY "id" HAVING "id" NOT IN (1, 2)', $query);
+    }
 }
