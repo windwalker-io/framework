@@ -12,6 +12,7 @@ use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\QuoteNameClause;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Assert\ArgumentsAssert;
+use Windwalker\Utilities\Symbol\Undefined;
 use Windwalker\Utilities\TypeCast;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
@@ -594,6 +595,28 @@ trait WhereConcernTrait
         return $this->whereRaw(
             $this->clause('', [$column, 'LIKE', $value, 'ESCAPE ' . $this->quote($escape)])
         );
+    }
+
+    public function whereIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $values = iterator_to_array($values);
+
+        if (!$default instanceof Undefined && count($values) === 0) {
+            return $this->where($column, $default);
+        }
+
+        return $this->where($column, 'in', $values);
+    }
+
+    public function havingIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $values = iterator_to_array($values);
+
+        if (!$default instanceof Undefined && count($values) === 0) {
+            return $this->where($column, $default);
+        }
+
+        return $this->having($column, 'in', $values);
     }
 
     private function whereVariant(string $type, string $operator, array $args)

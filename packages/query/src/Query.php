@@ -38,7 +38,6 @@ use Windwalker\Query\Concern\JsonConcernTrait;
 use Windwalker\Query\Concern\QueryConcernTrait;
 use Windwalker\Query\Concern\ReflectConcernTrait;
 use Windwalker\Query\Concern\WhereConcernTrait;
-use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Exception\NoResultException;
 use Windwalker\Query\Expression\Expression;
@@ -95,12 +94,10 @@ use function Windwalker\value;
  * @method  $this         leftJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         rightJoinLateral($table, ?string $alias = null, ...$on)
  * @method  $this         innerJoinLateral($table, ?string $alias = null, ...$on)
- * @method  $this         whereIn($column, iterable $values)
  * @method  $this         whereNotIn($column, iterable $values)
  * @method  $this         whereBetween($column, $start, $end)
  * @method  $this         whereNotBetween($column, $start, $end)
  * @method  $this         whereNotLike($column, string $search)
- * @method  $this         havingIn($column, iterable $values)
  * @method  $this         havingNotIn($column, iterable $values)
  * @method  $this         havingBetween($column, $start, $end)
  * @method  $this         havingNotBetween($column, $start, $end)
@@ -117,7 +114,7 @@ use function Windwalker\value;
  * @method  int                               count()
  * @method  StatementInterface                execute(?array $params = null)
  */
-class Query implements QueryInterface, BindableInterface, IteratorAggregate
+class Query implements BindableInterface, IteratorAggregate
 {
     use MarcoableTrait;
     use ChainingTrait;

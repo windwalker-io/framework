@@ -10,7 +10,6 @@ use Windwalker\Query\Clause\AsClause;
 use Windwalker\Query\Clause\Clause;
 use Windwalker\Query\Clause\ClauseInterface;
 use Windwalker\Query\Clause\ClausePosition;
-use Windwalker\Query\Contract\QueryInterface;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
@@ -578,7 +577,7 @@ trait QueryProxyTrait
     /**
      * @return  static
      */
-    public function createSubQuery(): QueryInterface
+    public function createSubQuery()
     {
         return $this->getQueryBuilder()->createSubQuery();
     }
