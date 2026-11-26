@@ -13,6 +13,7 @@ use Windwalker\Query\Clause\ClausePosition;
 use Windwalker\Query\Data\CursorPaginate;
 use Windwalker\Query\Query;
 use Windwalker\Utilities\Iterator\PaginateIterator;
+use Windwalker\Utilities\Symbol\Undefined;
 use Windwalker\Utilities\Wrapper\RawWrapper;
 
 /**
@@ -732,6 +733,34 @@ trait QueryProxyTrait
     public function where(mixed $column, mixed ...$args): static
     {
         $this->getQueryBuilder()->where($column, ...$args);
+
+        return $this;
+    }
+
+    public function whereIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->whereIn($column, $values, $default);
+
+        return $this;
+    }
+
+    public function whereNotIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->whereNotIn($column, $values, $default);
+
+        return $this;
+    }
+
+    public function havingIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->havingIn($column, $values, $default);
+
+        return $this;
+    }
+
+    public function havingNotIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
+    {
+        $this->getQueryBuilder()->havingNotIn($column, $values, $default);
 
         return $this;
     }
