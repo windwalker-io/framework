@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Windwalker\Database\Platform;
 
 use LogicException;
+use RuntimeException;
 use Windwalker\Database\Driver\ConnectionInterface;
 use Windwalker\Database\Driver\StatementInterface;
+use Windwalker\Database\Manager\TableManager;
 use Windwalker\Database\Platform\Type\DataType;
 use Windwalker\Database\Schema\Ddl\Column;
 use Windwalker\Database\Schema\Ddl\Constraint;
@@ -617,33 +619,14 @@ class SQLitePlatform extends AbstractPlatform
                 ->setName($this->db->quoteName($column->getColumnName()));
         }
 
-        $alter = $this->createQuery()->alter('', '');
-        $alter->getClause()->setName('');
-
         $constraints = $schema->getConstraints();
 
         if ($primaries) {
-            $constraints[] = new Constraint(
-                Constraint::TYPE_PRIMARY_KEY,
-                'pk_' . $table->getName(),
-                $table->getName()
-            )
-                ->columns($primaries);
+            $constraints[] = $this->createPrimaryKeyConstraint($table->getName(), $primaries);
         }
 
         foreach ($constraints as $constraint) {
-            if ($constraint->isCheck()) {
-                $columns[] = $alter->addCheck($constraint->constraintName, (string) $constraint->checkClause)
-                    ->setName('CONSTRAINT');
-                continue;
-            }
-
-            $columns[] = $alter->addConstraint(
-                $constraint->constraintName,
-                $constraint->constraintType,
-                $this->prepareKeyColumns($constraint->getColumns())
-            )
-                ->setName('CONSTRAINT');
+            $columns[] = $this->getTableConstraintClause($constraint);
         }
 
         $sql = $this->getGrammar()::build(
@@ -659,6 +642,379 @@ class SQLitePlatform extends AbstractPlatform
         $this->postTableModify($table, $schema->getIndexes());
 
         return $statement;
+    }
+
+    protected function createPrimaryKeyConstraint(string $tableName, array $primaries): Constraint
+    {
+        return new Constraint(Constraint::TYPE_PRIMARY_KEY, 'pk_' . $tableName, $tableName)
+            ->columns($primaries);
+    }
+
+    protected function getTableConstraintClause(Constraint $constraint): Clause
+    {
+        $alter = $this->createQuery()->alter('', '');
+        $alter->getClause()->setName('');
+
+        if ($constraint->isCheck()) {
+            return $alter->addCheck($constraint->constraintName, (string) $constraint->checkClause)
+                ->setName('CONSTRAINT');
+        }
+
+        return $alter->addConstraint(
+            $constraint->constraintName,
+            $constraint->constraintType,
+            $this->prepareKeyColumns($constraint->getColumns())
+        )
+            ->setName('CONSTRAINT');
+    }
+
+    /**
+     * SQLite can not alter columns, so the table is always rebuilt: create a new table, copy the data,
+     * drop the old one and rename the new one. Untouched column / constraint definitions are kept verbatim
+     * from the stored `CREATE TABLE` statement, so CHECK, FOREIGN KEY, collations... are not lost.
+     */
+    public function updateTable(TableManager $table, Schema $schema): void
+    {
+        $name = $table->getName();
+        $schemaName = $table->schemaName;
+        $realName = $this->db->replacePrefix($name);
+
+        $tableSql = null;
+        $indexes = [];
+        $triggers = [];
+
+        $master = $this->createQuery()
+            ->select('type', 'name', 'sql')
+            ->from(trim(($schemaName ?? static::getDefaultSchema()) . '.sqlite_master', '.'))
+            ->where('tbl_name', $realName);
+
+        foreach ($this->db->prepare($master) as $row) {
+            if ($row['sql'] === null) {
+                continue;
+            }
+
+            match ($row['type']) {
+                'table' => $tableSql = $row['sql'],
+                'index' => $indexes[$row['name']] = $row['sql'],
+                'trigger' => $triggers[] = $row['sql'],
+                default => null,
+            };
+        }
+
+        if ($tableSql === null) {
+            throw new RuntimeException(sprintf('Table "%s" not exists, unable to update.', $name));
+        }
+
+        $start = strpos($tableSql, '(');
+        $end = strrpos($tableSql, ')');
+
+        $tableOptions = substr($tableSql, $end + 1);
+        $dropColumns = $schema->dropColumns;
+        $dropConstraints = array_flip($schema->dropConstraints);
+        $dropIndexes = array_flip($schema->dropIndexes);
+        $columnDefs = [];
+        $constraintDefs = [];
+
+        foreach ($this->splitDefinitions(substr($tableSql, $start + 1, $end - $start - 1)) as $definition) {
+            $identifier = '"[^"]+"|`[^`]+`|\[[^\]]+\]|\w+';
+
+            if (
+                preg_match(
+                    '/^(?:CONSTRAINT\s+(?<name>' . $identifier . ')\s+)?(?:PRIMARY\s+KEY|UNIQUE|CHECK|FOREIGN\s+KEY)\b/i',
+                    $definition,
+                    $matches
+                )
+            ) {
+                $constraintDefs[] = [
+                    'name' => ($matches['name'] ?? '') !== '' ? $this->unquoteIdentifier($matches['name']) : null,
+                    'sql' => $definition,
+                ];
+            } elseif (preg_match('/^(' . $identifier . ')/', $definition, $matches)) {
+                $columnDefs[$this->unquoteIdentifier($matches[1])] = $definition;
+            }
+        }
+
+        $newColumns = $columnDefs;
+        $primaries = [];
+
+        foreach ($schema->getColumns() as $column) {
+            $column = $this->prepareColumn(clone $column);
+            $columnName = $column->getColumnName();
+
+            $definition = (string) $this->getColumnExpression($column)
+                ->setName($this->db->quoteName($columnName));
+
+            // Keep the inline primary key of the original column definition
+            if (
+                isset($columnDefs[$columnName])
+                && preg_match(
+                    '/\bPRIMARY\s+KEY(?:\s+(?:ASC|DESC))?(?:\s+AUTOINCREMENT)?/i',
+                    $columnDefs[$columnName],
+                    $matches
+                )
+            ) {
+                $definition .= ' ' . $matches[0];
+            }
+
+            $newColumns[$columnName] = $definition;
+
+            if ($column->isPrimary()) {
+                $primaries[] = $column;
+            }
+        }
+
+        foreach ($dropColumns as $dropColumn) {
+            unset($newColumns[$dropColumn]);
+        }
+
+        $replacedKeyNames = [];
+
+        foreach ($schema->getConstraints() as $constraint) {
+            $replacedKeyNames[$constraint->constraintName] = true;
+        }
+
+        foreach ($schema->getIndexes() as $index) {
+            $replacedKeyNames[$index->indexName] = true;
+        }
+
+        $newConstraints = [];
+
+        foreach ($constraintDefs as $constraint) {
+            if (
+                $constraint['name'] !== null
+                && (isset($dropConstraints[$constraint['name']]) || isset($replacedKeyNames[$constraint['name']]))
+            ) {
+                continue;
+            }
+
+            if ($this->referencesColumns($constraint['sql'], $dropColumns)) {
+                continue;
+            }
+
+            $newConstraints[] = $constraint['sql'];
+        }
+
+        foreach ($schema->getConstraints() as $constraint) {
+            $newConstraints[] = (string) $this->getTableConstraintClause($constraint);
+        }
+
+        $hasPrimaryKey = array_any(
+            $newConstraints,
+            static fn(string $sql) => (bool) preg_match('/^(?:CONSTRAINT\s+\S+\s+)?PRIMARY\s+KEY\b/i', $sql)
+        ) || array_any(
+            $newColumns,
+            static fn(string $sql) => (bool) preg_match('/\bPRIMARY\s+KEY\b/i', $sql)
+        );
+
+        if ($primaries && !$hasPrimaryKey) {
+            $newConstraints[] = (string) $this->getTableConstraintClause(
+                $this->createPrimaryKeyConstraint($name, $primaries)
+            );
+        }
+
+        $copyColumns = [];
+
+        foreach (array_keys($columnDefs) as $columnName) {
+            if (
+                isset($newColumns[$columnName])
+                && !preg_match('/\b(?:GENERATED\s+ALWAYS\s+)?AS\s*\(/i', $newColumns[$columnName])
+            ) {
+                $copyColumns[] = $this->db->quoteName($columnName);
+            }
+        }
+
+        $oldTable = $this->db->quoteName($schemaName . '.' . $name);
+        $tmpTable = $this->db->quoteName($schemaName . '.' . $name . '_ww_rebuild');
+        $createSql = "CREATE TABLE $tmpTable (\n"
+            . implode(",\n", [...array_values($newColumns), ...$newConstraints])
+            . "\n)" . $tableOptions;
+
+        $sequence = $this->loadAutoIncrementSequence($realName, $schemaName);
+
+        $foreignKeys = (bool) $this->db->prepare($this->pragma('foreign_keys'))->result();
+        $legacyAlter = (bool) $this->db->prepare($this->pragma('legacy_alter_table'))->result();
+
+        // PRAGMA foreign_keys is a no-op inside a transaction
+        $disableForeignKeys = $foreignKeys && !$this->isInTransaction();
+
+        if ($disableForeignKeys) {
+            $this->db->execute('PRAGMA foreign_keys = OFF');
+        }
+
+        try {
+            $this->transaction(
+                function () use (
+                    $name,
+                    $oldTable,
+                    $tmpTable,
+                    $createSql,
+                    $copyColumns,
+                    $sequence,
+                    $legacyAlter,
+                    $indexes,
+                    $triggers,
+                    $dropColumns,
+                    $dropIndexes,
+                    $replacedKeyNames,
+                    $schema,
+                    $table
+                ) {
+                    $this->db->execute('PRAGMA defer_foreign_keys = ON');
+                    $this->db->execute("DROP TABLE IF EXISTS $tmpTable");
+                    $this->db->execute($createSql);
+
+                    if ($copyColumns) {
+                        $cols = implode(', ', $copyColumns);
+
+                        $this->db->execute("INSERT INTO $tmpTable ($cols) SELECT $cols FROM $oldTable");
+                    }
+
+                    // Rows may have been deleted from the end, keep AUTOINCREMENT counter as is
+                    if ($sequence !== null && stripos($createSql, 'AUTOINCREMENT') !== false) {
+                        $tmpName = $name . '_ww_rebuild';
+
+                        $this->db->execute(
+                            'DELETE FROM sqlite_sequence WHERE name = ' . $this->db->quote($tmpName)
+                        );
+                        $this->db->execute(
+                            'INSERT INTO sqlite_sequence (name, seq) VALUES ('
+                            . $this->db->quote($tmpName) . ', ' . $sequence . ')'
+                        );
+                    }
+
+                    $this->db->execute("DROP TABLE $oldTable");
+
+                    // Views / triggers referencing the table would make a standard rename fail
+                    $this->db->execute('PRAGMA legacy_alter_table = ON');
+                    $this->db->execute(
+                        "ALTER TABLE $tmpTable RENAME TO " . $this->db->quoteName($name)
+                    );
+                    $this->db->execute('PRAGMA legacy_alter_table = ' . ($legacyAlter ? 'ON' : 'OFF'));
+
+                    foreach ($indexes as $indexName => $indexSql) {
+                        if (isset($dropIndexes[$indexName]) || isset($replacedKeyNames[$indexName])) {
+                            continue;
+                        }
+
+                        $onClause = preg_split('/\bON\b/i', $indexSql, 2)[1] ?? $indexSql;
+
+                        if ($this->referencesColumns($onClause, $dropColumns)) {
+                            continue;
+                        }
+
+                        $this->db->execute($indexSql);
+                    }
+
+                    foreach ($triggers as $triggerSql) {
+                        $this->db->execute($triggerSql);
+                    }
+
+                    $this->postTableModify($table, $schema->getIndexes());
+                }
+            );
+        } finally {
+            if ($disableForeignKeys) {
+                $this->db->execute('PRAGMA foreign_keys = ON');
+            }
+        }
+    }
+
+    protected function loadAutoIncrementSequence(string $table, ?string $schema): ?int
+    {
+        $master = trim(($schema ?? static::getDefaultSchema()) . '.sqlite_master', '.');
+
+        $exists = $this->db->prepare(
+            $this->createQuery()
+                ->select('name')
+                ->from($master)
+                ->where('type', 'table')
+                ->where('name', 'sqlite_sequence')
+        )->result();
+
+        if (!$exists) {
+            return null;
+        }
+
+        $seq = $this->db->prepare(
+            $this->createQuery()
+                ->select('seq')
+                ->from(trim(($schema ?? static::getDefaultSchema()) . '.sqlite_sequence', '.'))
+                ->where('name', $table)
+        )->result();
+
+        return $seq === null || $seq === false ? null : (int) $seq;
+    }
+
+    /**
+     * Split a `CREATE TABLE` body by top-level commas, ignoring commas in parentheses and quotes.
+     *
+     * @return  string[]
+     */
+    protected function splitDefinitions(string $body): array
+    {
+        $parts = [];
+        $depth = 0;
+        $quote = null;
+        $current = '';
+
+        foreach (str_split($body) as $char) {
+            if ($quote !== null) {
+                if ($char === $quote) {
+                    $quote = null;
+                }
+            } elseif ($char === "'" || $char === '"' || $char === '`') {
+                $quote = $char;
+            } elseif ($char === '[') {
+                $quote = ']';
+            } elseif ($char === '(') {
+                $depth++;
+            } elseif ($char === ')') {
+                $depth--;
+            } elseif ($char === ',' && $depth === 0) {
+                $parts[] = trim($current);
+                $current = '';
+                continue;
+            }
+
+            $current .= $char;
+        }
+
+        if (trim($current) !== '') {
+            $parts[] = trim($current);
+        }
+
+        return $parts;
+    }
+
+    protected function unquoteIdentifier(string $identifier): string
+    {
+        if (preg_match('/^(["`])(.*)\1$/s', $identifier, $matches)) {
+            return $matches[2];
+        }
+
+        if (str_starts_with($identifier, '[') && str_ends_with($identifier, ']')) {
+            return substr($identifier, 1, -1);
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Check if a key definition uses any of the columns. Referenced columns of a FOREIGN KEY are ignored.
+     *
+     * @param  string[]  $columns
+     */
+    protected function referencesColumns(string $sql, array $columns): bool
+    {
+        $sql = preg_split('/\bREFERENCES\b/i', $sql, 2)[0];
+
+        foreach ($columns as $column) {
+            if (preg_match('/(?<!\w)["`\[]?' . preg_quote($column, '/') . '["`\]]?(?!\w)/i', $sql)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function getKeyColumnExpression(Column $column): Clause
@@ -739,12 +1095,25 @@ class SQLitePlatform extends AbstractPlatform
      */
     public function truncateTable(string $table, ?string $schema = null): StatementInterface
     {
-        return $this->db->execute(
+        $statement = $this->db->execute(
             $this->getGrammar()::build(
                 'DELETE FROM',
                 $this->db->quoteName($schema . '.' . $table)
             )
         );
+
+        // DELETE keeps AUTOINCREMENT counters; reset them so ids restart like MySQL TRUNCATE.
+        $hasSequence = $this->db->prepare(
+            "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'sqlite_sequence'"
+        )->get();
+
+        if ($hasSequence) {
+            $statement = $this->db->execute(
+                'DELETE FROM sqlite_sequence WHERE name = ' . $this->db->quote($table)
+            );
+        }
+
+        return $statement;
     }
 
     public function dropIndex(string $table, string $name, ?string $schema = null): StatementInterface
