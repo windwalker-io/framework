@@ -843,38 +843,6 @@ trait QueryProxyTrait
     }
 
     /**
-     * whereIn
-     *
-     * @param  mixed          $column
-     * @param  iterable       $values
-     * @param  mixed          $default
-     *
-     * @return  static
-     */
-    public function whereIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
-    {
-        $this->getQueryBuilder()->whereIn($column, $values, $default);
-
-        return $this;
-    }
-
-    /**
-     * havingIn
-     *
-     * @param  mixed          $column
-     * @param  iterable       $values
-     * @param  mixed          $default
-     *
-     * @return  static
-     */
-    public function havingIn(mixed $column, iterable $values, mixed $default = new Undefined()): static
-    {
-        $this->getQueryBuilder()->havingIn($column, $values, $default);
-
-        return $this;
-    }
-
-    /**
      * @param  string|Clause  $string
      * @param  array          ...$args
      *
