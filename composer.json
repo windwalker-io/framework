@@ -63,7 +63,7 @@
         "symfony/string": "^6.0||^7.0||^8.0",
         "symfony/var-dumper": "^6.0||^7.0||^8.0",
         "symfony/yaml": "^6.0||^7.0||^8.0",
-        "twig/twig": "^2.0||^3.0",
+        "twig/twig": "^2.0||^3.0||^4.0",
         "webmozart/glob": "^4.1",
         "yosymfony/toml": "^1.0",
         "laravel/serializable-closure": "^1.0||^2.0",
@@ -89,7 +89,9 @@
         "symfony/string": "Install to use inflector.",
         "aws/aws-sdk-php": "If you want to use AWS SQS as queue service.",
         "php-amqplib/php-amqplib": "If you want to use RabbitMQ as queue service.",
-        "reactivex/rxphp": "Support EventEmitter::observe() pattern."
+        "reactivex/rxphp": "Support EventEmitter::observe() pattern.",
+        "symfony/yaml": "Required to load YAML language files.",
+        "ext-redis": "If you want to use Redis as queue service."
     },
     "autoload": {
         "psr-4": {
@@ -196,9 +198,9 @@
         }
     },
     "scripts": {
+        "prepare-hooks": "git config core.hooksPath .githooks",
         "cs-check": "php-cs-fixer check --diff",
-        "cs-fix": "php-cs-fixer fix",
-        "hooks-install": "git config core.hooksPath .githooks"
+        "cs-fix": "php-cs-fixer fix"
     },
     "extra": {
         "windwalker": {

@@ -22,7 +22,7 @@ class MergeComposer extends Console
      */
     protected function doExecute(): int
     {
-        $packages = Filesystem::folders(VENDOR_PATH);
+        $packages = Filesystem::folders(PACKAGES_PATH);
 
         $rootJsonFile = PROJECT_ROOT . '/composer.json';
         $rootJson = Collection::from($rootJsonFile);
@@ -53,7 +53,7 @@ class MergeComposer extends Console
 
         Filesystem::write(
             $rootJsonFile,
-            $rootJson->toJson(['options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES])
+            $rootJson->toJson(['options' => JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES]) . "\n"
         );
 
         $this->writeln('Sync to composer.json');
@@ -100,29 +100,32 @@ class MergeComposer extends Console
 
     protected function mergeAutoload(Collection $rootJson, Collection $json, string $path, string $dir): void
     {
-        $target = $rootJson->proxy($path);
+        $target = (array) $rootJson->getDeep($path);
 
         $name = explode('/', $json->get('name'))[1];
 
         foreach ((array) $json->getDeep($path) as $key => $item) {
             if (is_numeric($key)) {
-                $target->append("packages/$name/$dir")
-                    ->apply(fn ($storage) => array_unique($storage))
-                    ->sort()
-                    ->values();
+                $target[] = "packages/$name/$dir";
+                $target = array_values(array_unique($target));
+                sort($target);
             } else {
-                $target->set($key, "packages/$name/$dir")
-                    ->sortKeys();
+                $target[$key] = "packages/$name/$dir";
+                ksort($target);
             }
         }
+
+        $rootJson->setDeep($path, $target);
     }
 
     protected function mergeReplace(Collection $rootJson, Collection $json): void
     {
-        $target = $rootJson->proxy('replace');
+        $target = (array) $rootJson->getDeep('replace');
         $target[$json->get('name')] = 'self.version';
-        $target->sortKeys();
+        ksort($target);
+
+        $rootJson->setDeep('replace', $target);
     }
 }
 
-new MergeComposerDev()->execute($argv);
+new MergeComposer()->execute($argv);
