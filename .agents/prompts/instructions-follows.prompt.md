@@ -1,5 +1,5 @@
 ---
-agent: ''
+agent: ""
 ---
 
 Whenever this prompt is run, reread the instructions relevant to the task type before beginning the task.

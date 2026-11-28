@@ -13,18 +13,18 @@ Refactoring Requirements:
   correct namespaces, imports, and type declarations.
 - Actually rename test methods; do not only check formatting. Follow the naming rules in
   `../skills/test/SKILL.md`:
-  - Remove the `test` prefix from every test method, mark it with `#[Test]`, and import
-    `PHPUnit\Framework\Attributes\Test`.
-  - Use a camelCase name that describes the behavior under test (subject + action + expected outcome), e.g.
-    `testRead` → `readReturnsFileContents`, `testDelete` → `deleteRemovesDirectoryRecursively`. Vague names such as
-    `testFoo`, `testItems`, or names that only repeat the method under test are not acceptable.
-  - Split a test that verifies several independent scenarios into one test per scenario, each with its own name,
-    without weakening or dropping assertions. Keep them together only when they are steps of a single scenario.
-  - Data provider methods must end with `Provider` and be referenced via `#[DataProvider('...')]`.
-  - Do not rename tests inherited from or overriding a parent/trait/interface when the name is part of its contract,
-    and do not change test meaning merely for renaming.
-  - After renaming, grep for the old names (`--filter`, docs, `@depends`, `#[Depends]`, `#[DataProvider]`
-    references) and update every usage.
+    - Remove the `test` prefix from every test method, mark it with `#[Test]`, and import
+      `PHPUnit\Framework\Attributes\Test`.
+    - Use a camelCase name that describes the behavior under test (subject + action + expected outcome), e.g.
+      `testRead` → `readReturnsFileContents`, `testDelete` → `deleteRemovesDirectoryRecursively`. Vague names such as
+      `testFoo`, `testItems`, or names that only repeat the method under test are not acceptable.
+    - Split a test that verifies several independent scenarios into one test per scenario, each with its own name,
+      without weakening or dropping assertions. Keep them together only when they are steps of a single scenario.
+    - Data provider methods must end with `Provider` and be referenced via `#[DataProvider('...')]`.
+    - Do not rename tests inherited from or overriding a parent/trait/interface when the name is part of its contract,
+      and do not change test meaning merely for renaming.
+    - After renaming, grep for the old names (`--filter`, docs, `@depends`, `#[Depends]`, `#[DataProvider]`
+      references) and update every usage.
 - For lifecycle setup/teardown, prioritize using PHPUnit's attributes like `#[Before]`, `#[After]`, `#[BeforeClass]`,
   and `#[AfterClass]`, replacing vague `setUp()`/`tearDown()` names with names that express the actual behavior.
 - Before migrating lifecycle hooks, trace the initialization/cleanup order of parent classes, traits, and inheritance;

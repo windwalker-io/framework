@@ -20,4 +20,3 @@ applyTo: "**/*.php,**/composer.json"
 - Internal `windwalker/*` dependencies must still be declared in the owning package, but do not require running
   `merge-composer-dev.php`: workspace packages are already included through root `replace`, and the script skips
   them in root `require` / `require-dev`.
-

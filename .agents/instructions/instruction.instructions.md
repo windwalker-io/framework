@@ -17,10 +17,10 @@ For details, see `../main.instructions.md#guidance-document-directory`
 ## Editing principles
 
 - File links:
-  - Use the `path` format for important file links or guidance.
-  - When a heading is needed, use a Markdown link: `[display text](relative path)`.
-  - In general prose, decide whether to link to a file based on context. Use backticks when simply mentioning a filename or file type.
-  - Use the `<URL>` format for remote URLs.
+    - Use the `path` format for important file links or guidance.
+    - When a heading is needed, use a Markdown link: `[display text](relative path)`.
+    - In general prose, decide whether to link to a file based on context. Use backticks when simply mentioning a filename or file type.
+    - Use the `<URL>` format for remote URLs.
 - Use concise bullet points; avoid too much background unless the behavior has a specific context or constraint.
 - Avoid sensitive information, product confidential information, deployment settings, and keys.
 

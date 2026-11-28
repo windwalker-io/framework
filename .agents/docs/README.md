@@ -28,13 +28,13 @@ If instead the content is a short, always-applicable rule tied to a file pattern
 - Always add a one-line entry to the table below, and link to the doc from whichever instructions file, skill, or
   `copilot-instructions.md` entry needs the deeper context — a doc that nothing links to will not be discovered.
 - Also add a bullet to the **"Docs Reference Map"** section in `../../.github/copilot-instructions.md` (feature/topic → doc
-  path). That section is the one piece of this folder that *is* always loaded, so it's what makes a new doc
+  path). That section is the one piece of this folder that _is_ always loaded, so it's what makes a new doc
   discoverable without the agent having to stumble onto a stray link first.
 
 ## Contents
 
-| Doc | Summary | Linked from |
-| --- | --- | --- |
-| [`code-style.md`](code-style.md) | Full PHP-CS-Fixer ruleset: `@PER-CS` baseline, every project rule override, indentation/line-ending settings. | `../instructions/cs.instructions.md`, `../../AGENTS.md` |
-| [`database-testing.md`](database-testing.md) | Real-database test setup: MySQL/Oracle/Docker, DSN constants, sequential runs, fixture and state-isolation rules. | `../instructions/test.instructions.md`, `../skills` |
-| [`testing.md`](testing.md) | PHPUnit execution, coverage drivers and scoped reports, and filling missing test coverage. | `../instructions/test.instructions.md`, `../skills`, `../../AGENTS.md` |
+| Doc                                          | Summary                                                                                                           | Linked from                                                            |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| [`code-style.md`](code-style.md)             | Full PHP-CS-Fixer ruleset: `@PER-CS` baseline, every project rule override, indentation/line-ending settings.     | `../instructions/cs.instructions.md`, `../../AGENTS.md`                |
+| [`database-testing.md`](database-testing.md) | Real-database test setup: MySQL/Oracle/Docker, DSN constants, sequential runs, fixture and state-isolation rules. | `../instructions/test.instructions.md`, `../skills`                    |
+| [`testing.md`](testing.md)                   | PHPUnit execution, coverage drivers and scoped reports, and filling missing test coverage.                        | `../instructions/test.instructions.md`, `../skills`, `../../AGENTS.md` |

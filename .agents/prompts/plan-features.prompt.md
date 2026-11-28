@@ -1,5 +1,6 @@
 ---
 ---
+
 Plan or research a new feature, or a refactor, for this repository. Do not implement it; produce an analysis and a
 recommendation.
 
@@ -10,10 +11,10 @@ recommendation.
    hooks, `***Options` classes, no magic methods, etc.), and identify how the change should fit in, plus which
    existing APIs, tests, and docs it touches.
 2. **Research how other frameworks and systems solve the same problem.** Cover a diverse set of references:
-   - PHP frameworks: Laravel, Symfony, and others where relevant.
-   - For lower-level features, also look beyond PHP: Node.js, Go, Rust, TypeScript, Java, and any other ecosystem
-     with a notable solution.
-   - Cite concrete APIs, source files, or documentation for each reference.
+    - PHP frameworks: Laravel, Symfony, and others where relevant.
+    - For lower-level features, also look beyond PHP: Node.js, Go, Rust, TypeScript, Java, and any other ecosystem
+      with a notable solution.
+    - Cite concrete APIs, source files, or documentation for each reference.
 3. **For every researched reference, list its pros and cons**, including how well it would map onto this
    codebase's conventions and PHP's constraints (PHP ≥ 8.4.6).
 4. **Give a recommendation**: the proposed design, why it was chosen over the alternatives, the trade-offs, and

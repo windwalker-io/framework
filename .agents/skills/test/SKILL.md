@@ -25,28 +25,29 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    before relying on it, and stop to ask if uncertain.
 5. Write PHPUnit attribute-based tests (`#[Test]`, `#[DataProvider]`, etc. per PHPUnit 13) with
    `declare(strict_types=1);` at the top of every test file, matching the project's PHP 8.4+ style.
-   - Test methods do not need a `test` prefix; the `#[Test]` attribute marks them. Name them after the behavior
-     (e.g. `resolveCallArgumentsWithVariadic`).
-   - Data provider methods must end with `Provider` (e.g. `argumentsProvider`) and be referenced via
-     `#[DataProvider('argumentsProvider')]`.
-   - Prefer attribute-based lifecycle hooks as defined in the [Test Rules](../../instructions/test.instructions.md);
-     preserve inherited fixture behavior when migrating conventional hooks.
+    - Test methods do not need a `test` prefix; the `#[Test]` attribute marks them. Name them after the behavior
+      (e.g. `resolveCallArgumentsWithVariadic`).
+    - Data provider methods must end with `Provider` (e.g. `argumentsProvider`) and be referenced via
+      `#[DataProvider('argumentsProvider')]`.
+    - Prefer attribute-based lifecycle hooks as defined in the [Test Rules](../../instructions/test.instructions.md);
+      preserve inherited fixture behavior when migrating conventional hooks.
 6. Run the smallest selector from the repository root:
 
-   ```bash
-   # Single test file, optionally narrowed to a method
-   php vendor/bin/phpunit packages/{name}/test/ExampleTest.php --filter methodName
+    ```bash
+    # Single test file, optionally narrowed to a method
+    php vendor/bin/phpunit packages/{name}/test/ExampleTest.php --filter methodName
 
-   # One package's full suite, using the root configuration and autoloader
-   php vendor/bin/phpunit packages/{name}/test
+    # One package's full suite, using the root configuration and autoloader
+    php vendor/bin/phpunit packages/{name}/test
 
-   # All suites enabled by the root configuration
-   php vendor/bin/phpunit
-   ```
+    # All suites enabled by the root configuration
+    php vendor/bin/phpunit
+    ```
 
-   PHPUnit loads root `../../../phpunit.xml`, falling back to `phpunit.xml.dist`. Do not assume a package's standalone
-   configuration works in the monorepo: check its bootstrap path and PHPUnit compatibility first.
-   HTTP-related tests may need the bundled test server first: `php -S localhost:8000 bin/test-server.php`.
+    PHPUnit loads root `../../../phpunit.xml`, falling back to `phpunit.xml.dist`. Do not assume a package's standalone
+    configuration works in the monorepo: check its bootstrap path and PHPUnit compatibility first.
+    HTTP-related tests may need the bundled test server first: `php -S localhost:8000 bin/test-server.php`.
+
 7. Inspect failures, fix the root cause or fixture, and rerun the selector. Do not claim success if a required
    database or external service was not actually configured/running.
 8. When asked to add missing tests, collect baseline coverage for the requested source scope, inspect uncovered
@@ -55,5 +56,5 @@ description: Add, update, or run Windwalker Framework PHPUnit tests for any pack
    Follow the logic-free getter/setter exclusion rule in [Test Rules](../../instructions/test.instructions.md).
    For DB-backed tests see [Database Testing](../../docs/database-testing.md).
 
-   See [Testing and Coverage](../../docs/testing.md) for executable commands, coverage drivers, and configuration
-   caveats. If the driver is unavailable or tests are skipped, state the limitation explicitly.
+    See [Testing and Coverage](../../docs/testing.md) for executable commands, coverage drivers, and configuration
+    caveats. If the driver is unavailable or tests are skipped, state the limitation explicitly.

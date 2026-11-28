@@ -4,7 +4,7 @@ Windwalker Framework uses [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-
 style across all packages. The configuration lives in `/.php-cs-fixer.dist.php` at the repository root.
 
 For bite-sized "bad vs. good" examples meant to be followed while writing code, see
-`../instructions/cs.instructions.md`. This document explains the *why* and gives the full picture of the
+`../instructions/cs.instructions.md`. This document explains the _why_ and gives the full picture of the
 ruleset, for anyone who needs more context than the quick instructions provide.
 
 ## Running the fixer
@@ -71,23 +71,23 @@ but are intentional, reviewed choices for this codebase.
 These rules customize or override the `@PER-CS` defaults. Each entry below maps to a key in the `setRules([...])`
 array of `../../.php-cs-fixer.dist.php`.
 
-| Rule | Setting | Effect |
-| --- | --- | --- |
-| `declare_strict_types` | `true` | Every file must declare `strict_types=1`. |
-| `new_with_parentheses` | `anonymous_class: false`, `named_class: false` | `new Foo()` without wrapping parentheses is used instead of `(new Foo())`, enabling PHP 8.4's `new Foo()->bar()` chaining syntax. |
-| `nullable_type_declaration_for_default_null_value` | `true` | Parameters defaulting to `null` must have an explicit nullable type (`?Foo $foo = null`). |
-| `ordered_imports` | `sort_algorithm: alpha` | `use` statements are sorted alphabetically. |
-| `no_unused_imports` | `true` | Unused `use` statements are removed. |
-| `single_quote` | `true` | Prefer `'...'` over `"..."` when no interpolation/escapes are needed. |
-| `trailing_comma_in_multiline` | `false` | No trailing comma after the last element in multiline arrays, argument lists, or parameter lists. |
-| `concat_space` | `spacing: one` | Exactly one space around the `.` string concatenation operator. |
-| `array_syntax` | `syntax: short` | Use `[...]` instead of `array(...)`. |
-| `phpdoc_align` | `align: vertical`, `spacing: 2` | DocBlock tags (`@param`, `@return`, ...) are vertically aligned with 2 spaces of padding. |
-| `phpdoc_summary` | `false` | Disabled — DocBlock summary lines are not forced to end with a period or follow a strict format. |
-| `phpdoc_to_comment` | `false` | Disabled — DocBlocks that could be plain comments are left as DocBlocks (not downgraded). |
-| `yoda_style` | `false` | Disabled — Yoda conditions (`null === $x`) are *not* enforced; normal order (`$x === null`) is preferred, see the instructions file. |
-| `increment_style` | `false` | Disabled — no enforced preference between `$i++` and `++$i`. |
-| `global_namespace_import` | `import_classes: null`, `import_constants: null`, `import_functions: null` | No automatic addition/removal of `use` statements for global-namespace classes, constants, or functions — left to the author's discretion. |
+| Rule                                               | Setting                                                                    | Effect                                                                                                                                     |
+| -------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `declare_strict_types`                             | `true`                                                                     | Every file must declare `strict_types=1`.                                                                                                  |
+| `new_with_parentheses`                             | `anonymous_class: false`, `named_class: false`                             | `new Foo()` without wrapping parentheses is used instead of `(new Foo())`, enabling PHP 8.4's `new Foo()->bar()` chaining syntax.          |
+| `nullable_type_declaration_for_default_null_value` | `true`                                                                     | Parameters defaulting to `null` must have an explicit nullable type (`?Foo $foo = null`).                                                  |
+| `ordered_imports`                                  | `sort_algorithm: alpha`                                                    | `use` statements are sorted alphabetically.                                                                                                |
+| `no_unused_imports`                                | `true`                                                                     | Unused `use` statements are removed.                                                                                                       |
+| `single_quote`                                     | `true`                                                                     | Prefer `'...'` over `"..."` when no interpolation/escapes are needed.                                                                      |
+| `trailing_comma_in_multiline`                      | `false`                                                                    | No trailing comma after the last element in multiline arrays, argument lists, or parameter lists.                                          |
+| `concat_space`                                     | `spacing: one`                                                             | Exactly one space around the `.` string concatenation operator.                                                                            |
+| `array_syntax`                                     | `syntax: short`                                                            | Use `[...]` instead of `array(...)`.                                                                                                       |
+| `phpdoc_align`                                     | `align: vertical`, `spacing: 2`                                            | DocBlock tags (`@param`, `@return`, ...) are vertically aligned with 2 spaces of padding.                                                  |
+| `phpdoc_summary`                                   | `false`                                                                    | Disabled — DocBlock summary lines are not forced to end with a period or follow a strict format.                                           |
+| `phpdoc_to_comment`                                | `false`                                                                    | Disabled — DocBlocks that could be plain comments are left as DocBlocks (not downgraded).                                                  |
+| `yoda_style`                                       | `false`                                                                    | Disabled — Yoda conditions (`null === $x`) are _not_ enforced; normal order (`$x === null`) is preferred, see the instructions file.       |
+| `increment_style`                                  | `false`                                                                    | Disabled — no enforced preference between `$i++` and `++$i`.                                                                               |
+| `global_namespace_import`                          | `import_classes: null`, `import_constants: null`, `import_functions: null` | No automatic addition/removal of `use` statements for global-namespace classes, constants, or functions — left to the author's discretion. |
 
 ## Indentation & line endings
 

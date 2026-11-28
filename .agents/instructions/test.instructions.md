@@ -134,7 +134,7 @@ Don't use `expectExceptionMessage()` (deprecated in PHPUnit 13).
 ### PHPUnit Mock – Invocation Count Matchers
 
 Don't use `self::` for PHPUnit mock invocation count matchers; use `$this->` (applies to `once()`, `never()`,
-  `any()`, `exactly($n)`, `atLeastOnce()`, `atMost($n)`).
+`any()`, `exactly($n)`, `atLeastOnce()`, `atMost($n)`).
 
 ```php
 // Bad
