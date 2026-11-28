@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Windwalker\Utilities\Symbol;
 
+/**
+ * @internal
+ */
 final readonly class Emptied
 {
     public function __toString(): string
