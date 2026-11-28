@@ -270,6 +270,60 @@ class LanguageTest extends TestCase
     }
 
     #[Test]
+    public function replaceEscapesArgumentsByDefault(): void
+    {
+        self::assertEquals(
+            'hi &lt;b&gt;&amp;&quot;x&quot;&lt;/b&gt;, &lt;B&gt;&amp;&quot;X&quot;&lt;/B&gt;',
+            $this->instance->replace('hi :name, :NAME', ['name' => '<b>&"x"</b>'])
+        );
+        self::assertEquals(
+            'hi &lt;i&gt;',
+            $this->instance->replace('hi %s', ['<i>'])
+        );
+    }
+
+    #[Test]
+    public function replaceKeepsRawWrapperArgumentsUnescaped(): void
+    {
+        self::assertEquals(
+            'hi <b>x</b>, <B>X</B>, <b>x</b>',
+            $this->instance->replace(
+                'hi :name, :NAME, :Name',
+                ['name' => \Windwalker\raw('<b>x</b>')]
+            )
+        );
+        self::assertEquals('hi <i>', $this->instance->replace('hi %s', [\Windwalker\raw('<i>')]));
+    }
+
+    #[Test]
+    public function transAndChoiceEscapeArguments(): void
+    {
+        self::assertEquals(
+            'Hello &lt;x&gt;',
+            $this->instance->trans(
+                'Hello :name',
+                name: '<x>'
+            )
+        );
+    }
+
+    #[Test]
+    public function setEscaperReplacesOrDisablesEscaping(): void
+    {
+        self::assertNotNull($this->instance->getEscaper());
+
+        $this->instance->setEscaper(null);
+
+        self::assertNull($this->instance->getEscaper());
+        self::assertEquals('hi <b>', $this->instance->replace('hi :name', ['name' => '<b>']));
+
+        $this->instance->setEscaper(fn(string $v) => '[' . $v . ']');
+
+        self::assertEquals('hi [<b>]', $this->instance->replace('hi :name', ['name' => '<b>']));
+        self::assertEquals('hi <b>', $this->instance->replace('hi :name', ['name' => \Windwalker\raw('<b>')]));
+    }
+
+    #[Test]
     public function replacePrefersLongerPlaceholderNames(): void
     {
         self::assertEquals(

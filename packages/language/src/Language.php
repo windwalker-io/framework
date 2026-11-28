@@ -86,6 +86,8 @@ class Language implements LanguageInterface
 
     protected string $namespace;
 
+    protected $escaper = null;
+
     /**
      * Constructor.
      *
@@ -101,6 +103,7 @@ class Language implements LanguageInterface
         $this->setLocale($locale);
         $this->setFallback($fallback);
         $this->namespace = $namespace;
+        $this->escaper = static fn(string $v): string => htmlspecialchars($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
@@ -249,7 +252,7 @@ class Language implements LanguageInterface
 
         foreach ($args as $k => $v) {
             if (is_numeric($k)) {
-                $values[] = $v;
+                $values[] = $v instanceof RawWrapper ? (string) $v() : $this->escapeArg($v);
             } else {
                 $replacements[$k] = $v;
             }
@@ -263,6 +266,10 @@ class Language implements LanguageInterface
             $replacements = $this->sortReplacements($replacements);
 
             foreach ($replacements as $key => $value) {
+                $isRaw = $value instanceof RawWrapper;
+                $value = (string) ($isRaw ? $value() : $value);
+                $escape = fn(string $v) => $isRaw ? $v : $this->escapeArg($v);
+
                 $string = str_replace(
                     [
                         ':' . $key,
@@ -270,9 +277,9 @@ class Language implements LanguageInterface
                         ':' . Utf8String::ucfirst((string) $key),
                     ],
                     [
-                        $value,
-                        Utf8String::strtoupper((string) $value),
-                        Utf8String::ucfirst((string) $value),
+                        $escape($value),
+                        $escape(Utf8String::strtoupper($value)),
+                        $escape(Utf8String::ucfirst($value)),
                     ],
                     $string
                 );
@@ -280,6 +287,35 @@ class Language implements LanguageInterface
         }
 
         return $string;
+    }
+
+    public function getEscaper(): ?callable
+    {
+        return $this->escaper;
+    }
+
+    /**
+     * Set the handler to escape injected arguments, null to disable escaping.
+     * Arguments wrapped by raw() are never escaped.
+     *
+     * @param  (callable(string): string)|null  $escaper
+     */
+    public function setEscaper(?callable $escaper): static
+    {
+        $this->escaper = $escaper;
+
+        return $this;
+    }
+
+    protected function escapeArg(mixed $value): string
+    {
+        $value = (string) $value;
+
+        if ($this->escaper === null) {
+            return $value;
+        }
+
+        return (string) ($this->escaper)($value);
     }
 
     protected function sortReplacements(array $replacements): array
