@@ -16,21 +16,21 @@ plus CI workflows. Use this file to decide **where new AI-facing content should 
 ```
 
 Root-level `/AGENTS.md` is the canonical, human-oriented agent guide and is explicitly referenced from
-`copilot-instructions.md`. It is not duplicated here.
+`../.github/copilot-instructions.md`. It is not duplicated here.
 
 ## How each asset type is loaded (per GitHub Copilot's documented behavior)
 
 | Asset | Loaded when | Best for |
 | --- | --- | --- |
-| `copilot-instructions.md` | **Always**, for every Copilot Chat/agent request in this repo | Short, high-level, repo-wide conventions and an index pointing elsewhere. Keep it minimal — it costs context on *every* request. |
-| `instructions/*.instructions.md` | **Automatically**, only when the files Copilot is editing/viewing match the `applyTo` front-matter glob | Mechanical, "must always be true" rules tied to a file type or path (code style, test style, lint conventions). No need to ask for these — they just apply. |
-| `prompts/*.prompt.md` | **On explicit invocation** (e.g. `/prompt-name` in Copilot Chat) | Repeatable, parameterized tasks a human deliberately triggers (scaffolding, release notes, migration scripts). Not used for passive/background rules. |
-| `skills/<name>/SKILL.md` | **On demand**, chosen by the model based on the skill's `description` front-matter matching the current task | Complex, multi-step domain workflows that may need accompanying resources/scripts/examples, and that shouldn't cost context unless actually relevant. |
-| `docs/*.md` | **Never automatically** — must be linked explicitly from an instructions file, skill, or `copilot-instructions.md` | Longer-form rationale, full rule tables, "why", and anything that would bloat an instructions/skill file if inlined. |
+| `../.github/copilot-instructions.md` | **Always**, for every Copilot Chat/agent request in this repo | Short, high-level, repo-wide conventions and an index pointing elsewhere. Keep it minimal — it costs context on *every* request. |
+| `instructions` | **Automatically**, only when the files Copilot is editing/viewing match the `applyTo` front-matter glob | Mechanical, "must always be true" rules tied to a file type or path (code style, test style, lint conventions). No need to ask for these — they just apply. |
+| `prompts` | **On explicit invocation** (e.g. `/prompt-name` in Copilot Chat) | Repeatable, parameterized tasks a human deliberately triggers (scaffolding, release notes, migration scripts). Not used for passive/background rules. |
+| `skills` | **On demand**, chosen by the model based on the skill's `description` front-matter matching the current task | Complex, multi-step domain workflows that may need accompanying resources/scripts/examples, and that shouldn't cost context unless actually relevant. |
+| `docs` | **Never automatically** — must be linked explicitly from an instructions file, skill, or `../.github/copilot-instructions.md` | Longer-form rationale, full rule tables, "why", and anything that would bloat an instructions/skill file if inlined. |
 
 This mirrors GitHub's own recommended split:
 - [Repository custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) —
-  one always-on `copilot-instructions.md`, kept short, for conventions that apply to *every* request.
+  one always-on `../.github/copilot-instructions.md`, kept short, for conventions that apply to *every* request.
 - [Path-specific custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions#adding-path-specific-custom-instructions) —
   `*.instructions.md` files with `applyTo` globs, for rules scoped to specific file types/paths.
 - [Prompt files](https://code.visualstudio.com/docs/copilot/customization/prompt-files) —
@@ -44,25 +44,25 @@ This mirrors GitHub's own recommended split:
 ## Decision guide for new content
 
 1. **Does every single Copilot request in this repo need to know it?**
-   → Add a short bullet (or link) to `copilot-instructions.md`. Do not inline long explanations there.
+   → Add a short bullet (or link) to `../.github/copilot-instructions.md`. Do not inline long explanations there.
 2. **Does it only matter when touching certain files/paths, and should apply without being asked?**
-   → Add/extend an `instructions/*.instructions.md` file with an `applyTo` glob front-matter.
+   → Add/extend an `instructions` file with an `applyTo` glob front-matter.
 3. **Is it a deliberately-triggered, repeatable task a human runs on demand?**
-   → Add a `prompts/*.prompt.md` file.
+   → Add a `prompts` file.
 4. **Is it a non-trivial, multi-step workflow the agent should discover and run autonomously, possibly with helper
    scripts/resources?**
-   → Add a new `skills/<name>/SKILL.md` (optionally with sibling resource files in the same folder).
+   → Add a new `skills` (optionally with sibling resource files in the same folder).
 5. **Is it long-form rationale, a full reference table, or "why" context that would bloat an instructions/skill
    file?**
-   → Add it to `docs/*.md`, then:
-   - Link to it from whichever instructions file, skill, or `copilot-instructions.md` entry needs the deeper
-     context (a doc nothing links to will never be discovered, since `docs/*.md` is never auto-loaded).
-   - Add a one-line bullet to the **"Docs Reference Map"** section in `copilot-instructions.md` (feature/topic →
+   → Add it to `docs`, then:
+   - Link to it from whichever instructions file, skill, or `../.github/copilot-instructions.md` entry needs the deeper
+     context (a doc nothing links to will never be discovered, since `docs` is never auto-loaded).
+   - Add a one-line bullet to the **"Docs Reference Map"** section in `../.github/copilot-instructions.md` (feature/topic →
      doc path), so the agent knows to proactively check it for matching tasks.
    - Add a row to the contents table in `docs/README.md`.
 
 When in doubt, prefer the narrowest scope (instructions > skill > copilot-instructions.md) for anything
-auto-loaded, and move detailed prose into `docs/` either way.
+auto-loaded, and move detailed prose into `docs` either way.
 
 ## Current contents
 
@@ -74,9 +74,9 @@ auto-loaded, and move detailed prose into `docs/` either way.
 - `instructions/worktree.instructions.md` — worktree mode workflow: custom naming, commit every change, squash-merge.
 - `prompts/complete-test-and-coverage.prompt.md` — inspect a package's coverage and add meaningful missing tests.
 - `prompts/refactor-test-code-style.prompt.md` — refactor PHPUnit test style, structure, and lifecycle hook naming.
-- `prompts/squash-merge-worktree.prompt.md` — commit pending worktree changes and squash-merge them into the working branch.
-- `prompts/plan-feature.prompt.md` — analyze a new feature or refactor, research alternatives, and produce a recommendation and implementation plan.
+- `prompts` — commit pending worktree changes and squash-merge them into the working branch.
+- `prompts` — analyze a new feature or refactor, research alternatives, and produce a recommendation and implementation plan.
 - `skills/test/SKILL.md` — end-to-end workflow for adding/running PHPUnit tests in this monorepo.
-- `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs/README.md` for the docs index.
+- `docs/code-style.md` — full PHP-CS-Fixer ruleset explanation/rationale. See `docs` for the docs index.
 - `docs/database-testing.md` — Setting up MySQL/DSN for real-database tests and writing safe DB tests.
 - `docs/testing.md` — PHPUnit execution and coverage setup, scoped reports, and finding missing tests.

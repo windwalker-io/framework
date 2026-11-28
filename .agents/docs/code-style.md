@@ -4,7 +4,7 @@ Windwalker Framework uses [PHP-CS-Fixer](https://github.com/PHP-CS-Fixer/PHP-CS-
 style across all packages. The configuration lives in `/.php-cs-fixer.dist.php` at the repository root.
 
 For bite-sized "bad vs. good" examples meant to be followed while writing code, see
-`/.github/instructions/cs.instructions.md`. This document explains the *why* and gives the full picture of the
+`../instructions/cs.instructions.md`. This document explains the *why* and gives the full picture of the
 ruleset, for anyone who needs more context than the quick instructions provide.
 
 ## Running the fixer
@@ -45,7 +45,7 @@ php vendor/bin/php-cs-fixer check --diff
 php vendor/bin/php-cs-fixer fix
 ```
 
-Composer resolves the `php-cs-fixer` binary from `vendor/bin`; the direct equivalents above need no global
+Composer resolves the `php-cs-fixer` binary from `../../vendor/bin`; the direct equivalents above need no global
 installation. You can also append `--path-mode=intersection` and file paths to either direct command.
 The fixer automatically discovers the root configuration; add `--config=.php-cs-fixer.dist.php` to explicitly use
 the tracked rules instead of a local `.php-cs-fixer.php` override.

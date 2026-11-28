@@ -6,8 +6,8 @@ missing tests, then add tests to cover the gaps.
 
 1. Identify the target package from the user's request, selected files, or tagged scope. Keep investigation and
    changes within that package unless a directly related shared test helper must be used.
-2. Read the package source and neighboring tests, `.github/instructions/test.instructions.md`,
-   `.github/instructions/cs.instructions.md`, the `test` skill, and `.github/docs/testing.md`. Follow package test
+2. Read the package source and neighboring tests, `../instructions/test.instructions.md`,
+   `../instructions`, the `test` skill, and `../docs`. Follow package test
    conventions and use PHPUnit attributes and the project's existing test traits and fixtures.
 3. Run the package's current test suite and capture a package-source-scoped coverage baseline using an available
    coverage driver. Inspect uncovered source lines and branches, then prioritize meaningful behaviors, edge cases,
@@ -17,7 +17,7 @@ missing tests, then add tests to cover the gaps.
    directly related defect; keep any such fix minimal and covered by a regression test.
 5. Rerun the same package test and coverage scope. Also run the relevant style check and inspect the final diff.
    Preserve unrelated working-tree changes.
-6. For the logic-free getter/setter, see the instructions in `.github/instructions/test.instructions.md`. 
+6. For the logic-free getter/setter, see the instructions in `../instructions/test.instructions.md`.
    If a getter/setter is later modified to include meaningful behavior, remove the `@codeCoverageIgnore` tag and cover the new behavior with tests.
 7. If there has some class has no test, add test class for it.
 

@@ -2,8 +2,8 @@ Following the repository's testing instructions and test skills, refactor the PH
 within the specified scope `packages/*/test/`, including the naming and calling conventions of test methods and
 lifecycle hooks.
 
-Before starting, read `.github/instructions/test.instructions.md`, `.github/instructions/cs.instructions.md`, and
-`.github/skills/test/SKILL.md`, and consult `.github/docs/testing.md` if necessary. Confirm the user-specified package,
+Before starting, read `../instructions/test.instructions.md`, `../instructions`, and
+`../skills`, and consult `../docs` if necessary. Confirm the user-specified package,
 file, or test scope; if not specified, review changes or context to define the minimum reasonable scope. Do not rewrite
 the entire monorepo's tests without confirmation.
 
@@ -12,7 +12,7 @@ Refactoring Requirements:
 - Follow the repository's existing PHP/PHPUnit versions and testing conventions; retain `declare(strict_types=1);`,
   correct namespaces, imports, and type declarations.
 - Actually rename test methods; do not only check formatting. Follow the naming rules in
-  `.github/skills/test/SKILL.md`:
+  `../skills/test/SKILL.md`:
   - Remove the `test` prefix from every test method, mark it with `#[Test]`, and import
     `PHPUnit\Framework\Attributes\Test`.
   - Use a camelCase name that describes the behavior under test (subject + action + expected outcome), e.g.

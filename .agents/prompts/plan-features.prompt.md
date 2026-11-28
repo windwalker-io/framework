@@ -5,8 +5,8 @@ recommendation.
 
 ## Requirements
 
-1. **Analyze the existing architecture first.** Read the relevant package(s) under `packages/`, their style and
-   philosophy (see `/AGENTS.md` and `/.github/instructions/cs.instructions.md`: DI over globals/facades, property
+1. **Analyze the existing architecture first.** Read the relevant package(s) under `../../packages`, their style and
+   philosophy (see `/AGENTS.md` and `../instructions/cs.instructions.md`: DI over globals/facades, property
    hooks, `***Options` classes, no magic methods, etc.), and identify how the change should fit in, plus which
    existing APIs, tests, and docs it touches.
 2. **Research how other frameworks and systems solve the same problem.** Cover a diverse set of references:

@@ -9,7 +9,7 @@ end-to-end workflow, see the [test skill](../skills/test/SKILL.md).
 
 ## Running tests
 
-PHPUnit automatically loads root `phpunit.xml`, or `phpunit.xml.dist` if no local configuration exists. The root
+PHPUnit automatically loads root `../../phpunit.xml`, or `phpunit.xml.dist` if no local configuration exists. The root
 configuration bootstraps `vendor/autoload.php`, which maps source and test namespaces for the whole monorepo.
 Prefer explicit test paths so the run does not depend on which suites a local configuration enables.
 
@@ -29,10 +29,10 @@ php vendor/bin/phpunit
 
 Replace `methodName` with an actual test method. To explicitly use the distributed configuration, add
 `--configuration phpunit.xml.dist`; use `--configuration phpunit.xml` when local service settings are required.
-Some package-level configurations target older PHPUnit versions or expect a package-local `vendor/autoload.php`.
+Some package-level configurations target older PHPUnit versions or expect a package-local `../../vendor/autoload.php`.
 Do not use `--configuration packages/{name}/phpunit.xml.dist` from the monorepo without checking those assumptions.
 
-For service-backed tests, copy `phpunit.xml.dist` to `phpunit.xml` only if the local file does not already exist.
+For service-backed tests, copy `../../phpunit.xml.dist` to `phpunit.xml` only if the local file does not already exist.
 Enable the relevant test DSN constants or service flags there and start the required services. Use test-only
 databases: fixtures may create, truncate, or drop tables. SQLite needs its PDO extension and a writable database
 directory; external databases need a running local instance or the configured Docker services. HTTP tests may
@@ -66,7 +66,7 @@ XDEBUG_MODE=coverage php vendor/bin/phpunit packages/cache/test \
 ```
 
 Read `coverage/cache/index.html` and drill into the target source files to see uncovered executable lines.
-Reports belong under the git-ignored root `coverage/` directory, not in committed source.
+Reports belong under the git-ignored root `../../coverage` directory, not in committed source.
 The distributed root source filter includes all packages, so an aggregate percentage from a single package run
 is **not** that package's coverage percentage. `--filter` selects tests, not coverage source files, and
 `--coverage-filter` adds source directories rather than replacing an existing XML source filter.

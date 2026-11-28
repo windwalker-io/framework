@@ -16,7 +16,7 @@ applyTo: "**/*.php,**/composer.json"
   available through the root autoloader but is a new dependency for the owning package.
 - Run `php bin/merge-composer.php` from the repository root only when a new external package dependency is
   introduced, after user approval and declaration in the owning package's manifest. Review the resulting root
-  `composer.json` diff and any version warnings; do not declare package dependencies only in the root manifest.
+  `../../composer.json` diff and any version warnings; do not declare package dependencies only in the root manifest.
 - Internal `windwalker/*` dependencies must still be declared in the owning package, but do not require running
   `merge-composer-dev.php`: workspace packages are already included through root `replace`, and the script skips
   them in root `require` / `require-dev`.

@@ -6,9 +6,9 @@ applyTo: "**/*.php"
 
 This project follows the [PER-3.1](https://www.php-fig.org/per/coding-style/) PHP coding standard.
 
-These rules are enforced by `.php-cs-fixer.dist.php` (`@PER-CS` ruleset plus project overrides). Run
+These rules are enforced by `../../.php-cs-fixer.dist.php` (`@PER-CS` ruleset plus project overrides). Run
 `composer cs-check` to verify and `composer cs-fix` to auto-fix. For the full rule set and rationale, see
-`/.github/docs/code-style.md`.
+`../docs/code-style.md`.
 
 ## Running PHP-CS-Fixer
 

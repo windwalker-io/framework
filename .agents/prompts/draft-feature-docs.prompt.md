@@ -14,7 +14,7 @@ later move into the official documentation.
 3. Write the draft from the end user's point of view:
    - **Introduction**: what the feature is, what problem it solves, and when to use it.
    - **Usage**: how to use or operate it, with minimal, runnable PHP examples that follow the repository code style
-     (`.github/instructions/cs.instructions.md`) and prefer current APIs (e.g. `***Options` classes over legacy
+     (`../instructions/cs.instructions.md`) and prefer current APIs (e.g. `***Options` classes over legacy
      flags).
    - **Options / behaviors**: notable parameters, defaults, edge cases, and limitations that users need to know.
    - Mention deprecated or replaced APIs only when users need to migrate.

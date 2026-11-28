@@ -6,8 +6,8 @@ need tests with coverage ignore annotations. Also mark temporary integration/cov
 removed easily later.
 
 1. Identify the target package from the user's request, selected files, or tagged scope. Keep changes within that scope.
-2. Read `.github/instructions/test.instructions.md`, `.github/instructions/cs.instructions.md`, and
-   `.github/docs/testing.md` first, and follow their rules.
+2. Read `../instructions/test.instructions.md`, `../instructions`, and
+   `../docs` first, and follow their rules.
 3. Find source code that has no need for tests and add `@codeCoverageIgnore` in its docblock:
    - Logic-free getters/setters (only return/assign a property, optionally `return $this`) without meaningful coverage
      from other behavior tests.

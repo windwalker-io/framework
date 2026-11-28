@@ -1,6 +1,6 @@
 # Database Testing Environment
 
-How to set up and write tests that need a real database (`packages/database`, `packages/orm`, session, etc.).
+How to set up and write tests that need a real database (`../../packages/database`, `packages/orm`, session, etc.).
 MySQL is the default and best-covered platform; PostgreSQL / SQL Server / SQLite use the same mechanism.
 
 ## 1. Provide a database
@@ -21,7 +21,7 @@ The test base class creates and drops the database itself, so no manual schema i
 
 ## 2. DSN configuration
 
-Tests read DSNs from constants in the root `phpunit.xml` (copy `phpunit.xml.dist` if missing):
+Tests read DSNs from constants in the root `../../phpunit.xml` (copy `phpunit.xml.dist` if missing):
 
 ```xml
 <php>
@@ -71,7 +71,7 @@ Non-alphanumeric characters become `_`. With a suffix set, the suffixed database
 again at process shutdown (so errors/fatals don't leave it behind); the unsuffixed database is never dropped. Never share one suffix between concurrent runs. Executed SQL is still
 logged to one shared file, so don't rely on it when running in parallel.
 
-Executed SQL is logged to `packages/database/tmp/test-sql.sql` — check it when debugging.
+Executed SQL is logged to `../../packages/database/tmp/test-sql.sql` — check it when debugging.
 
 Scoped coverage (keep the project config; the filter leaks other packages, so filter the report afterwards):
 
