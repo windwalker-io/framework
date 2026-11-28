@@ -283,6 +283,15 @@ class LanguageTest extends TestCase
     }
 
     #[Test]
+    public function replaceDoesNotDoubleEncodeEntities(): void
+    {
+        self::assertEquals(
+            'hi &amp; &lt;b&gt;',
+            $this->instance->replace('hi :name', ['name' => '&amp; <b>'])
+        );
+    }
+
+    #[Test]
     public function replaceKeepsRawWrapperArgumentsUnescaped(): void
     {
         self::assertEquals(
