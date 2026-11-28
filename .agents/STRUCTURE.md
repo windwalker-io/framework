@@ -1,32 +1,38 @@
-# `.github` Directory Guide
+# Agent Guidance Structure
 
-This directory centralizes everything that drives GitHub Copilot (and other AI coding agents) in this repository,
-plus CI workflows. Use this file to decide **where new AI-facing content should live**.
+AI-agent guidance lives under the repository's `.agents/` directory, while `.github/` contains the Copilot entry point
+and GitHub Actions workflows. Use this file to decide **where new AI-facing content should live**.
 
 ## Layout
 
 ```
+AGENTS.md                         # Canonical human-oriented agent guide
 .github/
-  copilot-instructions.md    # Repo-wide instructions, always loaded by Copilot
-  instructions/*.instructions.md  # Path-scoped rules, auto-attached via `applyTo` glob
-  prompts/*.prompt.md        # Reusable, explicitly-invoked prompt templates (slash commands)
-  skills/<name>/SKILL.md     # On-demand, model-discovered deep-dive workflows
-  docs/*.md                  # Long-form reference docs, linked-to (not auto-loaded)
-  workflows/*.yml            # GitHub Actions CI
+  copilot-instructions.md         # Copilot entry point; imports .agents/main.instructions.md
+  workflows/*.yml                 # GitHub Actions CI
+.agents/
+  agents/*.agent.md               # Specialized agent profiles
+  instructions/*.instructions.md # Path-scoped rules, auto-attached via `applyTo` glob
+  prompts/*.prompt.md             # Reusable, explicitly-invoked prompt templates
+  skills/<name>/SKILL.md          # On-demand, model-discovered workflows
+  docs/*.md                       # Long-form reference docs, linked-to (not auto-loaded)
+  main.instructions.md            # Shared repo-wide guidance
+  STRUCTURE.md                    # This content-placement guide
 ```
 
-Root-level `/AGENTS.md` is the canonical, human-oriented agent guide and is explicitly referenced from
-`../.github/copilot-instructions.md`. It is not duplicated here.
+`AGENTS.md` and `.github/copilot-instructions.md` both load `.agents/main.instructions.md`; keep shared guidance there
+instead of duplicating it in the entry points.
 
 ## How each asset type is loaded (per GitHub Copilot's documented behavior)
 
 | Asset | Loaded when | Best for |
 | --- | --- | --- |
-| `../.github/copilot-instructions.md` | **Always**, for every Copilot Chat/agent request in this repo | Short, high-level, repo-wide conventions and an index pointing elsewhere. Keep it minimal — it costs context on *every* request. |
-| `instructions` | **Automatically**, only when the files Copilot is editing/viewing match the `applyTo` front-matter glob | Mechanical, "must always be true" rules tied to a file type or path (code style, test style, lint conventions). No need to ask for these — they just apply. |
-| `prompts` | **On explicit invocation** (e.g. `/prompt-name` in Copilot Chat) | Repeatable, parameterized tasks a human deliberately triggers (scaffolding, release notes, migration scripts). Not used for passive/background rules. |
-| `skills` | **On demand**, chosen by the model based on the skill's `description` front-matter matching the current task | Complex, multi-step domain workflows that may need accompanying resources/scripts/examples, and that shouldn't cost context unless actually relevant. |
-| `docs` | **Never automatically** — must be linked explicitly from an instructions file, skill, or `../.github/copilot-instructions.md` | Longer-form rationale, full rule tables, "why", and anything that would bloat an instructions/skill file if inlined. |
+| `.github/copilot-instructions.md` | **Always**, for every Copilot Chat/agent request in this repo | Imports shared repo-wide guidance; keep detailed rules in `.agents/main.instructions.md`. |
+| `.agents/instructions` | **Automatically**, when files match an `applyTo` front-matter glob | Mechanical, "must always be true" rules tied to a file type or path (code style, test style, lint conventions). |
+| `.agents/prompts` | **On explicit invocation** (e.g. `/prompt-name` in Copilot Chat) | Repeatable tasks a human deliberately triggers. Not used for passive/background rules. |
+| `.agents/skills` | **On demand**, chosen by the model based on the skill's `description` front-matter matching the current task | Complex, multi-step workflows that may need accompanying resources and should not cost context unless relevant. |
+| `.agents/docs` | **Never automatically** — must be linked explicitly from an instructions file, skill, or entry point | Longer-form rationale, full rule tables, and "why" context that would bloat an instructions/skill file if inlined. |
+| `.agents/agents` | **When selected for a task** | Specialized agent definitions for bounded tasks. |
 
 This mirrors GitHub's own recommended split:
 - [Repository custom instructions](https://docs.github.com/en/copilot/how-tos/configure-custom-instructions/add-repository-instructions) —

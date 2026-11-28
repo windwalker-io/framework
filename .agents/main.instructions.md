@@ -47,8 +47,8 @@ when done.
 
 Details:
 
-- [cs.instructions.md](../.agents/instructions/cs.instructions.md) - Advanced PHP code style rules.
-- [code-style.md](../.agents/docs/code-style.md) - Full PHP-CS-Fixer ruleset rationale.
+- [cs.instructions.md](instructions/cs.instructions.md) - Advanced PHP code style rules.
+- [code-style.md](docs/code-style.md) - Full PHP-CS-Fixer ruleset rationale.
 
 ## Testing
 
@@ -57,19 +57,19 @@ need MySQL and must not run in parallel; HTTP tests need `php -S localhost:8000 
 
 Base classes: `AbstractDatabaseTestCase` (`packages/database/src/Test/`), `AbstractORMTestCase` (`packages/orm/test/`).
 
-- [test.instructions.md](../.agents/instructions/test.instructions.md) - Testing-specific code style and deprecated/preferred
+- [test.instructions.md](instructions/test.instructions.md) - Testing-specific code style and deprecated/preferred
   APIs.
-- [test skill](../.agents/skills/test/SKILL.md) - Workflow for adding, updating, and running tests.
-- [database-testing.md](../.agents/docs/database-testing.md) - Real-database (MySQL) test environment and conventions.
-- [testing.md](../.agents/docs/testing.md) - Test execution, coverage drivers, reports, and finding missing tests.
+- [test skill](skills/test/SKILL.md) - Workflow for adding, updating, and running tests.
+- [database-testing.md](docs/database-testing.md) - Real-database (MySQL) test environment and conventions.
+- [testing.md](docs/testing.md) - Test execution, coverage drivers, reports, and finding missing tests.
 
 ## Others
 
-- [Config Sync](../.agents/instructions/config-sync.instructions.md) - When changing composer / CI / PHPUnit / docker configs,
+- [Config Sync](instructions/config-sync.instructions.md) - When changing composer / CI / PHPUnit / docker configs,
   update the related packages' counterparts too.
-- [Dependency Checks](../.agents/instructions/dependencies.instructions.md) - Package `require` / `require-dev` declarations
+- [Dependency Checks](instructions/dependencies.instructions.md) - Package `require` / `require-dev` declarations
   and root Composer synchronization.
-- [Instruction Maintenance](../.agents/instructions/instruction.instructions.md) - Where to place new rules across
+- [Instruction Maintenance](instructions/instruction.instructions.md) - Where to place new rules across
   instructions / skills / docs.
 
 ## Docs Reference Map
@@ -78,13 +78,12 @@ Base classes: `AbstractDatabaseTestCase` (`packages/database/src/Test/`), `Abstr
 feature/topic below. Keep this list alphabetical and append a new bullet whenever a new doc is added to
 `.agents/docs/` (also update `.agents/docs/README.md`'s table at the same time).
 
-- **Code style / PHP-CS-Fixer rules (`@PER-CS`, rule overrides, rationale)** → [code-style.md](../.agents/docs/code-style.md)
-- **Database tests (MySQL setup, DSN, never run suites in parallel)** → [database-testing.md](../.agents/docs/database-testing.md)
-- **Testing / PHPUnit execution and code coverage** → [testing.md](../.agents/docs/testing.md)
+- **Code style / PHP-CS-Fixer rules (`@PER-CS`, rule overrides, rationale)** → [code-style.md](docs/code-style.md)
+- **Database tests (MySQL setup, DSN, never run suites in parallel)** → [database-testing.md](docs/database-testing.md)
+- **Testing / PHPUnit execution and code coverage** → [testing.md](docs/testing.md)
 
 ## Project-Specific Conventions
 
 - Array/int option flags are moving to `***Options` classes (e.g. `ORM::FOR_UPDATE` →
   `new ORMOptions(forUpdate: true)`); old constants remain but are deprecated.
 - `StrInflector` (`packages/utilities/src/StrInflector.php`) handles singular/plural, e.g. default `Table` alias.
-

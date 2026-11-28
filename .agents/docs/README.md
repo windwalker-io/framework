@@ -5,7 +5,7 @@ This folder holds **long-form, reference-style documentation** for both humans a
 Copilot — files here are only read when something else (an instructions file, a skill, `copilot-instructions.md`,
 or a human) explicitly links to them.
 
-See `../README.md` for the full explanation of how `instructions/` / `prompts/` / `skills/` / `docs/` differ and
+See [`../STRUCTURE.md`](../STRUCTURE.md) for the full explanation of how `instructions/` / `prompts/` / `skills/` / `docs/` differ and
 when to use each.
 
 ## When to add a doc here
@@ -24,10 +24,10 @@ If instead the content is a short, always-applicable rule tied to a file pattern
 - One Markdown file per topic, named `kebab-case.md` (e.g. `code-style.md`).
 - Start with a single `# Title` heading.
 - Use relative links (e.g. `../../AGENTS.md`, `../../.php-cs-fixer.dist.php`) since this folder is nested two
-  levels under the repository root (``).
+  levels under the repository root.
 - Always add a one-line entry to the table below, and link to the doc from whichever instructions file, skill, or
   `copilot-instructions.md` entry needs the deeper context — a doc that nothing links to will not be discovered.
-- Also add a bullet to the **"Docs Reference Map"** section in `../../.github/copilot-instructions.md` (feature/topic → doc
+- Also add a bullet to the **"Docs Reference Map"** section in `../main.instructions.md` (feature/topic → doc
   path). That section is the one piece of this folder that _is_ always loaded, so it's what makes a new doc
   discoverable without the agent having to stumble onto a stray link first.
 
