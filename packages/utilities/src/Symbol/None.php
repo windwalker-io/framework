@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-
 namespace Windwalker\Utilities\Symbol;
 
-readonly final class None
+final readonly class None
 {
     public function __toString(): string
     {
