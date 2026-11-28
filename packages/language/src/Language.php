@@ -103,12 +103,7 @@ class Language implements LanguageInterface
         $this->setLocale($locale);
         $this->setFallback($fallback);
         $this->namespace = $namespace;
-        $this->escaper = static fn(string $v): string => htmlspecialchars(
-            $v,
-            ENT_QUOTES | ENT_SUBSTITUTE,
-            'UTF-8',
-            false
-        );
+        $this->escaper = static fn(string $v): string => htmlspecialchars($v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     /**
